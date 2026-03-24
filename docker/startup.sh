@@ -9,7 +9,7 @@ php artisan route:cache
 php artisan view:cache
 
 # Run migrations (forced)
-# php artisan migrate --force
+ php artisan migrate --force
 
 # Start Apache
 apache2-foreground
