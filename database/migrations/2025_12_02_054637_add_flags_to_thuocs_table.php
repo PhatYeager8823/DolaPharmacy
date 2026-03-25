@@ -15,6 +15,7 @@ return new class extends Migration
             $table->boolean('is_new')->default(0)->after('is_active'); // Sản phẩm mới (Gán thủ công)
             $table->boolean('is_exclusive')->default(0)->after('is_new'); // Ưu đãi độc quyền
             $table->boolean('is_suggested')->default(0)->after('is_exclusive'); // Gợi ý hôm nay
+            $table->boolean('is_featured')->default(0)->after('is_suggested'); // Sản phẩm nổi bật
         });
     }
 
@@ -22,6 +23,9 @@ return new class extends Migration
     {
         Schema::table('thuocs', function (Blueprint $table) {
             $table->dropColumn(['is_new', 'is_exclusive', 'is_suggested']);
+            if (Schema::hasColumn('thuocs', 'is_featured')) {
+                $table->dropColumn('is_featured');
+            }
         });
     }
 };

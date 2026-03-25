@@ -33,7 +33,7 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Men vi sinh Enterogermina (Pháp)', 'slug' => 'enterogermina', 'ma_san_pham' => 'TH001',
                 'gia_ban' => 160000, 'gia_cu' => 180000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['tieu-hoa-gan-mat'] ?? 1,
-                'is_new' => 0, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'enterogermina.webp'
+                'is_new' => 0, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'enterogermina.webp', 'is_featured' => 1
             ],
             [
                 'ten_thuoc' => 'Thuốc dạ dày Nexium 40mg', 'slug' => 'nexium-40mg', 'ma_san_pham' => 'TH-RX-01',
@@ -89,7 +89,7 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Panadol Extra (Đỏ)', 'slug' => 'panadol-extra', 'ma_san_pham' => 'GD001',
                 'gia_ban' => 180000, 'gia_cu' => 210000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['giam-dau-ha-sot'] ?? 1,
-                'is_new' => 1, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'panadol-extra.webp'
+                'is_new' => 1, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'panadol-extra.webp', 'is_featured' => 1
             ],
             [
                 'ten_thuoc' => 'Efferalgan 500mg Sủi', 'slug' => 'efferalgan-500mg', 'ma_san_pham' => 'GD002',
@@ -372,6 +372,7 @@ class ThuocSeeder extends Seeder
                 'is_new'        => $p['is_new'] ?? 0,
                 'is_exclusive'  => $p['is_exclusive'] ?? 0,
                 'is_suggested'  => $p['is_suggested'] ?? 0,
+                'is_featured'   => $p['is_featured'] ?? 0,
 
                 'created_at' => now(),
                 'updated_at' => now(),
