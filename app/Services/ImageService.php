@@ -20,11 +20,22 @@ class ImageService
         // Mặc định
         $maxWidth = $options['max_width'] ?? 1200;
         $maxHeight = $options['max_height'] ?? 1200;
-        $quality = $options['quality'] ?? 75; // 75% chất lượng JPEG
+        $quality = $options['quality'] ?? 80;
 
-        // Tạo tên file với timestamp
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        // Tạo tên file sạch (loại bỏ timestamp, lấy tên gốc slugify)
+        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName = \Illuminate\Support\Str::slug($baseName);
+        
+        $filename = $slugName . '.webp';
         $filePath = public_path($directory . '/' . $filename);
+
+        // Kiểm tra trùng tên và thêm hậu tố nếu cần
+        $counter = 1;
+        while (file_exists($filePath)) {
+            $filename = $slugName . '-' . $counter . '.webp';
+            $filePath = public_path($directory . '/' . $filename);
+            $counter++;
+        }
 
         // Đọc ảnh
         $image = Image::read($file->getPathname());
@@ -34,8 +45,8 @@ class ImageService
             $image->scaleDown(width: $maxWidth, height: $maxHeight);
         }
 
-        // Nén ảnh (chỉ áp dụng cho JPEG/PNG)
-        $image->toJpeg(quality: $quality)->save($filePath);
+        // Lưu dưới định dạng WebP
+        $image->toWebp(quality: $quality)->save($filePath);
 
         return $filename;
     }
