@@ -27,7 +27,7 @@
                             @else
                                 {{-- Slide mặc định --}}
                                 <div class="swiper-slide">
-                                    <img src="{{ asset('images/slider1.webp') }}"
+                                    <img src="{{ asset('images/sliders/slider1.webp') }}"
                                          class="d-block w-100 hero-img"
                                          alt="Default Slider">
                                 </div>
