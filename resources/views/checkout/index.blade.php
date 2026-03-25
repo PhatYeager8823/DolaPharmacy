@@ -148,7 +148,7 @@
                                 @php
                                     $qrAmount = $total + 15000; // Mặc định + 15k ship, JS sẽ tự động sửa nếu Free Ship
                                 @endphp
-                                <img src="https://img.vietqr.io/image/OCB-0919795426-compact2.png?amount={{ $qrAmount }}&addInfo={{ $ma_don_hang }}&accountName=DUONG THINH PHAT" alt="Mã QR Thanh Toán" class="img-fluid rounded border mb-2" id="dynamic-qr" style="max-height: 200px;">
+                                <img src="https://img.vietqr.io/image/OCB-0919795426-compact2.webp?amount={{ $qrAmount }}&addInfo={{ $ma_don_hang }}&accountName=DUONG THINH PHAT" alt="Mã QR Thanh Toán" class="img-fluid rounded border mb-2" id="dynamic-qr" style="max-height: 200px;">
                                 <div class="text-start">
                                     <p class="mb-1 small"><strong>Ngân hàng:</strong> OCB (Phương Đông)</p>
                                     <p class="mb-1 small"><strong>Tài khoản:</strong> DUONG THINH PHAT</p>
@@ -271,7 +271,7 @@
         const qrAmountText = document.getElementById('qr-amount-text');
         if (dynamicQr) {
             let orderCode = '{{ $ma_don_hang }}';
-            dynamicQr.src = `https://img.vietqr.io/image/OCB-0919795426-compact2.png?amount=${finalTotal}&addInfo=${orderCode}&accountName=DUONG THINH PHAT`;
+            dynamicQr.src = `https://img.vietqr.io/image/OCB-0919795426-compact2.webp?amount=${finalTotal}&addInfo=${orderCode}&accountName=DUONG THINH PHAT`;
             if (qrAmountText) {
                 qrAmountText.innerText = new Intl.NumberFormat('vi-VN').format(finalTotal) + ' đ';
             }

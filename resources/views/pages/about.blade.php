@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <img src="https://img.freepik.com/free-photo/pharmacists-working-together-drugstore_23-2148767035.jpg"
+                <img src="https://img.freepik.com/free-photo/pharmacists-working-together-drugstore_23-2148767035.webp"
                      alt="Nhà thuốc" class="img-fluid rounded-3 shadow-sm">
             </div>
             <div class="col-lg-6">
@@ -114,7 +114,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/portrait-smiling-male-doctor_171337-1532.jpg"
+                        <img src="https://img.freepik.com/free-photo/portrait-smiling-male-doctor_171337-1532.webp"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Nguyễn Văn A</h5>
                         <p class="text-muted small">Dược sĩ trưởng - 15 năm kinh nghiệm</p>
@@ -125,7 +125,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg"
+                        <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.webp"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Trần Thị B</h5>
                         <p class="text-muted small">Tư vấn chuyên môn</p>
@@ -136,7 +136,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/handsome-young-male-doctor-with-stethoscope-standing-against-blue-background_662251-343.jpg"
+                        <img src="https://img.freepik.com/free-photo/handsome-young-male-doctor-with-stethoscope-standing-against-blue-background_662251-343.webp"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Lê Văn C</h5>
                         <p class="text-muted small">Quản lý kho dược</p>
@@ -147,7 +147,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/attractive-medical-professional-uniform-smiling-camera_23-2148235043.jpg"
+                        <img src="https://img.freepik.com/free-photo/attractive-medical-professional-uniform-smiling-camera_23-2148235043.webp"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Phạm Thị D</h5>
                         <p class="text-muted small">Chăm sóc khách hàng</p>

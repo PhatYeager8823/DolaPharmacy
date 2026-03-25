@@ -19,7 +19,7 @@
                     <div class="card-body p-4">
                         @if($coupons->isEmpty())
                             <div class="text-center py-5">
-                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/c0a4e76957a224a0.png" width="100" class="mb-3" style="opacity: 0.5">
+                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/c0a4e76957a224a0.webp" width="100" class="mb-3" style="opacity: 0.5">
                                 <p class="text-muted">Bạn chưa có mã giảm giá nào.</p>
                             </div>
                         @else
@@ -33,7 +33,7 @@
                                         {{-- Phần Trái: CHỨA ẢNH --}}
                                         <div class="voucher-left-img">
                                             {{-- Kiểm tra nếu có ảnh thì hiện ảnh, không thì hiện ảnh mặc định --}}
-                                            <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}"
+                                            <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}"
                                                 alt="{{ $coupon->code }}"
                                                 class="voucher-img-cover">
                                         </div>
@@ -71,7 +71,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 {{-- Nếu muốn hiện ảnh to trong modal thì bỏ comment dòng dưới --}}
-                                                {{-- <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}" class="w-100 px-3 mb-2" style="max-height: 200px; object-fit: contain;"> --}}
+                                                {{-- <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}" class="w-100 px-3 mb-2" style="max-height: 200px; object-fit: contain;"> --}}
                                                 <div class="modal-body pt-0 text-center">
                                                     <h3 class="text-primary fw-bold mb-1">{{ $coupon->code }}</h3>
                                                     <p class="text-muted small mb-4">

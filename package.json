@@ -19,6 +19,8 @@
         "@fortawesome/fontawesome-free": "^7.1.0",
         "@popperjs/core": "^2.11.8",
         "bootstrap": "^5.3.8",
+        "glob": "^13.0.6",
+        "sharp": "^0.34.5",
         "sweetalert2": "^11.26.3",
         "swiper": "^12.0.3"
     }

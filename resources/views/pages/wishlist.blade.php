@@ -41,7 +41,7 @@
                                     {{-- Ảnh sản phẩm --}}
                                     <div class="fp-image">
                                         <a href="{{ route('thuoc.show', $product->slug) }}">
-                                            <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
+                                            <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.webp') }}"
                                                  alt="{{ $product->ten_thuoc }}"
                                                  style="object-fit: contain; width: 100%; height: 100%;">
                                         </a>

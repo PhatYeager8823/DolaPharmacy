@@ -6,12 +6,12 @@
     <div class="contact-options" id="contactOptions">
         {{-- Nút Zalo --}}
         <a href="https://zalo.me/0919795426" target="_blank" class="contact-item zalo" title="Chat Zalo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.webp" alt="Zalo">
         </a>
 
         {{-- Nút Messenger --}}
         <a href="https://m.me/your.facebook.id" target="_blank" class="contact-item messenger" title="Chat Facebook">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Facebook_Messenger_logo_2020.svg/2048px-Facebook_Messenger_logo_2020.svg.png" alt="Messenger">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Facebook_Messenger_logo_2020.svg/2048px-Facebook_Messenger_logo_2020.svg.webp" alt="Messenger">
         </a>
 
         {{-- Nút Gọi điện --}}

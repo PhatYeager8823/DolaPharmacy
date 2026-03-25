@@ -6,7 +6,7 @@
         </button>
         <div class="promo-content">
             <a href="{{ route('thuoc.index') }}">
-                <img src="{{ asset('images/promos/banner_km.png') }}" alt="Promotional Banner" class="img-fluid rounded shadow-lg">
+                <img src="{{ asset('images/promos/banner_km.webp') }}" alt="Promotional Banner" class="img-fluid rounded shadow-lg">
             </a>
             <div class="promo-footer mt-3 text-center">
                 <a href="{{ route('thuoc.index') }}" class="btn btn-primary px-4 py-2 rounded-pill fw-bold glow-btn">

@@ -106,7 +106,7 @@
                     @if($global_setting->logo)
                         <img src="{{ asset('images/settings/' . $global_setting->logo) }}" alt="{{ $global_setting->ten_website }}">
                     @else
-                        <img src="{{ asset('images/logos/logo-nha-thuoc.png') }}" alt="Dola Pharmacy">
+                        <img src="{{ asset('images/logos/logo-nha-thuoc.webp') }}" alt="Dola Pharmacy">
                     @endif
                 </a>
 

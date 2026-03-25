@@ -58,7 +58,7 @@
                                             onclick="document.getElementById('avatarInput').click()">
                                         <i class="fa fa-camera me-1"></i> Cập nhật ảnh
                                     </button>
-                                    <div class="text-muted small mt-1" style="font-size: 12px;">Dung lượng tối đa 5 MB. Định dạng: .JPEG, .PNG</div>
+                                    <div class="text-muted small mt-1" style="font-size: 12px;">Dung lượng tối đa 5 MB. Định dạng: .webp, .webp</div>
                                 </div>
                             </div>
 

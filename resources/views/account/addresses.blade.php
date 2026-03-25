@@ -88,7 +88,7 @@
                             </div>
                         @else
                             <div class="text-center py-5">
-                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png" width="100" style="opacity: 0.5">
+                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.webp" width="100" style="opacity: 0.5">
                                 <p class="text-muted mt-3">Bạn chưa có địa chỉ nào.</p>
                             </div>
                         @endif

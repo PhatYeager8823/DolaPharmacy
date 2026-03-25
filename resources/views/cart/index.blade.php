@@ -41,7 +41,7 @@
                                 <div class="d-flex flex-wrap align-items-center p-3 border-bottom position-relative item-row">
                                     {{-- Ảnh & Tên --}}
                                     <div class="d-flex align-items-center" style="width: 100%; md:width: 45%; flex-basis: 45%; flex-grow: 1;">
-                                        <img src="{{ $item['image'] ? asset('images/images_san_pham/' . $item['image']) : asset('images/no-image.png') }}"
+                                        <img src="{{ $item['image'] ? asset('images/images_san_pham/' . $item['image']) : asset('images/no-image.webp') }}"
                                              class="rounded border" style="width: 70px; height: 70px; object-fit: cover;">
                                         <div class="ms-3">
                                             <a href="{{ route('thuoc.show', $item['slug']) }}" class="text-decoration-none text-dark fw-bold two-lines">
@@ -154,7 +154,7 @@
         @else
             {{-- GIỎ HÀNG TRỐNG --}}
             <div class="text-center py-5">
-                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/9bdd8040b334d31946f49e36beaf32db.png" width="150" class="mb-4 opacity-50">
+                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/9bdd8040b334d31946f49e36beaf32db.webp" width="150" class="mb-4 opacity-50">
                 <h5 class="text-muted">Giỏ hàng của bạn đang trống</h5>
                 <p class="text-secondary mb-4">Hãy dạo một vòng xem có gì ưng ý không nhé!</p>
                 <a href="{{ route('home') }}" class="btn btn-primary px-4 py-2 fw-bold">Mua sắm ngay</a>

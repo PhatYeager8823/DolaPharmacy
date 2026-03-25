@@ -39,7 +39,7 @@
                     <a href="{{ route('baiviet.show', $rel->slug) }}" class="list-group-item list-group-item-action d-flex gap-3 py-3 border-0">
                         {{-- Thêm 'news/' vào đường dẫn --}}
                         <img src="{{ asset('images/news/' . $rel->hinh_anh) }}" class="rounded" width="80" height="60" style="object-fit: cover;"
-                            onerror="this.src='{{ asset('images/no-image.png') }}'">
+                            onerror="this.src='{{ asset('images/no-image.webp') }}'">
                             <h6 class="mb-1 fw-bold text-dark small two-lines">{{ $rel->tieu_de }}</h6>
                             <small class="text-muted">{{ $rel->created_at->format('d/m') }}</small>
                         </div>
@@ -49,7 +49,7 @@
 
                 {{-- Banner quảng cáo thuốc ở đây thì tuyệt vời --}}
                 <div class="mt-4">
-                    <img src="{{ asset('images/banner_spm1.png') }}" class="img-fluid rounded w-100">
+                    <img src="{{ asset('images/banner_spm1.webp') }}" class="img-fluid rounded w-100">
                 </div>
             </div>
         </div>

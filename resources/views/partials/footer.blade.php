@@ -15,22 +15,22 @@
 
             {{-- Icon Zalo --}}
             <a href="{{ $global_setting->zalo ?? '#' }}" class="footer-social-icon">
-                <img src="{{ asset('images/icons/zalo.png') }}" alt="Zalo">
+                <img src="{{ asset('images/icons/zalo.webp') }}" alt="Zalo">
             </a>
 
             {{-- Icon Facebook --}}
             <a href="{{ $global_setting->facebook ?? '#' }}" class="footer-social-icon">
-                <img src="{{ asset('images/icons/facebook.png') }}" alt="Facebook">
+                <img src="{{ asset('images/icons/facebook.webp') }}" alt="Facebook">
             </a>
 
             {{-- Icon YouTube --}}
             <a href="{{ $global_setting->youtube ?? '#' }}" class="footer-social-icon">
-                <img src="{{ asset('images/icons/youtube.png') }}" alt="YouTube">
+                <img src="{{ asset('images/icons/youtube.webp') }}" alt="YouTube">
             </a>
 
             {{-- Icon Google --}}
             <a href="#" class="footer-social-icon">
-                <img src="{{ asset('images/icons/google.png') }}" alt="Google">
+                <img src="{{ asset('images/icons/google.webp') }}" alt="Google">
             </a>
         </div>
     </div>
@@ -110,10 +110,10 @@
 
                 <div class="footer-ecommerce d-flex gap-3">
                     {{-- Bạn tự thay link hình sau --}}
-                    <img src="{{ asset('images/icons/shopee.png') }}" class="footer-icon" alt="">
-                    <img src="{{ asset('images/icons/lazada.png') }}" class="footer-icon" alt="">
-                    <img src="{{ asset('images/icons/tiki.png') }}" class="footer-icon" alt="">
-                    <img src="{{ asset('images/icons/sendo.png') }}" class="footer-icon" alt="">
+                    <img src="{{ asset('images/icons/shopee.webp') }}" class="footer-icon" alt="">
+                    <img src="{{ asset('images/icons/lazada.webp') }}" class="footer-icon" alt="">
+                    <img src="{{ asset('images/icons/tiki.webp') }}" class="footer-icon" alt="">
+                    <img src="{{ asset('images/icons/sendo.webp') }}" class="footer-icon" alt="">
                 </div>
 
             </div>

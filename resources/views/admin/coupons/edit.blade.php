@@ -18,7 +18,7 @@
                 <label class="form-label text-uppercase small fw-bold text-muted">Hình ảnh Banner</label>
                 <div class="d-flex align-items-start align-items-sm-center gap-4">
                     {{-- Hiển thị ảnh cũ nếu có, không thì hiện ảnh no-image --}}
-                    <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}"
+                    <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}"
                          alt="coupon-img" class="d-block rounded" height="100" width="100" id="uploadedAvatar" style="object-fit: cover; border: 1px solid #d9dee3;" />
 
                     <div class="button-wrapper">

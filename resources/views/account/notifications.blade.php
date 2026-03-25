@@ -56,7 +56,7 @@
                             </div>
                         @empty
                             <div class="text-center py-5">
-                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/99e92f071e5d9dbbb16523d0c38738e9.png" width="100">
+                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/99e92f071e5d9dbbb16523d0c38738e9.webp" width="100">
                                 <p class="text-muted mt-3">Chưa có thông báo nào.</p>
                             </div>
                         @endforelse

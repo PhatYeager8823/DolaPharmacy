@@ -357,7 +357,7 @@
                     </div>
                     {{-- Banner quảng cáo nhỏ --}}
                     <a href="#">
-                         <img src="{{ asset('images/logos/Thuong-hieu.png') }}" class="img-fluid rounded w-100" alt="Banner">
+                         <img src="{{ asset('images/logos/Thuong-hieu.webp') }}" class="img-fluid rounded w-100" alt="Banner">
                     </a>
                 </div>
             </div>

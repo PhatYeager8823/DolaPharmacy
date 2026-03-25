@@ -27,7 +27,7 @@
                             @else
                                 {{-- Slide mặc định --}}
                                 <div class="swiper-slide">
-                                    <img src="{{ asset('images/slider1.png') }}"
+                                    <img src="{{ asset('images/slider1.webp') }}"
                                          class="d-block w-100 hero-img"
                                          alt="Default Slider">
                                 </div>
@@ -45,7 +45,7 @@
                     {{-- Banner nhỏ 1 --}}
                     <div class="hero-banner-small rounded overflow-hidden flex-grow-1">
                         <a href="#" class="h-100 d-block">
-                            <img src="{{ asset('images/banners/banner_hdtc.png') }}"
+                            <img src="{{ asset('images/banners/banner_hdtc.webp') }}"
                                  class="w-100 h-100"
                                  style="object-fit: cover; min-height: 190px;"
                                  alt="Banner 1">
@@ -54,7 +54,7 @@
                     {{-- Banner nhỏ 2 --}}
                     <div class="hero-banner-small rounded overflow-hidden flex-grow-1">
                         <a href="#" class="h-100 d-block">
-                            <img src="{{ asset('images/banners/banner_kt.png') }}"
+                            <img src="{{ asset('images/banners/banner_kt.webp') }}"
                                  class="w-100 h-100"
                                  style="object-fit: cover; min-height: 190px;"
                                  alt="Banner 2">
@@ -80,7 +80,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-vitamin-khoang-chat.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-vitamin-khoang-chat.webp') }}" alt="">
                                 </div>
                                 <div class="title">Vitamin &amp;<br>Khoáng Chất</div>
                             </a>
@@ -90,7 +90,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-u50.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-u50.webp') }}" alt="">
                                 </div>
                                 <div class="title">Vitamin<br>Cho U50+</div>
                             </a>
@@ -100,7 +100,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-me-bau.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-me-bau.webp') }}" alt="">
                                 </div>
                                 <div class="title">Vitamin Cho Mẹ</div>
                             </a>
@@ -110,7 +110,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-duong-trang-da.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-duong-trang-da.webp') }}" alt="">
                                 </div>
                                 <div class="title">Dưỡng Trắng Da</div>
                             </a>
@@ -120,7 +120,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-tpcn.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-tpcn.webp') }}" alt="">
                                 </div>
                                 <div class="title">Thực Phẩm<br>Chức Năng</div>
                             </a>
@@ -130,7 +130,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-tang-can.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-tang-can.webp') }}" alt="">
                                 </div>
                                 <div class="title">Tăng Cân</div>
                             </a>
@@ -140,7 +140,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-giam-can.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-giam-can.webp') }}" alt="">
                                 </div>
                                 <div class="title">Giảm Cân</div>
                             </a>
@@ -150,7 +150,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-qua-tang.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-qua-tang.webp') }}" alt="">
                                 </div>
                                 <div class="title">Quà Tặng<br>Sức Khỏe</div>
                             </a>
@@ -160,7 +160,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-thiet-bi-y-te.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-thiet-bi-y-te.webp') }}" alt="">
                                 </div>
                                 <div class="title">Thiết Bị Y Tế</div>
                             </a>
@@ -170,7 +170,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-khuyen-mai-hot.png') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-khuyen-mai-hot.webp') }}" alt="">
                                 </div>
                                 <div class="title">Khuyến mãi hot</div>
                             </a>
@@ -288,13 +288,13 @@
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banners/banner_spm1.png') }}" alt="Banner 1">
+                            <img src="{{ asset('images/banners/banner_spm1.webp') }}" alt="Banner 1">
                         </a>
                     </div>
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banners/banner_spm2.png') }}" alt="Banner 2">
+                            <img src="{{ asset('images/banners/banner_spm2.webp') }}" alt="Banner 2">
                         </a>
                     </div>
 
@@ -316,7 +316,7 @@
                 {{-- Banner lớn bên trái (Giữ nguyên) --}}
                 <div class="col-12 col-lg-3 shine-effect">
                     <a href="#" class="featured-banner-card">
-                        <img src="{{ asset('images/banners/banner_spnb1.png') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                        <img src="{{ asset('images/banners/banner_spnb1.webp') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                     </a>
                 </div>
 
@@ -358,7 +358,7 @@
                 {{-- Ảnh bên trái --}}
                 <div class="col-12 col-lg-5 d-flex">
                     <div class="about-image-card shine-effect flex-fill">
-                        <img src="{{ asset('images/banners/gioithieu_doctor.png') }}" alt="Giới thiệu Dola Pharmacy">
+                        <img src="{{ asset('images/banners/gioithieu_doctor.webp') }}" alt="Giới thiệu Dola Pharmacy">
                     </div>
                 </div>
 
@@ -484,10 +484,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/tranhxabenhtat.png') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/tranhxabenhtat.webp') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/uudaidocquyen.png') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/uudaidocquyen.webp') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                 </div>
@@ -539,10 +539,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/lamsachlanda.png') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/lamsachlanda.webp') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/xithongkeoong.png') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/xithongkeoong.webp') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                 </div>
@@ -600,7 +600,7 @@
                                         {{-- Ảnh bài viết --}}
                                         <img src="{{ asset('images/news/' . $blog->hinh_anh) }}"
                                             alt="{{ $blog->tieu_de }}"
-                                            onerror="this.src='{{ asset('images/no-image.png') }}'">
+                                            onerror="this.src='{{ asset('images/no-image.webp') }}'">
                                     </a>
                                     <div class="blog-main-body">
                                         <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-main-heading">
@@ -637,7 +637,7 @@
                                 <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-side-thumb">
                                     <img src="{{ asset('images/news/' . $blog->hinh_anh) }}"
                                         alt="{{ $blog->tieu_de }}"
-                                        onerror="this.src='{{ asset('images/no-image.png') }}'">
+                                        onerror="this.src='{{ asset('images/no-image.webp') }}'">
                                 </a>
                                 <div class="blog-side-body">
                                     <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-side-heading">
@@ -729,7 +729,7 @@
                 <div class="col-12 col-md-3 d-flex">
                     <div class="policy-item d-flex">
                         <div class="policy-icon">
-                            <img src="{{ asset('images/icons/free-ship.png') }}" alt="">
+                            <img src="{{ asset('images/icons/free-ship.webp') }}" alt="">
                         </div>
                         <div class="policy-text">
                             <h4>Miễn phí vận chuyển</h4>
@@ -742,7 +742,7 @@
                 <div class="col-12 col-md-3 d-flex">
                     <div class="policy-item d-flex">
                         <div class="policy-icon">
-                            <img src="{{ asset('images/icons/return.png') }}" alt="">
+                            <img src="{{ asset('images/icons/return.webp') }}" alt="">
                         </div>
                         <div class="policy-text">
                             <h4>Miễn phí đổi – trả</h4>
@@ -755,7 +755,7 @@
                 <div class="col-12 col-md-3 d-flex">
                     <div class="policy-item d-flex">
                         <div class="policy-icon">
-                            <img src="{{ asset('images/icons/support.png') }}" alt="">
+                            <img src="{{ asset('images/icons/support.webp') }}" alt="">
                         </div>
                         <div class="policy-text">
                             <h4>Hỗ trợ nhanh chóng</h4>
@@ -768,7 +768,7 @@
                 <div class="col-12 col-md-3 d-flex">
                     <div class="policy-item d-flex">
                         <div class="policy-icon">
-                            <img src="{{ asset('images/icons/member.png') }}" alt="">
+                            <img src="{{ asset('images/icons/member.webp') }}" alt="">
                         </div>
                         <div class="policy-text">
                             <h4>Ưu đãi thành viên</h4>

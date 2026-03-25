@@ -99,7 +99,7 @@
                     @endforeach
                 @else
                     <div class="text-center py-5 bg-white rounded shadow-sm">
-                        <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/orderlist/5fafbb923393b712b96488590b8f781f.png" width="100" style="opacity: 0.5">
+                        <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/orderlist/5fafbb923393b712b96488590b8f781f.webp" width="100" style="opacity: 0.5">
                         <p class="mt-3 text-muted">Bạn chưa có đơn hàng nào.</p>
                         <a href="{{ route('thuoc.index') }}" class="btn btn-primary px-4">Mua sắm ngay</a>
                     </div>

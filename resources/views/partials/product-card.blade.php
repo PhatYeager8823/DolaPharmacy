@@ -26,9 +26,9 @@
         {{-- ẢNH SẢN PHẨM (CHIỀU CAO CỐ ĐỊNH) --}}
         <div class="fp-image">
             <a href="{{ route('thuoc.show', $product->slug) }}" class="d-block w-100 h-100">
-                <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
+                <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.webp') }}"
                      alt="{{ $product->ten_thuoc }}"
-                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';">
+                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.webp') }}';">
             </a>
         </div>
 
