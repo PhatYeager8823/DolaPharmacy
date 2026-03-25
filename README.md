@@ -51,12 +51,22 @@
    php artisan migrate --seed
    ```
 
-5. **Chạy ứng dụng:**
+### 🐳 Chạy bằng Docker (Khuyên dùng khi chuyển máy)
+
+Nếu bạn đã cài đặt Docker, bạn có thể chạy dự án nhanh chóng mà không cần cài đặt PHP/MySQL trên máy:
+
+1. **Chuẩn bị file `.env`:**
    ```bash
-   npm run dev
-   # Và ở một terminal khác:
-   php artisan serve
+   cp .env.example .env
    ```
+2. **Khởi chạy bằng Docker Compose:**
+   ```bash
+   docker compose up -d --build
+   ```
+3. **Truy cập:**
+   Ứng dụng sẽ chạy tại: [http://localhost:8000](http://localhost:8000)
+
+*Lưu ý: Dữ liệu database sẽ được lưu trữ an toàn trong Docker Volume `db_data`.*
 
 ## 📝 Giấy phép
 Dự án được phát triển nhằm mục đích học tập/đồ án.

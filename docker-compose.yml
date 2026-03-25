@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nhathuoc-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./public/images:/var/www/html/public/images
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=nhathuoc
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+    networks:
+      - nhathuoc-network
+
+  db:
+    image: mysql:8.0
+    container_name: nhathuoc-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: nhathuoc
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "33066:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p", "rootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nhathuoc-network
+
+networks:
+  nhathuoc-network:
+    driver: bridge
+
+volumes:
+  db_data:

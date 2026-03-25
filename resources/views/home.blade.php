@@ -45,7 +45,7 @@
                     {{-- Banner nhỏ 1 --}}
                     <div class="hero-banner-small rounded overflow-hidden flex-grow-1">
                         <a href="#" class="h-100 d-block">
-                            <img src="{{ asset('images/banner_hdtc.png') }}"
+                            <img src="{{ asset('images/banners/banner_hdtc.png') }}"
                                  class="w-100 h-100"
                                  style="object-fit: cover; min-height: 190px;"
                                  alt="Banner 1">
@@ -54,7 +54,7 @@
                     {{-- Banner nhỏ 2 --}}
                     <div class="hero-banner-small rounded overflow-hidden flex-grow-1">
                         <a href="#" class="h-100 d-block">
-                            <img src="{{ asset('images/banner_kt.png') }}"
+                            <img src="{{ asset('images/banners/banner_kt.png') }}"
                                  class="w-100 h-100"
                                  style="object-fit: cover; min-height: 190px;"
                                  alt="Banner 2">
@@ -288,13 +288,13 @@
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banner_spm1.png') }}" alt="Banner 1">
+                            <img src="{{ asset('images/banners/banner_spm1.png') }}" alt="Banner 1">
                         </a>
                     </div>
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banner_spm2.png') }}" alt="Banner 2">
+                            <img src="{{ asset('images/banners/banner_spm2.png') }}" alt="Banner 2">
                         </a>
                     </div>
 
@@ -316,7 +316,7 @@
                 {{-- Banner lớn bên trái (Giữ nguyên) --}}
                 <div class="col-12 col-lg-3 shine-effect">
                     <a href="#" class="featured-banner-card">
-                        <img src="{{ asset('images/banner_spnb1.png') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                        <img src="{{ asset('images/banners/banner_spnb1.png') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                     </a>
                 </div>
 
@@ -358,7 +358,7 @@
                 {{-- Ảnh bên trái --}}
                 <div class="col-12 col-lg-5 d-flex">
                     <div class="about-image-card shine-effect flex-fill">
-                        <img src="{{ asset('images/gioithieu_doctor.png') }}" alt="Giới thiệu Dola Pharmacy">
+                        <img src="{{ asset('images/banners/gioithieu_doctor.png') }}" alt="Giới thiệu Dola Pharmacy">
                     </div>
                 </div>
 
@@ -484,10 +484,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/tranhxabenhtat.png') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/tranhxabenhtat.png') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/uudaidocquyen.png') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/uudaidocquyen.png') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                 </div>
@@ -539,10 +539,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/lamsachlanda.png') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/lamsachlanda.png') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/xithongkeoong.png') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/xithongkeoong.png') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                 </div>

@@ -15,22 +15,22 @@
 
             {{-- Icon Zalo --}}
             <a href="{{ $global_setting->zalo ?? '#' }}" class="footer-social-icon">
-                <img src="/images/icons/zalo.png" alt="Zalo">
+                <img src="{{ asset('images/icons/zalo.png') }}" alt="Zalo">
             </a>
 
             {{-- Icon Facebook --}}
             <a href="{{ $global_setting->facebook ?? '#' }}" class="footer-social-icon">
-                <img src="/images/icons/facebook.png" alt="Facebook">
+                <img src="{{ asset('images/icons/facebook.png') }}" alt="Facebook">
             </a>
 
             {{-- Icon YouTube --}}
             <a href="{{ $global_setting->youtube ?? '#' }}" class="footer-social-icon">
-                <img src="/images/icons/youtube.png" alt="YouTube">
+                <img src="{{ asset('images/icons/youtube.png') }}" alt="YouTube">
             </a>
 
             {{-- Icon Google --}}
             <a href="#" class="footer-social-icon">
-                <img src="/images/icons/google.png" alt="Google">
+                <img src="{{ asset('images/icons/google.png') }}" alt="Google">
             </a>
         </div>
     </div>

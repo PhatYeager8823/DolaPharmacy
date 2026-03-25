@@ -6,7 +6,7 @@
     <a href="{{ route('admin.dashboard') }}" class="app-brand-link">
 
       {{-- 3. Chỉ giữ lại thẻ IMG và set kích thước to lên --}}
-      <img src="{{ asset('images/logo.png') }}"
+      <img src="{{ asset('images/logos/logo.png') }}"
            alt="Dola Pharmacy"
            style="width: 170px; height: auto; object-fit: contain;">
            {{-- width: 170px là kích thước chuẩn đẹp cho sidebar --}}
