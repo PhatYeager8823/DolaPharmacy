@@ -33,13 +33,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Men vi sinh Enterogermina (Pháp)', 'slug' => 'enterogermina', 'ma_san_pham' => 'TH001',
                 'gia_ban' => 160000, 'gia_cu' => 180000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['tieu-hoa-gan-mat'] ?? 1,
-                'is_new' => 0, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'enterogermina.png'
+                'is_new' => 0, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'enterogermina.webp'
             ],
             [
                 'ten_thuoc' => 'Thuốc dạ dày Nexium 40mg', 'slug' => 'nexium-40mg', 'ma_san_pham' => 'TH-RX-01',
                 'gia_ban' => 350000, 'gia_cu' => null, 'ke_don' => 1, // Kê đơn
                 'danh_muc_id' => $cats['tieu-hoa-gan-mat'] ?? 1,
-                'hinh_anh' => 'nexium.png'
+                'hinh_anh' => 'nexium.webp'
             ],
 
             // 2. Thuốc thần kinh, Não bộ
@@ -47,13 +47,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Hoạt huyết dưỡng não Traphaco', 'slug' => 'hoat-huyet-duong-nao', 'ma_san_pham' => 'TK001',
                 'gia_ban' => 95000, 'gia_cu' => 105000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['than-kinh-nao-bo'] ?? 1,
-                'is_suggested' => 1, 'hinh_anh' => 'hoat-huyet.png'
+                'is_suggested' => 1, 'hinh_anh' => 'hoat-huyet.webp'
             ],
             [
                 'ten_thuoc' => 'Stilux-60 (Rotunda) - An thần', 'slug' => 'stilux-60', 'ma_san_pham' => 'TK002',
                 'gia_ban' => 45000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['than-kinh-nao-bo'] ?? 1,
-                'hinh_anh' => 'stilux.png'
+                'hinh_anh' => 'stilux.webp'
             ],
 
             // 3. Thuốc cơ xương khớp, Gout
@@ -61,13 +61,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Salonpas (Hộp 20 miếng)', 'slug' => 'salonpas', 'ma_san_pham' => 'XK001',
                 'gia_ban' => 30000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['co-xuong-khop-gout'] ?? 1,
-                'is_new' => 0, 'is_suggested' => 1, 'hinh_anh' => 'salonpas.png'
+                'is_new' => 0, 'is_suggested' => 1, 'hinh_anh' => 'salonpas.webp'
             ],
             [
                 'ten_thuoc' => 'Celebrex 200mg (Giảm đau khớp)', 'slug' => 'celebrex-200', 'ma_san_pham' => 'XK-RX-01',
                 'gia_ban' => 380000, 'gia_cu' => null, 'ke_don' => 1, // Kê đơn
                 'danh_muc_id' => $cats['co-xuong-khop-gout'] ?? 1,
-                'hinh_anh' => 'celebrex.png'
+                'hinh_anh' => 'celebrex.webp'
             ],
 
             // 4. Thuốc tim mạch, Huyết áp
@@ -75,13 +75,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Concor 5mg (Bisoprolol)', 'slug' => 'concor-5mg', 'ma_san_pham' => 'TM-RX-01',
                 'gia_ban' => 120000, 'gia_cu' => null, 'ke_don' => 1,
                 'danh_muc_id' => $cats['tim-mach-huyet-ap'] ?? 1,
-                'hinh_anh' => 'concor.png'
+                'hinh_anh' => 'concor.webp'
             ],
             [
                 'ten_thuoc' => 'Amlodipin 5mg (Huyết áp)', 'slug' => 'amlodipin-5mg', 'ma_san_pham' => 'TM-RX-02',
                 'gia_ban' => 35000, 'gia_cu' => null, 'ke_don' => 1,
                 'danh_muc_id' => $cats['tim-mach-huyet-ap'] ?? 1,
-                'hinh_anh' => 'amlodipin.png'
+                'hinh_anh' => 'amlodipin.webp'
             ],
 
             // 5. Thuốc giảm đau, Hạ sốt
@@ -89,13 +89,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Panadol Extra (Đỏ)', 'slug' => 'panadol-extra', 'ma_san_pham' => 'GD001',
                 'gia_ban' => 180000, 'gia_cu' => 210000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['giam-dau-ha-sot'] ?? 1,
-                'is_new' => 1, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'panadol-extra.png'
+                'is_new' => 1, 'thuoc_uu_tien' => 1, 'hinh_anh' => 'panadol-extra.webp'
             ],
             [
                 'ten_thuoc' => 'Efferalgan 500mg Sủi', 'slug' => 'efferalgan-500mg', 'ma_san_pham' => 'GD002',
                 'gia_ban' => 85000, 'gia_cu' => 90000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['giam-dau-ha-sot'] ?? 1,
-                'hinh_anh' => 'efferalgan.png'
+                'hinh_anh' => 'efferalgan.webp'
             ],
 
             // 6. Hô hấp, Ho, Cảm cúm
@@ -103,13 +103,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Siro Ho Prospan Đức 100ml', 'slug' => 'siro-ho-prospan', 'ma_san_pham' => 'HH001',
                 'gia_ban' => 85000, 'gia_cu' => 95000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['ho-hap-cam-cum'] ?? 1,
-                'is_new' => 1, 'hinh_anh' => 'prospan.png'
+                'is_new' => 1, 'hinh_anh' => 'prospan.webp'
             ],
             [
                 'ten_thuoc' => 'Augmentin 625mg (Kháng sinh)', 'slug' => 'augmentin-625mg', 'ma_san_pham' => 'HH-RX-01',
                 'gia_ban' => 210000, 'gia_cu' => null, 'ke_don' => 1, // Kê đơn
                 'danh_muc_id' => $cats['ho-hap-cam-cum'] ?? 1,
-                'hinh_anh' => 'augmentin.png'
+                'hinh_anh' => 'augmentin.webp'
             ],
 
             // 7. Da liễu, Dị ứng
@@ -117,13 +117,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Kem bôi da 7 màu Silkron', 'slug' => 'silkron', 'ma_san_pham' => 'DL001',
                 'gia_ban' => 15000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['da-lieu-di-ung'] ?? 1,
-                'hinh_anh' => 'silkron.png'
+                'hinh_anh' => 'silkron.webp'
             ],
             [
                 'ten_thuoc' => 'Fucidin H (Viêm da)', 'slug' => 'fucidin-h', 'ma_san_pham' => 'DL-RX-02',
                 'gia_ban' => 95000, 'gia_cu' => null, 'ke_don' => 1,
                 'danh_muc_id' => $cats['da-lieu-di-ung'] ?? 1,
-                'hinh_anh' => 'fucidin.png'
+                'hinh_anh' => 'fucidin.webp'
             ],
 
             // 8. Mắt - Tai - Mũi - Họng
@@ -131,13 +131,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Nước muối sinh lý Vshine', 'slug' => 'nuoc-muoi-vshine', 'ma_san_pham' => 'TMH001',
                 'gia_ban' => 5000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['mat-tai-mui-hong'] ?? 1,
-                'hinh_anh' => 'nuoc-muoi.png'
+                'hinh_anh' => 'nuoc-muoi.webp'
             ],
             [
                 'ten_thuoc' => 'Thuốc nhỏ mắt V.Rohto', 'slug' => 'v-rohto', 'ma_san_pham' => 'TMH002',
                 'gia_ban' => 48000, 'gia_cu' => 55000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['mat-tai-mui-hong'] ?? 1,
-                'hinh_anh' => 'rohto.png'
+                'hinh_anh' => 'rohto.webp'
             ],
 
             // 9. Dầu gió, Cao xoa
@@ -145,13 +145,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Dầu gió xanh Thiên Thảo', 'slug' => 'dau-gio-thien-thao', 'ma_san_pham' => 'DG001',
                 'gia_ban' => 12000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dau-gio-cao-xoa'] ?? 1,
-                'hinh_anh' => 'dau-gio.png'
+                'hinh_anh' => 'dau-gio.webp'
             ],
             [
                 'ten_thuoc' => 'Cao sao vàng (Hộp thiếc)', 'slug' => 'cao-sao-vang', 'ma_san_pham' => 'DG002',
                 'gia_ban' => 8000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dau-gio-cao-xoa'] ?? 1,
-                'hinh_anh' => 'cao-sao-vang.png'
+                'hinh_anh' => 'cao-sao-vang.webp'
             ],
 
             // =========================================================
@@ -163,13 +163,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Enervon C (Lọ 100 viên)', 'slug' => 'enervon-c', 'ma_san_pham' => 'VT001',
                 'gia_ban' => 220000, 'gia_cu' => 250000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['vitamin-khoang-chat'] ?? 2,
-                'thuoc_uu_tien' => 1, 'hinh_anh' => 'enervon.png'
+                'thuoc_uu_tien' => 1, 'hinh_anh' => 'enervon.webp'
             ],
             [
                 'ten_thuoc' => 'Vitamin E Enat 400', 'slug' => 'enat-400', 'ma_san_pham' => 'VT005',
                 'gia_ban' => 110000, 'gia_cu' => 130000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['vitamin-khoang-chat'] ?? 2,
-                'hinh_anh' => 'enat400.png'
+                'hinh_anh' => 'enat400.webp'
             ],
 
             // 11. Hỗ trợ làm đẹp
@@ -177,13 +177,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Collagen Youtheory Mỹ (390 viên)', 'slug' => 'collagen-youtheory', 'ma_san_pham' => 'LD001',
                 'gia_ban' => 550000, 'gia_cu' => 650000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['ho-tro-lam-dep'] ?? 2,
-                'is_new' => 1, 'hinh_anh' => 'collagen.png'
+                'is_new' => 1, 'hinh_anh' => 'collagen.webp'
             ],
             [
                 'ten_thuoc' => 'Sữa ong chúa Healthy Care', 'slug' => 'sua-ong-chua', 'ma_san_pham' => 'LD004',
                 'gia_ban' => 450000, 'gia_cu' => 500000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['ho-tro-lam-dep'] ?? 2,
-                'hinh_anh' => 'sua-ong-chua.png'
+                'hinh_anh' => 'sua-ong-chua.webp'
             ],
 
             // 12. Sức khỏe tim mạch
@@ -191,13 +191,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Viên uống CoQ10 150mg', 'slug' => 'coq10', 'ma_san_pham' => 'TPCN-TM01',
                 'gia_ban' => 550000, 'gia_cu' => 600000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['suc-khoe-tim-mach'] ?? 2,
-                'hinh_anh' => 'coq10.png'
+                'hinh_anh' => 'coq10.webp'
             ],
             [
                 'ten_thuoc' => 'Dầu cá Omega 3-6-9', 'slug' => 'omega-369', 'ma_san_pham' => 'TPCN-TM02',
                 'gia_ban' => 250000, 'gia_cu' => 300000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['suc-khoe-tim-mach'] ?? 2,
-                'hinh_anh' => 'omega369.png'
+                'hinh_anh' => 'omega369.webp'
             ],
 
             // 13. Dinh dưỡng & Mẹ bé
@@ -205,13 +205,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Sữa bột PediaSure 850g', 'slug' => 'pediasure-850', 'ma_san_pham' => 'MB001',
                 'gia_ban' => 650000, 'gia_cu' => 680000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dinh-duong-me-be'] ?? 2,
-                'is_new' => 1, 'hinh_anh' => 'pediasure.png'
+                'is_new' => 1, 'hinh_anh' => 'pediasure.webp'
             ],
             [
                 'ten_thuoc' => 'Vitamin bầu Elevit', 'slug' => 'elevit-bau', 'ma_san_pham' => 'MB004',
                 'gia_ban' => 1150000, 'gia_cu' => 1250000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dinh-duong-me-be'] ?? 2,
-                'is_exclusive' => 1, 'hinh_anh' => 'elevit.png'
+                'is_exclusive' => 1, 'hinh_anh' => 'elevit.webp'
             ],
 
             // =========================================================
@@ -223,13 +223,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Máy đo huyết áp Omron HEM-8712', 'slug' => 'may-do-huyet-ap-omron', 'ma_san_pham' => 'TB001',
                 'gia_ban' => 750000, 'gia_cu' => 890000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['may-do-y-te'] ?? 3,
-                'is_suggested' => 1, 'hinh_anh' => 'omron.png'
+                'is_suggested' => 1, 'hinh_anh' => 'omron.webp'
             ],
             [
                 'ten_thuoc' => 'Máy đo đường huyết Accu-Chek', 'slug' => 'accu-chek', 'ma_san_pham' => 'TB002',
                 'gia_ban' => 1200000, 'gia_cu' => 1350000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['may-do-y-te'] ?? 3,
-                'hinh_anh' => 'accu-chek.png'
+                'hinh_anh' => 'accu-chek.webp'
             ],
 
             // 15. Nhiệt kế
@@ -237,13 +237,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Nhiệt kế điện tử Microlife', 'slug' => 'nhiet-ke-microlife', 'ma_san_pham' => 'TB003',
                 'gia_ban' => 85000, 'gia_cu' => 100000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['nhiet-ke'] ?? 3,
-                'hinh_anh' => 'nhiet-ke.png'
+                'hinh_anh' => 'nhiet-ke.webp'
             ],
             [
                 'ten_thuoc' => 'Nhiệt kế hồng ngoại Omron', 'slug' => 'nhiet-ke-hong-ngoai', 'ma_san_pham' => 'TB004',
                 'gia_ban' => 650000, 'gia_cu' => 700000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['nhiet-ke'] ?? 3,
-                'hinh_anh' => 'nhiet-ke-hong-ngoai.png'
+                'hinh_anh' => 'nhiet-ke-hong-ngoai.webp'
             ],
 
             // 16. Khẩu trang y tế
@@ -251,13 +251,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Khẩu trang y tế 4 lớp (Hộp 50 cái)', 'slug' => 'khau-trang-4-lop', 'ma_san_pham' => 'TB005',
                 'gia_ban' => 35000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['khau-trang-y-te'] ?? 3,
-                'hinh_anh' => 'khau-trang.png'
+                'hinh_anh' => 'khau-trang.webp'
             ],
             [
                 'ten_thuoc' => 'Khẩu trang 4D Mask (Hộp 10 cái)', 'slug' => 'khau-trang-4d', 'ma_san_pham' => 'TB006',
                 'gia_ban' => 20000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['khau-trang-y-te'] ?? 3,
-                'hinh_anh' => 'khau-trang-4d.png'
+                'hinh_anh' => 'khau-trang-4d.webp'
             ],
 
             // 17. Dụng cụ sơ cứu
@@ -265,13 +265,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Băng cá nhân Urgo (Hộp 100 miếng)', 'slug' => 'bang-ca-nhan-urgo', 'ma_san_pham' => 'TB007',
                 'gia_ban' => 45000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dung-cu-so-cuu'] ?? 3,
-                'hinh_anh' => 'urgo.png'
+                'hinh_anh' => 'urgo.webp'
             ],
             [
                 'ten_thuoc' => 'Bông y tế Bạch Tuyết 1kg', 'slug' => 'bong-bach-tuyet', 'ma_san_pham' => 'TB008',
                 'gia_ban' => 120000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['dung-cu-so-cuu'] ?? 3,
-                'hinh_anh' => 'bong-y-te.png'
+                'hinh_anh' => 'bong-y-te.webp'
             ],
 
             // =========================================================
@@ -283,13 +283,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Sữa tắm Cetaphil 500ml', 'slug' => 'cetaphil-500', 'ma_san_pham' => 'MP001',
                 'gia_ban' => 350000, 'gia_cu' => 390000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-co-the'] ?? 4,
-                'is_new' => 1, 'hinh_anh' => 'cetaphil.png'
+                'is_new' => 1, 'hinh_anh' => 'cetaphil.webp'
             ],
             [
                 'ten_thuoc' => 'Lăn khử mùi Nivea', 'slug' => 'lan-khu-mui-nivea', 'ma_san_pham' => 'MP002',
                 'gia_ban' => 65000, 'gia_cu' => 75000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-co-the'] ?? 4,
-                'hinh_anh' => 'nivea.png'
+                'hinh_anh' => 'nivea.webp'
             ],
 
             // 19. Chăm sóc da mặt
@@ -297,13 +297,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Kem chống nắng Anessa', 'slug' => 'anessa-milk', 'ma_san_pham' => 'MP003',
                 'gia_ban' => 450000, 'gia_cu' => 500000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-da-mat'] ?? 4,
-                'thuoc_uu_tien' => 1, 'hinh_anh' => 'anessa.png'
+                'thuoc_uu_tien' => 1, 'hinh_anh' => 'anessa.webp'
             ],
             [
                 'ten_thuoc' => 'Bông tẩy trang Silcot', 'slug' => 'bong-tay-trang-silcot', 'ma_san_pham' => 'MP004',
                 'gia_ban' => 35000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-da-mat'] ?? 4,
-                'hinh_anh' => 'silcot.png'
+                'hinh_anh' => 'silcot.webp'
             ],
 
             // 20. Vệ sinh phụ nữ
@@ -311,13 +311,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Dung dịch vệ sinh Dạ Hương', 'slug' => 'da-huong', 'ma_san_pham' => 'MP005',
                 'gia_ban' => 25000, 'gia_cu' => null, 'ke_don' => 0,
                 'danh_muc_id' => $cats['ve-sinh-phu-nu'] ?? 4,
-                'hinh_anh' => 'dahuong.png'
+                'hinh_anh' => 'dahuong.webp'
             ],
             [
                 'ten_thuoc' => 'Dung dịch Lactacyd 250ml', 'slug' => 'lactacyd', 'ma_san_pham' => 'MP006',
                 'gia_ban' => 65000, 'gia_cu' => 72000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['ve-sinh-phu-nu'] ?? 4,
-                'hinh_anh' => 'lactacyd.png'
+                'hinh_anh' => 'lactacyd.webp'
             ],
 
             // 21. Chăm sóc răng miệng
@@ -325,13 +325,13 @@ class ThuocSeeder extends Seeder
                 'ten_thuoc' => 'Nước súc miệng Listerine', 'slug' => 'listerine', 'ma_san_pham' => 'MP007',
                 'gia_ban' => 85000, 'gia_cu' => 95000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-rang-mieng'] ?? 4,
-                'hinh_anh' => 'listerine.png'
+                'hinh_anh' => 'listerine.webp'
             ],
             [
                 'ten_thuoc' => 'Kem đánh răng Sensodyne', 'slug' => 'sensodyne', 'ma_san_pham' => 'MP008',
                 'gia_ban' => 55000, 'gia_cu' => 60000, 'ke_don' => 0,
                 'danh_muc_id' => $cats['cham-soc-rang-mieng'] ?? 4,
-                'hinh_anh' => 'sensodyne.png'
+                'hinh_anh' => 'sensodyne.webp'
             ],
         ];
 
