@@ -13,6 +13,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('brand_back_url', request()->fullUrl());
         return view('admin.brands.index', compact('brands'));
     }
 
@@ -46,7 +47,8 @@ class BrandController extends Controller
     public function edit(string $id)
     {
         $brand = Brand::findOrFail($id);
-        return view('admin.brands.edit', compact('brand'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('brand_back_url', route('admin.brands.index'));
+        return view('admin.brands.edit', compact('brand', 'backUrl'));
     }
 
     // 5. Cập nhật
@@ -64,7 +66,8 @@ class BrandController extends Controller
             'xuat_xu' => $request->xuat_xu,
         ]);
 
-        return redirect()->route('admin.brands.index')->with('success', 'Cập nhật thành công!');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('brand_back_url', route('admin.brands.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật thành công!');
     }
 
     // 6. Xóa

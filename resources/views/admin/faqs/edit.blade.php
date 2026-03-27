@@ -11,6 +11,7 @@
             <form action="{{ route('admin.faqs.update', $faq->id) }}" method="POST">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="redirect_url" value="{{ $backUrl }}">
 
                 {{-- Câu hỏi --}}
                 <div class="mb-3">
@@ -35,7 +36,7 @@
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
-                    <a href="{{ route('admin.faqs.index') }}" class="btn btn-outline-secondary">Hủy</a>
+                    <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Hủy</a>
                 </div>
             </form>
         </div>

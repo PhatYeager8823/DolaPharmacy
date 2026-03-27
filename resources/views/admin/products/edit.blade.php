@@ -132,9 +132,13 @@
                             <input class="form-check-input" type="checkbox" name="is_exclusive" value="1" {{ $product->is_exclusive ? 'checked' : '' }}>
                             <label class="form-check-label text-warning">Ưu đãi độc quyền</label>
                         </div>
-                        <div class="form-check form-switch">
+                        <div class="form-check form-switch mb-2">
                             <input class="form-check-input" type="checkbox" name="is_suggested" value="1" {{ $product->is_suggested ? 'checked' : '' }}>
                             <label class="form-check-label text-secondary">Gợi ý hôm nay</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_hot_deal" value="1" {{ $product->is_hot_deal ? 'checked' : '' }}>
+                            <label class="form-check-label text-danger fw-bold">Khuyến mãi hấp dẫn (Hot Deal)</label>
                         </div>
                     </div>
                 </div>

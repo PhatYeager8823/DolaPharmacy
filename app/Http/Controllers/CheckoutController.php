@@ -32,7 +32,7 @@ class CheckoutController extends Controller
         if ($user) {
             $gioHang = GioHang::where('nguoi_dung_id', $user->id)->first();
             if ($gioHang) {
-                $dbItems = $gioHang->chiTiets()->with('thuoc')->get();
+                $dbItems = $gioHang->chiTiets()->where('trang_thai', 0)->with('thuoc')->get();
                 foreach ($dbItems as $item) {
                     if ($item->thuoc) {
                         $cartItems[] = [
@@ -154,7 +154,7 @@ class CheckoutController extends Controller
             if (Auth::check()) {
                 $gh = GioHang::where('nguoi_dung_id', Auth::id())->first();
                 if ($gh) {
-                    foreach ($gh->chiTiets as $ct) {
+                    foreach ($gh->chiTiets()->where('trang_thai', 0)->get() as $ct) {
                          $finalCartItems[] = [
                             'thuoc_id'  => $ct->thuoc_id,
                             'ten_thuoc' => $ct->thuoc->ten_thuoc,
@@ -269,7 +269,7 @@ class CheckoutController extends Controller
                      TonKho::create([
                         'thuoc_id' => $item['thuoc_id'],
                         'so_luong_thay_doi' => -($item['so_luong']),
-                        'loai_giao_dich' => 'xuat_ban_hang',
+                        'loai_giao_dich' => 'xuat',
                         'gia_nhap' => 0,
                         'ghi_chu' => "Bán hàng đơn #" . $order->ma_don_hang
                     ]);
@@ -318,10 +318,15 @@ class CheckoutController extends Controller
                 session()->forget('coupon');
             }
 
-            // Xóa giỏ hàng
-            session()->forget('cart');
+            // Xóa/Cập nhật trạng thái giỏ hàng sau khi đặt thành công
+            session()->forget('cart'); // Xóa session cho cả khách và user (để tránh trùng)
+
             if($user) {
-                 GioHang::where('nguoi_dung_id', $user->id)->first()?->chiTiets()->delete();
+                 // Với User: Chuyển sang trạng thái "Đã đặt" (trang_thai = 1) thay vì xóa hẳn
+                 $gioHang = \App\Models\GioHang::where('nguoi_dung_id', $user->id)->first();
+                 if ($gioHang) {
+                     $gioHang->chiTiets()->where('trang_thai', 0)->update(['trang_thai' => 1]);
+                 }
             }
 
             DB::commit(); // === LƯU THÀNH CÔNG ===
@@ -339,7 +344,7 @@ class CheckoutController extends Controller
                  $order->save();
             }
 
-            return redirect()->route('checkout.success', ['order' => $order->id])
+            return redirect()->route('checkout.success', ['id' => $order->id])
                              ->with('success', 'Bạn đã đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();

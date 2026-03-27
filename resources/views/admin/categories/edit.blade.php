@@ -15,6 +15,7 @@
                     <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
                         @csrf
                         @method('PUT') {{-- Quan trọng để gửi PUT request --}}
+                        <input type="hidden" name="redirect_url" value="{{ $backUrl }}">
 
                         {{-- Tên danh mục --}}
                         <div class="mb-3">
@@ -39,7 +40,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
-                        <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">Hủy</a>
+                        <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Hủy</a>
                     </form>
                 </div>
             </div>

@@ -110,9 +110,10 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('CẢNH BÁO: Xóa khách hàng sẽ mất toàn bộ lịch sử đơn hàng. Bạn có chắc chắn không?');">
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-icon btn-label-danger" title="Xóa vĩnh viễn">
+                                    <button type="button" class="btn btn-sm btn-icon btn-label-danger delete-confirm-btn" 
+                                            data-message="CẢNH BÁO: Xóa khách hàng sẽ mất toàn bộ lịch sử đơn hàng. Bạn có chắc chắn không?" title="Xóa vĩnh viễn">
                                         <i class="bx bx-trash"></i>
                                     </button>
                                 </form>

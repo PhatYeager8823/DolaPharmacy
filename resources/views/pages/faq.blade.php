@@ -48,7 +48,7 @@
                 {{-- Box hỗ trợ thêm --}}
                 <div class="text-center mt-5">
                     <p class="mb-3">Bạn vẫn chưa tìm thấy câu trả lời?</p>
-                    <a href="tel:0123456789" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
+                    <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
                         <i class="fa fa-phone-alt me-2"></i> Gọi ngay {{ $global_setting->hotline ?? '0123.456.789' }}
                     </a>
                 </div>

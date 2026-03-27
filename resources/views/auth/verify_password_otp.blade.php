@@ -86,7 +86,7 @@
     function submitPassOtp() {
         updateRealInput();
         if (realInput.value.length < 6) {
-            alert('Vui lòng nhập đủ 6 số OTP');
+            showAlert('Vui lòng nhập đủ 6 số OTP', 'error');
             return;
         }
         form.submit();

@@ -139,12 +139,30 @@
                         {{-- NÚT HỦY ĐƠN (Chỉ hiện khi chưa xử lý) --}}
                         @if($order->trang_thai == 'cho_xac_nhan')
                             <div class="d-grid">
-                                <form action="{{ route('account.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                <form id="cancel-form" action="{{ route('account.orders.cancel', $order->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-outline-danger w-100">
+                                    <button type="button" class="btn btn-outline-danger w-100" onclick="confirmCancel()">
                                         <i class="fa fa-times me-1"></i> Hủy đơn hàng
                                     </button>
                                 </form>
+                                <script>
+                                    function confirmCancel() {
+                                        Swal.fire({
+                                            title: 'Hủy đơn hàng?',
+                                            text: "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            cancelButtonColor: '#3085d6',
+                                            confirmButtonText: 'Đồng ý hủy',
+                                            cancelButtonText: 'Quay lại'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('cancel-form').submit();
+                                            }
+                                        });
+                                    }
+                                </script>
                                 <small class="text-muted text-center mt-2" style="font-size: 12px;">
                                     Bạn chỉ có thể hủy khi đơn hàng chưa được xác nhận.
                                 </small>

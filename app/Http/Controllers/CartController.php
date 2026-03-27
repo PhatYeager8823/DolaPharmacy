@@ -19,9 +19,10 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = [];
+        $orderedItems = [];
         $total = 0;
 
-        // --- A. LẤY DỮ LIỆU GIỎ HÀNG (Giữ nguyên logic cũ) ---
+        // --- A. LẤY DỮ LIỆU GIỎ HÀNG (Có phân tách trạng thái) ---
         if (Auth::check()) {
             // Đã đăng nhập: Lấy từ DB
             $user = Auth::user();
@@ -30,20 +31,28 @@ class CartController extends Controller
 
             foreach ($dbItems as $item) {
                 if ($item->thuoc) {
-                    $cartItems[$item->thuoc_id] = [
-                        'id'       => $item->thuoc_id,
-                        'name'     => $item->thuoc->ten_thuoc,
-                        'price'    => $item->thuoc->gia_ban,
-                        'image'    => $item->thuoc->hinh_anh,
-                        'quantity' => $item->so_luong,
-                        'slug'     => $item->thuoc->slug,
-                        'unit'     => $item->thuoc->don_vi_tinh
+                    $data = [
+                        'cart_item_id' => $item->id, // Lưu ID của bảng chi tiết để xử lý riêng
+                        'id'           => $item->thuoc_id,
+                        'name'         => $item->thuoc->ten_thuoc,
+                        'price'        => $item->thuoc->gia_ban,
+                        'image'        => $item->thuoc->hinh_anh,
+                        'quantity'     => $item->so_luong,
+                        'slug'         => $item->thuoc->slug,
+                        'unit'         => $item->thuoc->don_vi_tinh
                     ];
-                    $total += $item->thuoc->gia_ban * $item->so_luong;
+
+                    if ($item->trang_thai == 0) {
+                        $cartItems[$item->thuoc_id] = $data;
+                        $total += $item->thuoc->gia_ban * $item->so_luong;
+                    } else {
+                        // Sản phẩm đã đặt trong quá khứ
+                        $orderedItems[$item->id] = $data;
+                    }
                 }
             }
         } else {
-            // Chưa đăng nhập: Lấy từ Session
+            // Chưa đăng nhập: Lấy từ Session (Toàn bộ là Active)
             $cartItems = session()->get('cart', []);
             foreach ($cartItems as $item) {
                 $total += $item['price'] * $item['quantity'];
@@ -94,12 +103,49 @@ class CartController extends Controller
 
         // Truyền hết dữ liệu sang View
         return view('cart.index', [
-            'cart' => $cartItems, // <--- Quan trọng: Đổi tên $cartItems thành $cart để khớp với View cũ
-            'total' => $total,
+            'cart'           => $cartItems,
+            'orderedItems'   => $orderedItems, // <--- Truyền thêm danh sách đã đặt
+            'total'          => $total,
             'discountAmount' => $discountAmount,
-            'finalTotal' => $finalTotal,
-            'userCoupons' => $userCoupons
+            'finalTotal'     => $finalTotal,
+            'userCoupons'    => $userCoupons
         ]);
+    }
+
+    /**
+     * Chuyển một sản phẩm đã đặt quay lại giỏ hàng chủ động
+     */
+    public function repurchase(Request $request)
+    {
+        if (!Auth::check()) return response()->json(['success' => false]);
+
+        $cartItemId = $request->id;
+        $oldItem = GioHangChiTiet::find($cartItemId);
+
+        if (!$oldItem) return response()->json(['success' => false, 'message' => 'Sản phẩm không tồn tại']);
+
+        $userCart = GioHang::firstOrCreate(['nguoi_dung_id' => Auth::id()]);
+
+        // Tìm xem đã có item này đang ACTIVE (0) chưa
+        $activeItem = GioHangChiTiet::where('gio_hang_id', $userCart->id)
+                                    ->where('thuoc_id', $oldItem->thuoc_id)
+                                    ->where('trang_thai', 0)
+                                    ->first();
+
+        if ($activeItem) {
+            $activeItem->so_luong += $oldItem->so_luong;
+            $activeItem->save();
+        } else {
+            // Tạo mới active item
+            GioHangChiTiet::create([
+                'gio_hang_id' => $userCart->id,
+                'thuoc_id'    => $oldItem->thuoc_id,
+                'so_luong'    => $oldItem->so_luong,
+                'trang_thai'  => 0
+            ]);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     // ====================================================
@@ -143,6 +189,10 @@ class CartController extends Controller
             'value' => $coupon->value,
         ]);
 
+        if ($request->has('redirect')) {
+            return redirect()->route($request->redirect)->with('success', 'Áp dụng mã giảm giá thành công!');
+        }
+
         return back()->with('success', 'Áp dụng mã giảm giá thành công!');
     }
 
@@ -172,6 +222,7 @@ class CartController extends Controller
 
             $chiTiet = GioHangChiTiet::where('gio_hang_id', $gioHang->id)
                                      ->where('thuoc_id', $id)
+                                     ->where('trang_thai', 0) // <--- CHỈ TÌM SẢN PHẨM ĐANG ACTIVE
                                      ->first();
 
             if ($chiTiet) {
@@ -181,10 +232,11 @@ class CartController extends Controller
                 GioHangChiTiet::create([
                     'gio_hang_id' => $gioHang->id,
                     'thuoc_id'    => $id,
-                    'so_luong'    => $qty
+                    'so_luong'    => $qty,
+                    'trang_thai'  => 0 // <--- MẶC ĐỊNH LÀ ACTIVE
                 ]);
             }
-            $totalCount = $gioHang->chiTiets()->sum('so_luong');
+            $totalCount = $gioHang->chiTiets()->where('trang_thai', 0)->sum('so_luong');
 
         } else {
             $cart = session()->get('cart', []);
@@ -227,13 +279,14 @@ class CartController extends Controller
                 if ($gioHang) {
                     $chiTiet = GioHangChiTiet::where('gio_hang_id', $gioHang->id)
                                              ->where('thuoc_id', $request->id)
+                                             ->where('trang_thai', 0) // Chỉ cập nhật item đang active
                                              ->first();
                     if ($chiTiet) {
                         $chiTiet->so_luong = $request->quantity;
                         $chiTiet->save();
                         $itemSubtotal = $chiTiet->so_luong * $chiTiet->thuoc->gia_ban;
                     }
-                    foreach ($gioHang->chiTiets as $item) {
+                    foreach ($gioHang->chiTiets()->where('trang_thai', 0)->get() as $item) {
                         $total += $item->so_luong * $item->thuoc->gia_ban;
                     }
                 }
@@ -272,12 +325,13 @@ class CartController extends Controller
                 if ($gioHang) {
                     GioHangChiTiet::where('gio_hang_id', $gioHang->id)
                                   ->where('thuoc_id', $request->id)
+                                  ->where('trang_thai', 0) // Chỉ xóa item đang active
                                   ->delete();
 
-                    foreach ($gioHang->chiTiets()->get() as $item) {
+                    foreach ($gioHang->chiTiets()->where('trang_thai', 0)->get() as $item) {
                         $total += $item->so_luong * $item->thuoc->gia_ban;
                     }
-                    $totalCount = $gioHang->chiTiets()->sum('so_luong');
+                    $totalCount = $gioHang->chiTiets()->where('trang_thai', 0)->sum('so_luong');
                 }
             } else {
                 $cart = session()->get('cart');
@@ -328,13 +382,15 @@ class CartController extends Controller
                 if ($cartItem) {
                     // Nếu có rồi thì cộng thêm số lượng
                     $cartItem->so_luong += $item->so_luong;
+                    $cartItem->trang_thai = 0; // Đảm bảo nó là ACTIVE
                     $cartItem->save();
                 } else {
                     // Nếu chưa có thì tạo mới
                     GioHangChiTiet::create([
                         'gio_hang_id' => $gioHang->id,
                         'thuoc_id'    => $item->thuoc_id,
-                        'so_luong'    => $item->so_luong
+                        'so_luong'    => $item->so_luong,
+                        'trang_thai'  => 0 // MẶC ĐỊNH LÀ ACTIVE
                     ]);
                 }
             }

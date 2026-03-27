@@ -14,6 +14,7 @@ class CategoryController extends Controller
     {
         // Lấy danh sách, phân trang 10 dòng
         $categories = DanhMuc::with('parent')->latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('category_back_url', request()->fullUrl());
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -50,7 +51,8 @@ class CategoryController extends Controller
     {
         $category = DanhMuc::findOrFail($id);
         $parents = DanhMuc::whereNull('danh_muc_cha_id')->where('id', '!=', $id)->get();
-        return view('admin.categories.edit', compact('category', 'parents'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('category_back_url', route('admin.categories.index'));
+        return view('admin.categories.edit', compact('category', 'parents', 'backUrl'));
     }
 
     // 5. Cập nhật
@@ -67,7 +69,8 @@ class CategoryController extends Controller
 
         $category->update($data);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thành công');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('category_back_url', route('admin.categories.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật thành công');
     }
 
     // 6. Xóa

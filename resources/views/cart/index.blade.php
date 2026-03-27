@@ -7,20 +7,6 @@
 
         <h4 class="fw-bold mb-4">Giỏ hàng <span class="fs-6 text-muted fw-normal">({{ count($cart) }} sản phẩm)</span></h4>
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4">
-                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-4">
-                <i class="fa fa-exclamation-circle me-2"></i> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         @if(count($cart) > 0)
             <div class="row g-4">
                 {{-- CỘT TRÁI: DANH SÁCH SẢN PHẨM --}}
@@ -38,10 +24,10 @@
 
                             {{-- Danh sách Items --}}
                             @foreach($cart as $id => $item)
-                                <div class="d-flex flex-wrap align-items-center p-3 border-bottom position-relative item-row">
+                                <div class="d-flex align-items-center p-3 border-bottom position-relative item-row">
                                     {{-- Ảnh & Tên --}}
                                     <div class="d-flex align-items-center" style="width: 100%; md:width: 45%; flex-basis: 45%; flex-grow: 1;">
-                                        <img src="{{ $item['image'] ? asset('images/images_san_pham/' . $item['image']) : asset('images/no-image.webp') }}"
+                                        <img src="{{ $item['image'] ? asset('images/images_san_pham/' . $item['image']) : asset('images/no-image.png') }}"
                                              class="rounded border" style="width: 70px; height: 70px; object-fit: cover;">
                                         <div class="ms-3">
                                             <a href="{{ route('thuoc.show', $item['slug']) }}" class="text-decoration-none text-dark fw-bold two-lines">
@@ -71,8 +57,9 @@
                                     </div>
 
                                     {{-- Nút Xóa --}}
-                                    <div class="text-end mt-3 mt-md-0 ms-auto ms-md-0" style="width: 5%;">
-                                        <button class="btn btn-link text-danger p-0" onclick="removeItem({{ $id }})">
+                                    <div class="text-end" style="width: 5%; min-width: 30px;">
+                                        <button class="btn btn-link text-danger p-0" 
+                                                onclick="removeItem({{ $id }})">
                                             <i class="fa fa-trash-alt"></i>
                                         </button>
                                     </div>
@@ -158,6 +145,32 @@
                 <h5 class="text-muted">Giỏ hàng của bạn đang trống</h5>
                 <p class="text-secondary mb-4">Hãy dạo một vòng xem có gì ưng ý không nhé!</p>
                 <a href="{{ route('home') }}" class="btn btn-primary px-4 py-2 fw-bold">Mua sắm ngay</a>
+            </div>
+        @endif
+
+        {{-- SẢN PHẨM ĐÃ ĐẶT (QUÁ KHỨ) - HIỆN BÊN DƯỚI ĐỂ NGĂN CÁCH --}}
+        @if(Auth::check() && count($orderedItems) > 0)
+            <div class="mt-5 pt-4 border-top">
+                <h5 class="fw-bold mb-4 text-secondary"><i class="fa fa-history me-2"></i> Sản phẩm đã đặt (Gần đây)</h5>
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <div class="card-body p-0">
+                        @foreach($orderedItems as $itemId => $item)
+                            <div class="d-flex align-items-center p-3 border-bottom bg-light bg-opacity-50 ordered-item" style="opacity: 0.8;">
+                                <img src="{{ $item['image'] ? asset('images/images_san_pham/' . $item['image']) : asset('images/no-image.png') }}"
+                                     class="rounded border grayscale" style="width: 60px; height: 60px; object-fit: cover; filter: grayscale(40%);">
+                                <div class="ms-3 flex-grow-1">
+                                    <div class="text-dark fw-bold small">{{ $item['name'] }}</div>
+                                    <div class="small text-muted mt-1">{{ number_format($item['price']) }} đ • Đã thanh toán</div>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-pill" onclick="repurchase({{ $itemId }})">
+                                        <i class="fa fa-redo me-1"></i> Mua lại
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         @endif
     </div>
@@ -262,10 +275,36 @@
     }
 
     function removeItem(id) {
-        if(!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+        Swal.fire({
+            title: 'Xác nhận xóa?',
+            text: "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1b5e20',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('{{ route('cart.remove') }}', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ id: id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) location.reload();
+                });
+            }
+        });
+    }
 
-        fetch('{{ route('cart.remove') }}', {
-            method: 'DELETE',
+    function repurchase(id) {
+        fetch('{{ route('cart.repurchase') }}', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -275,6 +314,7 @@
         .then(response => response.json())
         .then(data => {
             if(data.success) location.reload();
+            else showAlert('Có lỗi xảy ra, vui lòng thử lại.', 'error');
         });
     }
 

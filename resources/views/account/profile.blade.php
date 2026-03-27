@@ -20,14 +20,6 @@
 
                     <div class="card-body p-4">
 
-                        {{-- Thông báo thành công --}}
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
                         {{-- Thông báo đặc biệt cho khách vãng lai vừa mua hàng xong --}}
                         @if(session('account_created'))
                             <div class="alert alert-info mb-4">

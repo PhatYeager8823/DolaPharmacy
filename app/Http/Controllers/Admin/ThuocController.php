@@ -116,7 +116,8 @@ class ThuocController extends Controller
         $data['is_new'] = $request->has('is_new') ? 1 : 0;
         $data['is_exclusive'] = $request->has('is_exclusive') ? 1 : 0;
         $data['is_suggested'] = $request->has('is_suggested') ? 1 : 0;
-        $data['is_featured']  = $request->has('is_featured') ? 1 : 0; // <--- THÊM DÒNG NÀY
+        $data['is_featured']  = $request->has('is_featured') ? 1 : 0;
+        $data['is_hot_deal']  = $request->has('is_hot_deal') ? 1 : 0;
 
         // Xử lý upload ảnh (OPT: Resize + Nén với ImageService)
         if ($request->hasFile('hinh_anh')) {
@@ -183,7 +184,8 @@ class ThuocController extends Controller
         $data['is_new']        = $request->has('is_new') ? 1 : 0;
         $data['is_exclusive']  = $request->has('is_exclusive') ? 1 : 0;
         $data['is_suggested']  = $request->has('is_suggested') ? 1 : 0;
-        $data['is_featured']   = $request->has('is_featured') ? 1 : 0; // <--- THÊM DÒNG NÀY
+        $data['is_featured']   = $request->has('is_featured') ? 1 : 0;
+        $data['is_hot_deal']   = $request->has('is_hot_deal') ? 1 : 0;
 
         // Xử lý ảnh (Nếu có up ảnh mới)
         if ($request->hasFile('hinh_anh')) {

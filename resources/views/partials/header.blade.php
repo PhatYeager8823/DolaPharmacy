@@ -1,25 +1,33 @@
-<header class="pharmacy-header">
+<header class="pharmacy-header {{ $global_setting->is_promo_active ? 'has-promo' : '' }}">
+    @if($global_setting->is_promo_active)
     {{-- Banner khuyến mãi trên cùng --}}
     <div class="pharmacy-promo">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="promo-text">
-                <span>CHÀO MỪNG BẠN MỚI</span>
+                <span>{{ $global_setting->promo_text ?? 'CHÀO MỪNG BẠN MỚI' }}</span>
                 <strong>TƯNG BỪNG ƯU ĐÃI</strong>
             </div>
             <div class="promo-code">
-                <span>NHẬP MÃ "<strong>BANMOI</strong>"</span>
-                <br>
+                @if($global_setting->promo_code)
+                    <span>NHẬP MÃ "<strong>{{ $global_setting->promo_code }}</strong>"</span>
+                    <br>
+                @endif
                 <span>NHẬN QUÀ HẤP DẪN</span>
                 <p class="promo-note mb-0">(Áp dụng cho đơn hàng online đầu tiên từ 399K)</p>
             </div>
             <div class="promo-date-btn d-flex align-items-center">
                 <div class="promo-date me-3">
-                    <strong>01.07 - 31.07.2023</strong>
+                    @if($global_setting->promo_end_date)
+                        <strong>Kết thúc: {{ date('d/m/Y', strtotime($global_setting->promo_end_date)) }}</strong>
+                    @else
+                        <strong>01.07 - 31.07.2023</strong>
+                    @endif
                 </div>
                 <a href="#" class="btn btn-promo">XEM CHI TIẾT</a>
             </div>
         </div>
     </div>
+    @endif
 
     {{-- Header chính --}}
     <div class="pharmacy-header-main">
@@ -177,7 +185,9 @@
                         if (Auth::check()) {
                             $userCart = \App\Models\GioHang::where('nguoi_dung_id', Auth::id())->first();
                             if ($userCart) {
-                                $cartCount = \App\Models\GioHangChiTiet::where('gio_hang_id', $userCart->id)->sum('so_luong');
+                                $cartCount = \App\Models\GioHangChiTiet::where('gio_hang_id', $userCart->id)
+                                                                       ->where('trang_thai', 0)
+                                                                       ->sum('so_luong');
                             }
                         } else {
                             $cartSession = session()->get('cart', []);
@@ -326,8 +336,8 @@
 
 {{-- MOBILE MENU OFFCANVAS --}}
 <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileMenuOffcanvas">
-    <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title fw-bold text-primary">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold text-white">
             {{ strtoupper($global_setting->ten_website ?? 'Dola Pharmacy') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -388,13 +398,12 @@
             <hr class="my-3">
             <div class="hotline d-flex align-items-center justify-content-between bg-primary bg-opacity-10 p-2 rounded">
                 <span class="fw-bold text-primary"><i class="fa fa-phone-alt me-2"></i>Hotline:</span>
-                <a href="tel:0123456789" class="fw-bold text-danger text-decoration-none">0123.456.789</a>
+                <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="fw-bold text-danger text-decoration-none">{{ $global_setting->hotline ?? '0123.456.789' }}</a>
             </div>
         </div>
 
         <nav class="mobile-nav">
             <ul class="nav flex-column gap-1">
-                <li class="nav-item border-bottom"><a class="nav-link text-dark py-3" href="{{ route('home') }}"><i class="fa fa-home me-2 text-secondary"></i> Trang chủ</a></li>
                 <li class="nav-item border-bottom"><a class="nav-link text-dark py-3" href="{{ route('about') }}"><i class="fa fa-info-circle me-2 text-secondary"></i> Giới thiệu</a></li>
 
                 @php $mobileParents = \App\Models\DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get(); @endphp

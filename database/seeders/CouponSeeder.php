@@ -19,23 +19,23 @@ class CouponSeeder extends Seeder
         // 3. Bật lại kiểm tra khóa ngoại
         Schema::enableForeignKeyConstraints();
 
-        // 4. Thêm dữ liệu
+        // 4. Thêm dữ liệu (CHAO10K và CHAO20K như yêu cầu)
         DB::table('coupons')->insert([
             [
-                'code' => 'BANMOI',
+                'code' => 'CHAO10K',
                 'type' => 'fixed',
-                'value' => 50000,
-                'image' => 'voucher_50k.webp',
+                'value' => 10000,
+                'image' => 'voucher_10k.webp',
                 'expiry_date' => '2030-12-31 23:59:59',
                 'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'code' => 'SALE10',
-                'type' => 'percent',
-                'value' => 10, // 10%
-                'image' => 'voucher_10percent.webp',
+                'code' => 'CHAO20K',
+                'type' => 'fixed',
+                'value' => 20000,
+                'image' => 'voucher_20k.webp',
                 'expiry_date' => '2030-12-31 23:59:59',
                 'is_active' => 1,
                 'created_at' => now(),

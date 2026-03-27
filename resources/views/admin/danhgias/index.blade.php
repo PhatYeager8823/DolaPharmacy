@@ -82,10 +82,12 @@
                             </form>
 
                             {{-- Nút Xóa vĩnh viễn --}}
-                            <form action="{{ route('admin.reviews.destroy', $review->id) }}" method="POST" class="d-inline-block ms-1" onsubmit="return confirm('Bạn có CHẮC CHẮN muốn xóa vĩnh viễn đánh giá này không? Không thể khôi phục!');">
+                            <form action="{{ route('admin.reviews.destroy', $review->id) }}" method="POST" class="d-inline-block ms-1">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="tooltip" title="Xóa vĩnh viễn">
+                                <button type="button" class="btn btn-sm btn-icon btn-outline-danger delete-confirm-btn" 
+                                        data-message="Bạn có CHẮC CHẮN muốn xóa vĩnh viễn đánh giá này không? Không thể khôi phục!"
+                                        data-bs-toggle="tooltip" title="Xóa vĩnh viễn">
                                     <i class="bx bx-trash"></i>
                                 </button>
                             </form>

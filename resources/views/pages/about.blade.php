@@ -7,7 +7,7 @@
 {{-- 1. HEADER BANNER --}}
 <div class="bg-primary py-5 text-center text-white">
     <div class="container">
-        <h1 class="fw-bold display-5">Về {{ $global_setting->ten_website }}</h1>
+        <h1 class="fw-bold display-5">Về chúng tôi - {{ $global_setting->ten_website }}</h1>
         <p class="lead mb-0">Tận tâm chăm sóc - Vững bước sức khỏe</p>
     </div>
 </div>
@@ -17,8 +17,10 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <img src="https://img.freepik.com/free-photo/pharmacists-working-together-drugstore_23-2148767035.webp"
-                     alt="Nhà thuốc" class="img-fluid rounded-3 shadow-sm">
+                <div class="about-image-card shine-effect shadow-sm rounded-3 overflow-hidden">
+                    <img src="{{ asset('images/banners/gioithieu_doctor.webp') }}"
+                         alt="Dola Pharmacy" class="img-fluid w-100">
+                </div>
             </div>
             <div class="col-lg-6">
                 <h5 class="text-primary fw-bold text-uppercase">Câu chuyện của chúng tôi</h5>
@@ -114,7 +116,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/portrait-smiling-male-doctor_171337-1532.webp"
+                        <img src="{{ asset('images/team/pharmacist_1.png') }}"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Nguyễn Văn A</h5>
                         <p class="text-muted small">Dược sĩ trưởng - 15 năm kinh nghiệm</p>
@@ -125,7 +127,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.webp"
+                        <img src="{{ asset('images/team/pharmacist_2.png') }}"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Trần Thị B</h5>
                         <p class="text-muted small">Tư vấn chuyên môn</p>
@@ -136,7 +138,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/handsome-young-male-doctor-with-stethoscope-standing-against-blue-background_662251-343.webp"
+                        <img src="{{ asset('images/team/pharmacist_3.png') }}"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Lê Văn C</h5>
                         <p class="text-muted small">Quản lý kho dược</p>
@@ -147,7 +149,7 @@
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm text-center h-100">
                     <div class="card-body">
-                        <img src="https://img.freepik.com/free-photo/attractive-medical-professional-uniform-smiling-camera_23-2148235043.webp"
+                        <img src="{{ asset('images/team/pharmacist_4.png') }}"
                              class="rounded-circle mb-3" width="120" height="120" style="object-fit: cover;">
                         <h5 class="fw-bold">DS. Phạm Thị D</h5>
                         <p class="text-muted small">Chăm sóc khách hàng</p>

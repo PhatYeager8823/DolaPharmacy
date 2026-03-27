@@ -30,23 +30,40 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
 /* ============================================= */
 
 .pharmacy-header {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-
-  /* 1. Kích hoạt chế độ dính */
-    position: -webkit-sticky; /* Cho Safari */
+    font-family: 'Quicksand', sans-serif;
+    position: -webkit-sticky;
     position: sticky;
-
-    /* 2. MẤU CHỐT Ở ĐÂY:
-       Banner khuyến mãi của bạn cao khoảng 46px-50px.
-       Đặt top âm để nó cuộn qua phần đó rồi mới dính.
-       Bạn hãy thử -46px, nếu vẫn lòi banner thì tăng lên -50px */
-    top: -85px;
-
-    /* 3. Đè lên mọi thứ khác */
+    top: 0;
     z-index: 1020;
+    background: linear-gradient(to bottom, #1685fbff 25%, #0056d6 75%);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
 
-    /* 4. Màu nền (đề phòng bị trong suốt) */
-    background: #fff;
+    // Khi cuộn trang
+    &.scrolled {
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+        
+        // Không ẩn thanh top-links (giữ lại theo ý người dùng)
+        transform: translateY(0);
+
+        // Nếu có promo, để khoảng 70px theo ý bạn để cân đối nhất
+        &.has-promo {
+            transform: translateY(-70px);
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        position: fixed;
+        width: 100%;
+        transform: none !important; // Không ẩn trên mobile
+    }
+}
+
+// Fix overlay cho content khi header fixed trên mobile
+@media (max-width: 991.98px) {
+    .main-content {
+        padding-top: 130px !important; // Chiều cao header mobile (search + logo)
+        padding-bottom: 70px !important; // Chừa chỗ cho bottom nav
+    }
 }
 
 .pharmacy-promo {
@@ -757,11 +774,10 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
 
 /* 1. Phần Header (Tiêu đề + Nút đóng) */
 #mobileMenuOffcanvas .offcanvas-header {
-    background-color: #0b80ff; /* Màu xanh chủ đạo */
-    color: #fff;
-    padding: 15px 20px;
-    /* Border mờ ngăn cách với phần dưới */
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(135deg, #0b80ff 0%, #0056d6 100%) !important; /* Gradient premium */
+    color: #fff !important;
+    padding: 20px !important;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
 }
 
 #mobileMenuOffcanvas .offcanvas-title {
@@ -772,9 +788,21 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
 }
 
 #mobileMenuOffcanvas .btn-close {
-    /* Đảo màu icon đóng thành trắng */
     filter: invert(1) grayscale(100%) brightness(200%);
     opacity: 1;
+    width: 25px;
+    height: 25px;
+    background-size: 15px;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 0;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: rotate(90deg);
+    }
 }
 
 /* 2. Phần Body (Chứa Menu + Auth) */
@@ -3440,6 +3468,11 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
     flex-direction: column;
     align-items: flex-end;
     gap: 15px;
+
+    @media (max-width: 991.98px) {
+        bottom: 90px; /* Đẩy lên trên mobile bottom nav (70px + 20px gap) */
+        right: 20px;
+    }
 }
 
 /* Nút chính to bự */
@@ -3598,3 +3631,95 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
     }
 }
 
+/* =========================================================
+   MOBILE BOTTOM NAVIGATION (Giống Pharmacity)
+   ========================================================= */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+    z-index: 1030;
+    padding: 10px 0;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    height: calc(70px + env(safe-area-inset-bottom));
+    border-top: 1px solid #f1f1f1;
+    transition: transform 0.3s ease; // Smooth show/hide if needed later
+
+    .bottom-nav-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
+        position: relative;
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #666;
+        flex: 1;
+        transition: all 0.2s;
+
+        i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        span {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        &.active {
+            color: #0b80ff;
+        }
+
+        &:hover {
+            color: #0b80ff;
+        }
+    }
+
+    .nav-item-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 70px;
+        position: relative;
+        margin-top: -30px; // Đẩy cả cụm lên
+
+        .center-raised-btn {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #0b80ff 0%, #0056d6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(11, 128, 255, 0.4);
+            border: 4px solid #fff;
+            text-decoration: none;
+            transition: transform 0.2s;
+
+            i {
+                font-size: 24px;
+            }
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .center-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-top: 5px;
+        }
+    }
+}

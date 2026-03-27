@@ -12,43 +12,10 @@
 <div class="bg-light py-4">
     <div class="container">
         {{-- 1. Hiển thị thông báo Lỗi từ Controller (Session Error) --}}
-@if(session('error'))
-    <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border: 1px solid #f5c6cb; border-radius: 5px;">
-        <strong>Lỗi:</strong> {{ session('error') }}
-    </div>
-@endif
-
-{{-- 2. Hiển thị thông báo Thành công (Session Success) --}}
-@if(session('success'))
-    <div class="alert alert-success" style="background: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border: 1px solid #c3e6cb; border-radius: 5px;">
-        {{ session('success') }}
-    </div>
-@endif
-
-{{-- 3. Hiển thị lỗi Validate (Nhập thiếu, sai định dạng...) --}}
-@if ($errors->any())
-    <div class="alert alert-warning" style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; border-radius: 5px;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
         <form action="{{ route('checkout.process') }}" method="POST" id="checkoutForm">
             @csrf
             {{-- Giữ Order Code để gửi lên Controller --}}
             <input type="hidden" name="ma_don_hang" value="{{ $ma_don_hang }}">
-            {{-- === THÊM ĐOẠN NÀY ĐỂ HIỆN LỖI === --}}
-            @if ($errors->any())
-                <div class="alert alert-danger m-3">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
             {{-- ================================ --}}
             <div class="row g-4">
 
@@ -148,11 +115,11 @@
                                 @php
                                     $qrAmount = $total + 15000; // Mặc định + 15k ship, JS sẽ tự động sửa nếu Free Ship
                                 @endphp
-                                <img src="https://img.vietqr.io/image/OCB-0919795426-compact2.webp?amount={{ $qrAmount }}&addInfo={{ $ma_don_hang }}&accountName=DUONG THINH PHAT" alt="Mã QR Thanh Toán" class="img-fluid rounded border mb-2" id="dynamic-qr" style="max-height: 200px;">
+                                <img src="https://img.vietqr.io/image/OCB-{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0919795426') }}-compact2.webp?amount={{ $qrAmount }}&addInfo={{ $ma_don_hang }}&accountName=DUONG THINH PHAT" alt="Mã QR Thanh Toán" class="img-fluid rounded border mb-2" id="dynamic-qr" style="max-height: 200px;">
                                 <div class="text-start">
                                     <p class="mb-1 small"><strong>Ngân hàng:</strong> OCB (Phương Đông)</p>
                                     <p class="mb-1 small"><strong>Tài khoản:</strong> DUONG THINH PHAT</p>
-                                    <p class="mb-1 small"><strong>Số tài khoản:</strong> <span class="text-danger fw-bold">0919795426</span></p>
+                                    <p class="mb-1 small"><strong>Số tài khoản:</strong> <span class="text-danger fw-bold">{{ $global_setting->hotline ?? '0919795426' }}</span></p>
                                     <p class="mb-1 small"><strong>Số tiền:</strong> <span id="qr-amount-text" class="text-danger fw-bold">{{ number_format($qrAmount) }} đ</span></p>
                                     <p class="mb-1 small text-danger"><em>* Chuyển khoản vui lòng ghi đúng nội dung: <strong>{{ $ma_don_hang }}</strong></em></p>
                                 </div>
@@ -271,7 +238,7 @@
         const qrAmountText = document.getElementById('qr-amount-text');
         if (dynamicQr) {
             let orderCode = '{{ $ma_don_hang }}';
-            dynamicQr.src = `https://img.vietqr.io/image/OCB-0919795426-compact2.webp?amount=${finalTotal}&addInfo=${orderCode}&accountName=DUONG THINH PHAT`;
+            dynamicQr.src = `https://img.vietqr.io/image/OCB-${'{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0919795426') }}'}-compact2.webp?amount=${finalTotal}&addInfo=${orderCode}&accountName=DUONG THINH PHAT`;
             if (qrAmountText) {
                 qrAmountText.innerText = new Intl.NumberFormat('vi-VN').format(finalTotal) + ' đ';
             }

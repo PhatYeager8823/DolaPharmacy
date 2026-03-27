@@ -33,7 +33,7 @@
                                         {{-- Phần Trái: CHỨA ẢNH --}}
                                         <div class="voucher-left-img">
                                             {{-- Kiểm tra nếu có ảnh thì hiện ảnh, không thì hiện ảnh mặc định --}}
-                                            <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}"
+                                            <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}"
                                                 alt="{{ $coupon->code }}"
                                                 class="voucher-img-cover">
                                         </div>
@@ -52,7 +52,12 @@
                                             </div>
                                             <div class="voucher-footer">
                                                 <div class="voucher-date">HSD: {{ \Carbon\Carbon::parse($coupon->expiry_date)->format('d.m.Y') }}</div>
-                                                <button class="btn-use">Dùng ngay</button>
+                                                <form action="{{ route('cart.coupon.add') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="coupon_code" value="{{ $coupon->code }}">
+                                                    <input type="hidden" name="redirect" value="cart.index">
+                                                    <button type="submit" class="btn-use border-0 bg-transparent">Dùng ngay</button>
+                                                </form>
                                             </div>
                                         </div>
 
@@ -71,7 +76,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 {{-- Nếu muốn hiện ảnh to trong modal thì bỏ comment dòng dưới --}}
-                                                {{-- <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}" class="w-100 px-3 mb-2" style="max-height: 200px; object-fit: contain;"> --}}
+                                                {{-- <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}" class="w-100 px-3 mb-2" style="max-height: 200px; object-fit: contain;"> --}}
                                                 <div class="modal-body pt-0 text-center">
                                                     <h3 class="text-primary fw-bold mb-1">{{ $coupon->code }}</h3>
                                                     <p class="text-muted small mb-4">
@@ -94,7 +99,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer border-top-0">
-                                                    <a href="{{ route('cart.index') }}" class="btn btn-primary w-100 fw-bold">Dùng ngay</a>
+                                                    <form action="{{ route('cart.coupon.add') }}" method="POST" class="w-100">
+                                                        @csrf
+                                                        <input type="hidden" name="coupon_code" value="{{ $coupon->code }}">
+                                                        <input type="hidden" name="redirect" value="cart.index">
+                                                        <button type="submit" class="btn btn-primary w-100 fw-bold">Dùng ngay</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>

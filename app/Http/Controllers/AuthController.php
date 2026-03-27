@@ -85,7 +85,7 @@ class AuthController extends Controller
                 // ========================================================
                 // [MỚI] TỰ ĐỘNG TẶNG 2 MÃ GIẢM GIÁ CHO THÀNH VIÊN MỚI
                 // ========================================================
-                $defaultCoupons = \App\Models\Coupon::whereIn('code', ['BANMOI', 'SALE10'])->get();
+                $defaultCoupons = \App\Models\Coupon::whereIn('code', ['CHAO10K', 'CHAO20K'])->get();
 
                 foreach ($defaultCoupons as $coupon) {
                     // Thêm vào bảng trung gian coupon_user

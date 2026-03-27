@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="{{ asset('admin/assets/css/demo.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
+    
+    {{-- Flatpickr --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="{{ asset('admin/assets/js/config.js') }}"></script>
 
     <style>
@@ -54,11 +58,25 @@
         }
 
         /* Chữ trong giao diện */
-        h1, h2, h3, h4, h5, h6, .text-heading, .card-title, .menu-link, .menu-header-text, span, p, label {
+        h1, h2, h3, h4, h5, h6, .text-heading, .card-title, .menu-link, .menu-header-text, p, label {
             color: #f8fafc !important; /* Trắng sáng */
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+        
+        /* Loại bỏ span khỏi quy tắc !important chung để không đè lên các thành phần đặc biệt */
+        span:not(.badge):not(.menu-header-text) {
+            color: inherit;
+        }
+
         .text-muted { color: #94a3b8 !important; }
+
+        /* FIX LỖI KÍNH LÚP TÀNG HÌNH TRÊN NỀN TRẮNG */
+        .input-group-text, .bx-search {
+            color: #64748b !important; /* Màu xám Slate đậm để hiện rõ trên nền trắng/sáng */
+        }
+        .bg-white .bx-search, .bg-light .bx-search {
+            color: #475569 !important;
+        }
 
         /* Menu Sidebar Giao diện Active/Hover */
         .menu-link {
@@ -119,7 +137,7 @@
         }
 
         /* Cải thiện Input/Select để hợp với nền mờ */
-        .form-control, .form-select {
+        .form-control, .form-select, .form-control:focus, .form-select:focus, input, textarea, select {
             background-color: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
             color: #fff !important;
@@ -190,10 +208,100 @@
         .menu-link:hover .menu-icon {
             transform: scale(1.15) rotate(5deg);
         }
+
+        /* --- THÔNG BÁO TỐI ƯU (ĐỒNG BỘ LAYOUT CHUNG) --- */
+        .custom-alert {
+            border-radius: 12px !important;
+            border: none !important;
+            padding: 1rem 1.5rem !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+        }
+        .custom-alert-success { background-color: rgba(27, 94, 32, 0.8) !important; color: #fff !important; }
+        .custom-alert-danger { background-color: rgba(198, 40, 40, 0.8) !important; color: #fff !important; }
+        .custom-alert-warning { background-color: rgba(230, 81, 0, 0.8) !important; color: #fff !important; }
+        
+        .alert-icon-circle {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 1rem; flex-shrink: 0; font-size: 14px;
+        }
+        .alert-icon-circle-success { background-color: #fff; color: #1b5e20; }
+        .alert-icon-circle-danger { background-color: #fff; color: #c62828; }
+        .alert-icon-circle-warning { background-color: #fff; color: #e65100; }
+        
+        .alert-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; display: block; }
+        .alert-msg { font-size: 0.875rem; opacity: 0.9; }
+
+        #notification-container {
+            position: fixed; top: 20px; right: 20px; z-index: 99999;
+            width: 350px; max-width: 90vw;
+        }
+
+        /* --- CẢI THIỆN SWITCH BUTTON (FORM-SWITCH) --- */
+        .form-switch .form-check-input {
+            width: 2.5em !important;
+            height: 1.25em !important;
+            margin-right: 1.2rem !important; /* Tăng khoảng cách với chữ */
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .form-switch .form-check-input:checked {
+            background-color: #38bdf8 !important; /* Màu xanh neon */
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+        }
+        .form-switch .form-check-input:not(:checked) {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,0.4)'/%3e%3c/svg%3e") !important;
+        }
     </style>
+
+    {{-- SweetAlert2 CDN (Admin Layout chưa có) --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        window.showAlert = function(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+            const iconClass = type === 'success' ? 'fa-check' : (type === 'error' ? 'fa-exclamation-triangle' : 'fa-exclamation');
+            const title = type === 'success' ? 'Thành công!' : (type === 'error' ? 'Lỗi!' : 'Thông báo!');
+            
+            const alertHtml = `
+                <div class="alert custom-alert custom-alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show mb-3" role="alert">
+                    <div class="d-flex align-items-center">
+                        <div class="alert-icon-circle alert-icon-circle-${type === 'error' ? 'danger' : type}">
+                            <i class="fa ${iconClass}"></i>
+                        </div>
+                        <div>
+                            <span class="alert-title">${title}</span>
+                            <span class="alert-msg">${message}</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            const alertElement = document.createElement('div');
+            alertElement.innerHTML = alertHtml;
+            container.appendChild(alertElement);
+            setTimeout(() => {
+                const alert = alertElement.querySelector('.alert');
+                if (alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        };
+    </script>
+    @stack('styles')
 </head>
 
 <body>
+    <div id="notification-container"></div>
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
 
@@ -230,7 +338,60 @@
     <script src="{{ asset('admin/assets/js/dashboards-analytics.js') }}"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+    {{-- Flatpickr --}}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
 
     @stack('scripts')
+
+    <script>
+        // --- HÀM XÁC NHẬN XÓA GLOBAL (SWEETALERT2) ---
+        $(document).ready(function() {
+            $(document).on('click', '.delete-confirm-btn', function(e) {
+                e.preventDefault();
+                const form = $(this).closest('form');
+                const message = $(this).data('message') || 'Dữ liệu này sẽ bị xóa vĩnh viễn và không thể khôi phục!';
+                
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff3e1d',
+                    cancelButtonColor: '#8592a3',
+                    confirmButtonText: 'Có, xóa ngay!',
+                    cancelButtonText: 'Hủy bỏ',
+                    background: '#1e293b',
+                    color: '#fff',
+                    backdrop: `rgba(0,0,123,0.2)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // --- TỰ ĐỘNG LƯU VÀ KHÔI PHỤC TAB ĐANG CHỌN (BOOTSTRAP 5) ---
+        $(document).ready(function() {
+            // 1. Khi một tab được bấm, lưu ID của tab đó vào localStorage theo URL hiện tại
+            $(document).on('shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+                const tabId = $(e.target).attr('data-bs-target');
+                const path = window.location.pathname;
+                localStorage.setItem('activeTab_' + path, tabId);
+            });
+
+            // 2. Khi tải lại trang, kiểm tra xem có tab nào được lưu cho URL này không
+            const path = window.location.pathname;
+            const activeTabId = localStorage.getItem('activeTab_' + path);
+            if (activeTabId) {
+                const tabTriggerEl = document.querySelector(`button[data-bs-target="${activeTabId}"]`);
+                if (tabTriggerEl) {
+                    const tab = new bootstrap.Tab(tabTriggerEl);
+                    tab.show();
+                }
+            }
+        });
+    </script>
 </body>
 </html>

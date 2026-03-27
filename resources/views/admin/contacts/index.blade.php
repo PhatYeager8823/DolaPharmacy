@@ -82,10 +82,11 @@
 
                         {{-- Nút Xóa --}}
                         <td>
-                            <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa tin nhắn này không?');">
+                             <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-icon btn-label-danger" title="Xóa tin nhắn">
+                                <button type="button" class="btn btn-sm btn-icon btn-label-danger delete-confirm-btn" 
+                                        data-message="Bạn có chắc muốn xóa tin nhắn liên hệ này không?" title="Xóa tin nhắn">
                                     <i class="bx bx-trash"></i>
                                 </button>
                             </form>

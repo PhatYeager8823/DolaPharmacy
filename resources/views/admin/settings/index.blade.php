@@ -33,6 +33,11 @@
                                     <i class="bx bx-share-alt me-1"></i> Mạng xã hội
                                 </button>
                             </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link text-warning" role="tab" data-bs-toggle="tab" data-bs-target="#navs-promo">
+                                    <i class="bx bx-gift me-1"></i> Khuyến mãi
+                                </button>
+                            </li>
                         </ul>
 
                         <div class="tab-content">
@@ -106,6 +111,35 @@
                                     <input type="url" name="youtube" class="form-control" value="{{ $setting->youtube }}" placeholder="https://youtube.com/..." />
                                 </div>
                             </div>
+                            
+                            {{-- TAB 4: KHUYẾN MÃI --}}
+                            <div class="tab-pane fade" id="navs-promo" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" name="is_promo_active" id="is_promo_active" value="1" {{ $setting->is_promo_active ? 'checked' : '' }}>
+                                            <label class="form-check-label fw-bold text-warning" for="is_promo_active">Kích hoạt chương trình khuyến mãi (Banner + Đồng hồ)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label">Nội dung Banner khuyến mãi (Dòng 1)</label>
+                                        <input type="text" name="promo_text" class="form-control" value="{{ $setting->promo_text }}" placeholder="Ví dụ: CHÀO MỪNG BẠN MỚI" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Mã Promo / Coupon</label>
+                                        <input type="text" name="promo_code" class="form-control" value="{{ $setting->promo_code }}" placeholder="Ví dụ: BANMOI" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-danger fw-bold">Thời gian kết thúc (Đồng hồ đếm ngược)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-dark border-secondary"><i class="bx bx-calendar text-white"></i></span>
+                                            <input type="text" id="promo_end_date_picker" name="promo_end_date" class="form-control" 
+                                                value="{{ $setting->promo_end_date }}" placeholder="Chọn ngày và giờ kết thúc..." />
+                                        </div>
+                                        <div class="form-text">Đồng hồ đếm ngược ở trang chủ sẽ chạy theo mốc thời gian này.</div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -119,3 +153,31 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#promo_end_date_picker", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i:S",
+            time_24hr: true,
+            locale: "vn",
+            altInput: true,
+            altFormat: "d/m/Y H:i",
+            theme: "dark",
+            minDate: "today"
+        });
+    });
+</script>
+@endpush
+
+@push('styles')
+<style>
+    .form-control, .form-select, input, textarea {
+        color: #ffffff !important;
+    }
+    .form-label {
+        color: #ffffff !important;
+    }
+</style>
+@endpush

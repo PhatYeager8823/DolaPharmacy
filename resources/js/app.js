@@ -89,48 +89,7 @@ const hotDealsSwiper = new Swiper('.hot-deals-swiper', {
     },
 });
 
-// COUNTDOWN "Khuyến mãi hấp dẫn"
-document.addEventListener('DOMContentLoaded', function () {
-    const countdown = document.querySelector('.hot-deals-countdown');
-    if (!countdown) return;
-
-    // TODO: chỉnh lại ngày kết thúc khuyến mãi cho đúng
-    const endTime = new Date('2025-12-31T23:59:59'); // ISO format
-
-    const boxDays    = countdown.querySelector('.count-box[data-unit="days"] .value');
-    const boxHours   = countdown.querySelector('.count-box[data-unit="hours"] .value');
-    const boxMinutes = countdown.querySelector('.count-box[data-unit="minutes"] .value');
-    const boxSeconds = countdown.querySelector('.count-box[data-unit="seconds"] .value');
-
-    function updateCountdown() {
-        const now = new Date();
-        let diff = endTime - now;
-
-        if (diff <= 0) {
-            // Hết giờ
-            boxDays.textContent    = '0';
-            boxHours.textContent   = '0';
-            boxMinutes.textContent = '0';
-            boxSeconds.textContent = '0';
-            return;
-        }
-
-        const totalSeconds = Math.floor(diff / 1000);
-        const days    = Math.floor(totalSeconds / (24 * 60 * 60));
-        const hours   = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        boxDays.textContent    = days;
-        boxHours.textContent   = hours.toString().padStart(2, '0');
-        boxMinutes.textContent = minutes.toString().padStart(2, '0');
-        boxSeconds.textContent = seconds.toString().padStart(2, '0');
-    }
-
-    // chạy ngay lần đầu + lặp mỗi giây
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-});
+// (Countdown script removed because it conflicts with the one in home.blade.php)
 
 const newProductsSwiper = new Swiper('.new-products-swiper', {
     loop: true,
@@ -377,3 +336,16 @@ window.toggleWishlist = function(id, btn) {
     })
     .catch(error => console.error('Error:', error));
 };
+// ==========================================
+// XỬ LÝ HEADER KHI CUỘN (STICKY EFFECT)
+// ==========================================
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('.pharmacy-header');
+    if (header) {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    }
+});

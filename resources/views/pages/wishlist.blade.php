@@ -41,7 +41,7 @@
                                     {{-- Ảnh sản phẩm --}}
                                     <div class="fp-image">
                                         <a href="{{ route('thuoc.show', $product->slug) }}">
-                                            <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.webp') }}"
+                                            <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
                                                  alt="{{ $product->ten_thuoc }}"
                                                  style="object-fit: contain; width: 100%; height: 100%;">
                                         </a>
@@ -103,34 +103,48 @@
 
 <script>
     function removeFromWishlist(id) {
-        if(!confirm('Bạn muốn bỏ sản phẩm này khỏi danh sách yêu thích?')) return;
+        Swal.fire({
+            title: 'Bỏ yêu thích?',
+            text: "Bạn có chắc muốn bỏ sản phẩm này khỏi danh sách yêu thích?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1b5e20',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Gọi lại API toggle cũ, vì nó có chức năng xóa nếu đã tồn tại
+                fetch('{{ route('wishlist.toggle') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ id: id })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'added' || data.status === 'removed' || data.status === 'success') {
+                        // Xóa thẻ sản phẩm khỏi giao diện ngay lập tức
+                        const item = document.getElementById('wishlist-item-' + id);
+                        if(item) {
+                            item.remove();
 
-        // Gọi lại API toggle cũ, vì nó có chức năng xóa nếu đã tồn tại
-        fetch('{{ route('wishlist.toggle') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ id: id })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === 'success') {
-                // Xóa thẻ sản phẩm khỏi giao diện ngay lập tức
-                const item = document.getElementById('wishlist-item-' + id);
-                if(item) {
-                    item.remove();
+                            // Cập nhật số lượng trên Header
+                            document.querySelectorAll('.wishlist-count-badge').forEach(el => {
+                                el.innerText = data.count;
+                                el.style.display = data.count > 0 ? 'inline-block' : 'none';
+                            });
 
-                    // Cập nhật số lượng trên Header
-                    document.querySelectorAll('.wishlist-count-badge').forEach(el => {
-                        el.innerText = data.count;
-                        el.style.display = data.count > 0 ? 'inline-block' : 'none';
-                    });
-
-                    // Nếu xóa hết thì reload để hiện màn hình trống
-                    if(data.count == 0) location.reload();
-                }
+                            // Nếu xóa hết thì reload để hiện màn hình trống
+                            if(data.count == 0 || !document.querySelectorAll('.col-6.col-md-3').length) {
+                                location.reload();
+                            }
+                        }
+                        showAlert('Đã bỏ khỏi danh sách yêu thích.', 'success');
+                    }
+                });
             }
         });
     }

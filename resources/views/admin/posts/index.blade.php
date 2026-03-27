@@ -50,9 +50,11 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{{ route('admin.posts.edit', $post->id) }}"><i class="bx bx-edit-alt me-1"></i> Sửa</a>
-                                    <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Xóa bài này?');">
+                                    <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger"><i class="bx bx-trash me-1"></i> Xóa</button>
+                                        <button type="button" class="dropdown-item text-danger delete-confirm-btn" data-message="Bạn có chắc muốn xóa bài viết này?">
+                                            <i class="bx bx-trash me-1"></i> Xóa
+                                        </button>
                                     </form>
                                 </div>
                             </div>

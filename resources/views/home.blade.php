@@ -25,11 +25,22 @@
                                     </div>
                                 @endforeach
                             @else
-                                {{-- Slide mặc định --}}
+                                {{-- Slide mặc định (Đủ 4 ảnh như yêu cầu) --}}
                                 <div class="swiper-slide">
                                     <img src="{{ asset('images/sliders/slider1.webp') }}"
-                                         class="d-block w-100 hero-img"
-                                         alt="Default Slider">
+                                         class="d-block w-100 hero-img" alt="Slider 1">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('images/sliders/slider2.webp') }}"
+                                         class="d-block w-100 hero-img" alt="Slider 2">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('images/sliders/slider3.webp') }}"
+                                         class="d-block w-100 hero-img" alt="Slider 3">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('images/sliders/slider4.webp') }}"
+                                         class="d-block w-100 hero-img" alt="Slider 4">
                                 </div>
                             @endif
 
@@ -187,6 +198,7 @@
     </section>
 
     {{-- khuyến mãi hấp dẫn --}}
+    @if($global_setting->is_promo_active)
     <section class="hot-deals-section py-4 py-lg-5">
         <div class="container">
 
@@ -197,8 +209,9 @@
                     <h2 class="hot-deals-title mb-0">Khuyến mãi hấp dẫn</h2>
                 </div>
 
-                {{-- Countdown demo, bạn có thể thay bằng JS sau --}}
-                <div class="hot-deals-countdown d-none d-md-flex align-items-center gap-2">
+                {{-- Countdown - Hiển thị dựa trên Admin --}}
+                @if($global_setting->promo_end_date)
+                <div id="promo-countdown" class="hot-deals-countdown d-flex align-items-center gap-2">
                     <div class="count-box" data-unit="days">
                         <div class="value">0</div>
                         <div class="label">Ngày</div>
@@ -219,6 +232,7 @@
                         <div class="label">Giây</div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <div class="hot-deals-wrapper position-relative">
@@ -246,6 +260,7 @@
             </div>
         </div>
     </section>
+    @endif
 
     {{-- sản phẩm mới --}}
     <section class="new-products-section py-4 py-lg-5">
@@ -600,7 +615,7 @@
                                         {{-- Ảnh bài viết --}}
                                         <img src="{{ asset('images/news/' . $blog->hinh_anh) }}"
                                             alt="{{ $blog->tieu_de }}"
-                                            onerror="this.src='{{ asset('images/no-image.webp') }}'">
+                                            onerror="this.src='{{ asset('images/no-image.png') }}'">
                                     </a>
                                     <div class="blog-main-body">
                                         <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-main-heading">
@@ -637,7 +652,7 @@
                                 <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-side-thumb">
                                     <img src="{{ asset('images/news/' . $blog->hinh_anh) }}"
                                         alt="{{ $blog->tieu_de }}"
-                                        onerror="this.src='{{ asset('images/no-image.webp') }}'">
+                                        onerror="this.src='{{ asset('images/no-image.png') }}'">
                                 </a>
                                 <div class="blog-side-body">
                                     <a href="{{ route('baiviet.show', $blog->slug ?? '#') }}" class="blog-side-heading">
@@ -759,7 +774,7 @@
                         </div>
                         <div class="policy-text">
                             <h4>Hỗ trợ nhanh chóng</h4>
-                            <p>Gọi Hotline: 19006750 để được hỗ trợ ngay lập tức</p>
+                            <p>Gọi Hotline: {{ $global_setting->hotline ?? '0123.456.789' }} để được hỗ trợ ngay lập tức</p>
                         </div>
                     </div>
                 </div>
@@ -783,3 +798,50 @@
     </section>
 
 @endsection
+
+@push('scripts')
+<script>
+    (function() {
+        console.log('HOT DEALS TIMER START');
+        
+        @if($global_setting->promo_end_date)
+            const targetDate = new Date('{{ $global_setting->promo_end_date }}');
+        @else
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 3);
+            targetDate.setHours(23, 59, 59, 0);
+        @endif
+
+        function update() {
+            const countdown = document.getElementById('promo-countdown');
+            if (!countdown) return;
+
+            const now = new Date().getTime();
+            const diff = targetDate.getTime() - now;
+
+            if (diff <= 0) {
+                countdown.querySelectorAll('.value').forEach(v => v.textContent = '00');
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const dv = countdown.querySelector('[data-unit="days"] .value');
+            const hv = countdown.querySelector('[data-unit="hours"] .value');
+            const mv = countdown.querySelector('[data-unit="minutes"] .value');
+            const sv = countdown.querySelector('[data-unit="seconds"] .value');
+
+            if (dv) dv.textContent = d < 10 ? '0' + d : d;
+            if (hv) hv.textContent = h < 10 ? '0' + h : h;
+            if (mv) mv.textContent = m < 10 ? '0' + m : m;
+            if (sv) sv.textContent = s < 10 ? '0' + s : s;
+        }
+
+        setInterval(update, 1000);
+        update();
+    })();
+</script>
+@endpush

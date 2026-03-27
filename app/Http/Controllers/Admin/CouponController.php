@@ -13,6 +13,7 @@ class CouponController extends Controller
     public function index()
     {
         $coupons = Coupon::latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('coupon_back_url', request()->fullUrl());
         return view('admin.coupons.index', compact('coupons'));
     }
 
@@ -59,7 +60,8 @@ class CouponController extends Controller
     public function edit($id)
     {
         $coupon = Coupon::findOrFail($id);
-        return view('admin.coupons.edit', compact('coupon'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('coupon_back_url', route('admin.coupons.index'));
+        return view('admin.coupons.edit', compact('coupon', 'backUrl'));
     }
 
     // Xử lý cập nhật
@@ -79,8 +81,8 @@ class CouponController extends Controller
         // Xử lý upload ảnh mới
         if ($request->hasFile('image')) {
             // 1. Xóa ảnh cũ nếu có
-            if ($coupon->image && File::exists(public_path('images/coupons/' . $coupon->image))) {
-                File::delete(public_path('images/coupons/' . $coupon->image));
+            if ($coupon->image && \Illuminate\Support\Facades\File::exists(public_path('images/coupons/' . $coupon->image))) {
+                \Illuminate\Support\Facades\File::delete(public_path('images/coupons/' . $coupon->image));
             }
 
             // 2. Lưu ảnh mới
@@ -93,8 +95,8 @@ class CouponController extends Controller
 
         $coupon->update($data);
 
-        return redirect()->route('admin.coupons.index')
-            ->with('success', 'Cập nhật mã giảm giá thành công');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('coupon_back_url', route('admin.coupons.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật mã giảm giá thành công');
     }
 
     // Xóa mã

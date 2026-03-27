@@ -64,10 +64,10 @@
                                         </a>
 
                                         {{-- XÓA (Dùng Form) --}}
-                                        <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?');">
+                                        <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">
+                                            <button type="button" class="dropdown-item text-danger delete-confirm-btn" data-message="Bạn có chắc muốn xóa danh mục này?">
                                                 <i class="bx bx-trash me-1"></i> Xóa
                                             </button>
                                         </form>

@@ -164,11 +164,11 @@
 
                     <div class="d-flex gap-3 mb-4">
                         {{-- Nút gọi điện --}}
-                        <a href="tel:19001234" class="btn btn-warning btn-lg flex-grow-1 fw-bold text-white shadow-sm">
+                        <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="btn btn-warning btn-lg flex-grow-1 fw-bold text-white shadow-sm">
                             <i class="fa fa-phone-alt me-2"></i> Gọi dược sĩ
                         </a>
                         {{-- Nút Zalo --}}
-                        <a href="https://zalo.me/0123456789" target="_blank" class="btn btn-info btn-lg flex-grow-1 fw-bold text-white shadow-sm">
+                        <a href="https://zalo.me/{{ str_replace(['.', ' '], '', $global_setting->zalo ?? '0123456789') }}" target="_blank" class="btn btn-info btn-lg flex-grow-1 fw-bold text-white shadow-sm">
                             <i class="fa fa-comments me-2"></i> Chat Zalo
                         </a>
                     </div>

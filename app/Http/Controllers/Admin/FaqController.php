@@ -11,6 +11,7 @@ class FaqController extends Controller
     public function index()
     {
         $faqs = Faq::latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('faq_back_url', request()->fullUrl());
         return view('admin.faqs.index', compact('faqs'));
     }
 
@@ -38,7 +39,8 @@ class FaqController extends Controller
     public function edit($id)
     {
         $faq = Faq::findOrFail($id);
-        return view('admin.faqs.edit', compact('faq'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('faq_back_url', route('admin.faqs.index'));
+        return view('admin.faqs.edit', compact('faq', 'backUrl'));
     }
 
     public function update(Request $request, $id)
@@ -56,7 +58,8 @@ class FaqController extends Controller
             'is_active' => $request->has('is_active') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.faqs.index')->with('success', 'Cập nhật thành công!');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('faq_back_url', route('admin.faqs.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật thành công!');
     }
 
     public function destroy($id)

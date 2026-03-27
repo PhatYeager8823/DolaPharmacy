@@ -12,13 +12,14 @@
         <form action="{{ route('admin.coupons.update', $coupon->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" name="redirect_url" value="{{ $backUrl }}">
 
             {{-- KHU VỰC CHỌN ẢNH --}}
             <div class="mb-3">
                 <label class="form-label text-uppercase small fw-bold text-muted">Hình ảnh Banner</label>
                 <div class="d-flex align-items-start align-items-sm-center gap-4">
                     {{-- Hiển thị ảnh cũ nếu có, không thì hiện ảnh no-image --}}
-                    <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.webp') }}"
+                    <img src="{{ $coupon->image ? asset('images/coupons/' . $coupon->image) : asset('images/no-image.png') }}"
                          alt="coupon-img" class="d-block rounded" height="100" width="100" id="uploadedAvatar" style="object-fit: cover; border: 1px solid #d9dee3;" />
 
                     <div class="button-wrapper">
@@ -68,7 +69,7 @@
 
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
-                <a href="{{ route('admin.coupons.index') }}" class="btn btn-outline-secondary">Hủy</a>
+                <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Hủy</a>
             </div>
         </form>
     </div>

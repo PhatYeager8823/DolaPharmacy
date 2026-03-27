@@ -80,9 +80,9 @@
 
                                     {{-- 2. Nút Hủy đơn (Chỉ hiện khi Chờ xác nhận) --}}
                                     @if($order->trang_thai == 'cho_xac_nhan')
-                                        <form action="{{ route('account.orders.cancel', $order->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                        <form id="cancel-form-{{ $order->id }}" action="{{ route('account.orders.cancel', $order->id) }}" method="POST" style="display:inline;">
                                             @csrf
-                                            <button type="submit" class="btn btn-danger btn-sm me-2">Hủy đơn</button>
+                                            <button type="button" class="btn btn-danger btn-sm me-2" onclick="confirmCancel({{ $order->id }})">Hủy đơn</button>
                                         </form>
                                     @endif
 
@@ -109,3 +109,24 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function confirmCancel(orderId) {
+        Swal.fire({
+            title: 'Hủy đơn hàng?',
+            text: "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Đồng ý hủy',
+            cancelButtonText: 'Quay lại'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('cancel-form-' + orderId).submit();
+            }
+        });
+    }
+</script>
+@endpush

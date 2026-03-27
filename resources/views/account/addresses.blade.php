@@ -25,14 +25,6 @@
 
             {{-- NỘI DUNG CHÍNH --}}
             <div class="col-12 col-lg-9">
-                {{-- Hiển thị thông báo --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom-0 py-3 d-flex justify-content-between align-items-center">
                         <h5 class="fw-bold mb-0">Sổ địa chỉ</h5>
@@ -255,13 +247,24 @@
     }
 
     function deleteAddress(id) {
-        if(confirm('Bạn có chắc muốn xóa địa chỉ này?')) {
-            let url = "{{ route('address.destroy', ':id') }}";
-            url = url.replace(':id', id);
-            let form = document.getElementById('deleteForm');
-            form.action = url;
-            form.submit();
-        }
+        Swal.fire({
+            title: 'Xác nhận xóa?',
+            text: "Bạn có chắc muốn xóa địa chỉ này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let url = "{{ route('address.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                let form = document.getElementById('deleteForm');
+                form.action = url;
+                form.submit();
+            }
+        });
     }
 </script>
 @endsection

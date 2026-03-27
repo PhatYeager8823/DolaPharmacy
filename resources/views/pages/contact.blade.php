@@ -32,7 +32,7 @@
                     <div>
                         <h6 class="fw-bold mb-1">Hotline tư vấn</h6>
                         <p class="text-secondary mb-0">
-                            <a href="tel:0123456789" class="text-decoration-none text-secondary">{{ $global_setting->hotline ?? '0123.456.789' }}</a>
+                            <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="text-decoration-none text-secondary">{{ $global_setting->hotline ?? '0123.456.789' }}</a>
                         </p>
                     </div>
                 </div>
@@ -73,11 +73,6 @@
                 <div class="card border-0 shadow-sm p-4">
                     <h3 class="fw-bold mb-4">Gửi tin nhắn cho chúng tôi</h3>
 
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
-                        </div>
-                    @endif
 
                     <form action="{{ route('contact.store') }}" method="POST">
                         @csrf

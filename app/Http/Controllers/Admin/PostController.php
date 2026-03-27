@@ -15,6 +15,7 @@ class PostController extends Controller
     {
         // Lấy bài viết mới nhất trước, phân trang 10 bài
         $posts = BaiViet::latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('post_back_url', request()->fullUrl());
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -61,7 +62,8 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = BaiViet::findOrFail($id);
-        return view('admin.posts.edit', compact('post'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('post_back_url', route('admin.posts.index'));
+        return view('admin.posts.edit', compact('post', 'backUrl'));
     }
 
     // 5. Xử lý cập nhật
@@ -83,8 +85,8 @@ class PostController extends Controller
         // Xử lý ảnh mới
         if ($request->hasFile('hinh_anh')) {
             // Xóa ảnh cũ nếu có
-            if ($post->hinh_anh && File::exists(public_path('images/news/' . $post->hinh_anh))) {
-                File::delete(public_path('images/news/' . $post->hinh_anh));
+            if ($post->hinh_anh && \Illuminate\Support\Facades\File::exists(public_path('images/news/' . $post->hinh_anh))) {
+                \Illuminate\Support\Facades\File::delete(public_path('images/news/' . $post->hinh_anh));
             }
 
             $file = $request->file('hinh_anh');
@@ -95,7 +97,8 @@ class PostController extends Controller
 
         $post->update($data);
 
-        return redirect()->route('admin.posts.index')->with('success', 'Cập nhật bài viết thành công');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('post_back_url', route('admin.posts.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật bài viết thành công');
     }
 
     // 6. Xóa bài viết

@@ -27,6 +27,7 @@ class SettingController extends Controller
         $setting = Setting::first();
 
         $data = $request->all();
+        $data['is_promo_active'] = $request->has('is_promo_active') ? 1 : 0;
 
         // Xử lý upload Logo
         if ($request->hasFile('logo')) {

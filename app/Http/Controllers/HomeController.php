@@ -57,12 +57,11 @@ class HomeController extends Controller
                                  ->take(8)
                                  ->get();
 
-        // 6. KHUYẾN MÃI HOT (Tự động dựa trên giá: Có giảm giá là hiện)
-        // Mục này thường tự động là tốt nhất, không cần tích tay
+        // 6. KHUYẾN MÃI HOT (Dựa vào cột is_hot_deal)
         $hotDeals = Thuoc::where('is_active', 1)
                          ->where('ke_don', 0)
-                         ->where('so_luong_ton', '>', 0) // <--- CHỈ LẤY CÒN HÀNG
-                         ->where('gia_cu', '>', 'gia_ban') // Giá cũ > Giá bán
+                         ->where('so_luong_ton', '>', 0)
+                         ->where('is_hot_deal', 1) // <--- Lấy theo tích tay
                          ->orderBy('created_at', 'desc')
                          ->take(8)
                          ->get();

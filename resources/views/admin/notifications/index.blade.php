@@ -70,10 +70,9 @@
                         </td>
                         <td>{{ $notif->created_at->format('d/m/Y H:i') }}</td>
                         <td>
-                            <form action="{{ route('admin.notifications.destroy', $notif->id) }}" method="POST"
-                                  onsubmit="return confirm('Xóa thông báo này?');">
+                            <form action="{{ route('admin.notifications.destroy', $notif->id) }}" method="POST">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-confirm-btn" data-message="Bạn có chắc muốn xóa thông báo này?">
                                     <i class="bx bx-trash"></i> Xóa
                                 </button>
                             </form>

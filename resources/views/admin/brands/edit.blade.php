@@ -15,6 +15,7 @@
                     <form action="{{ route('admin.brands.update', $brand->id) }}" method="POST">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="redirect_url" value="{{ $backUrl }}">
 
                         <div class="mb-3">
                             <label class="form-label">Tên thương hiệu <span class="text-danger">*</span></label>
@@ -27,7 +28,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
-                        <a href="{{ route('admin.brands.index') }}" class="btn btn-outline-secondary">Hủy</a>
+                        <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Hủy</a>
                     </form>
                 </div>
             </div>

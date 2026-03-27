@@ -13,6 +13,7 @@ class SupplierController extends Controller
     {
         // Lấy danh sách mới nhất, phân trang 10
         $suppliers = NhaCungCap::latest()->paginate(10);
+        \Illuminate\Support\Facades\Session::put('supplier_back_url', request()->fullUrl());
         return view('admin.suppliers.index', compact('suppliers'));
     }
 
@@ -48,7 +49,8 @@ class SupplierController extends Controller
     public function edit($id)
     {
         $supplier = NhaCungCap::findOrFail($id);
-        return view('admin.suppliers.edit', compact('supplier'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('supplier_back_url', route('admin.suppliers.index'));
+        return view('admin.suppliers.edit', compact('supplier', 'backUrl'));
     }
 
     // 5. Xử lý cập nhật
@@ -68,7 +70,8 @@ class SupplierController extends Controller
             'trang_thai' => $request->has('trang_thai') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.suppliers.index')->with('success', 'Cập nhật thành công!');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('supplier_back_url', route('admin.suppliers.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật thành công!');
     }
 
     // 6. Xóa

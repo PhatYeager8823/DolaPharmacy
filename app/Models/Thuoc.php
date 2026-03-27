@@ -45,6 +45,7 @@ class Thuoc extends Model
         'is_exclusive', // <--- Mới
         'is_suggested', // <--- Mới
         'is_featured',
+        'is_hot_deal',
     ];
 
     // Relationships

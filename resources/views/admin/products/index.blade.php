@@ -135,11 +135,10 @@
                                         <i class="bx bx-edit-alt me-1"></i> Sửa
                                     </a>
                                     {{-- THAY BẰNG ĐOẠN NÀY: --}}
-                                    <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thuốc này không?');">
+                                    <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST">
                                         @csrf
-                                        @method('DELETE') {{-- Giả lập phương thức DELETE --}}
-
-                                        <button type="submit" class="dropdown-item text-danger" style="border: none; background: none;">
+                                        @method('DELETE')
+                                        <button type="button" class="dropdown-item text-danger delete-confirm-btn" data-message="Bạn có chắc chắn muốn xóa thuốc này không?">
                                             <i class="bx bx-trash me-1"></i> Xóa
                                         </button>
                                     </form>

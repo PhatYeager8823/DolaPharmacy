@@ -12,6 +12,7 @@ class SliderController extends Controller
     public function index()
     {
         $sliders = Slider::orderBy('thu_tu', 'asc')->get();
+        \Illuminate\Support\Facades\Session::put('slider_back_url', request()->fullUrl());
         return view('admin.sliders.index', compact('sliders'));
     }
 
@@ -68,7 +69,8 @@ class SliderController extends Controller
     public function edit($id)
     {
         $slider = Slider::findOrFail($id);
-        return view('admin.sliders.edit', compact('slider'));
+        $backUrl = \Illuminate\Support\Facades\Session::get('slider_back_url', route('admin.sliders.index'));
+        return view('admin.sliders.edit', compact('slider', 'backUrl'));
     }
 
     public function update(Request $request, $id)
@@ -91,7 +93,8 @@ class SliderController extends Controller
 
         $slider->update($data);
 
-        return redirect()->route('admin.sliders.index')->with('success', 'Cập nhật Slider thành công!');
+        $redirectUrl = $request->input('redirect_url', \Illuminate\Support\Facades\Session::get('slider_back_url', route('admin.sliders.index')));
+        return redirect($redirectUrl)->with('success', 'Cập nhật Slider thành công!');
     }
 
     public function destroy($id)

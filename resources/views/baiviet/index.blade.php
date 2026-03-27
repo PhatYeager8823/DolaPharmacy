@@ -13,7 +13,7 @@
                     {{-- Thêm 'news/' vào đường dẫn --}}
                     <img src="{{ asset('images/news/' . $post->hinh_anh) }}" class="card-img-top" alt="{{ $post->tieu_de }}"
                         style="height: 200px; object-fit: cover; transition: transform 0.3s;"
-                        onerror="this.src='{{ asset('images/no-image.webp') }}'"> {{-- Thêm xử lý nếu ảnh lỗi --}}
+                        onerror="this.src='{{ asset('images/no-image.png') }}'"> {{-- Thêm xử lý nếu ảnh lỗi --}}
                 </a>
                 <div class="card-body">
                     <div class="text-muted small mb-2"><i class="far fa-calendar-alt me-1"></i> {{ $post->created_at->format('d/m/Y') }}</div>

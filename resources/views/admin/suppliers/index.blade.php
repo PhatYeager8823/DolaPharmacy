@@ -73,10 +73,10 @@
                                         <i class="bx bx-edit-alt me-1"></i> Sửa
                                     </a>
 
-                                    <form action="{{ route('admin.suppliers.destroy', $ncc->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa nhà cung cấp này?');">
+                                    <form action="{{ route('admin.suppliers.destroy', $ncc->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger">
+                                        <button type="button" class="dropdown-item text-danger delete-confirm-btn" data-message="Bạn có chắc muốn xóa nhà cung cấp này?">
                                             <i class="bx bx-trash me-1"></i> Xóa
                                         </button>
                                     </form>

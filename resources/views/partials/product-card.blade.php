@@ -26,9 +26,9 @@
         {{-- ẢNH SẢN PHẨM (CHIỀU CAO CỐ ĐỊNH) --}}
         <div class="fp-image">
             <a href="{{ route('thuoc.show', $product->slug) }}" class="d-block w-100 h-100">
-                <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.webp') }}"
+                <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
                      alt="{{ $product->ten_thuoc }}"
-                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.webp') }}';">
+                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';">
             </a>
         </div>
 
@@ -73,7 +73,7 @@
         <div class="fp-actions">
             @if($product->so_luong_ton > 0)
                 @if($product->ke_don == 1)
-                    <a href="tel:19001234" class="fp-consult-btn" title="Cần tư vấn">
+                    <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="fp-consult-btn" title="Cần tư vấn">
                         <i class="fa fa-user-md"></i>
                     </a>
                 @else

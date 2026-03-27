@@ -59,7 +59,7 @@
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
-                    <a href="{{ route('admin.sliders.index') }}" class="btn btn-outline-secondary">Hủy</a>
+                    <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Hủy</a>
                 </div>
             </form>
         </div>

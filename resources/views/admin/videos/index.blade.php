@@ -52,9 +52,11 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{{ route('admin.videos.edit', $vid->id) }}"><i class="bx bx-edit-alt me-1"></i> Sửa</a>
-                                    <form action="{{ route('admin.videos.destroy', $vid->id) }}" method="POST" onsubmit="return confirm('Xóa video này?');">
+                                    <form action="{{ route('admin.videos.destroy', $vid->id) }}" method="POST">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger"><i class="bx bx-trash me-1"></i> Xóa</button>
+                                        <button type="button" class="dropdown-item text-danger delete-confirm-btn" data-message="Bạn có chắc muốn xóa video này?">
+                                            <i class="bx bx-trash me-1"></i> Xóa
+                                        </button>
                                     </form>
                                 </div>
                             </div>
