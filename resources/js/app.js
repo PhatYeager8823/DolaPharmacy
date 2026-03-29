@@ -33,6 +33,7 @@ const heroSwiper = new Swiper('.hero-swiper', {
         delay: 4000, // 3000ms = 3 giây
         disableOnInteraction: false, // Vẫn tự chạy sau khi người dùng
                                      // tự bấm next/prev
+        pauseOnMouseEnter: true,      // Tạm dừng khi di chuột vào (Để tránh nhảy liên tục)
     },
 
     // Kích hoạt nút Next/Prev
@@ -40,6 +41,12 @@ const heroSwiper = new Swiper('.hero-swiper', {
         el: '.swiper-pagination',
         clickable: true, // Cho phép bấm vào chấm để chuyển slide
     },
+
+    navigation: {
+        nextEl: '.hero-next',
+        prevEl: '.hero-prev',
+    },
+    watchOverflow: false, // Hiện mũi tên ngay cả khi ít slide
 });
 
 const featuredCatSwiper = new Swiper('.featured-categories-swiper', {
@@ -48,6 +55,7 @@ const featuredCatSwiper = new Swiper('.featured-categories-swiper', {
     autoplay: {
         delay: 4500,            // GIẢM TỐC – tự chạy chậm giống mẫu
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
 
     speed: 900,                 // Chuyển slide mượt hơn
@@ -59,6 +67,7 @@ const featuredCatSwiper = new Swiper('.featured-categories-swiper', {
         nextEl: '.featured-cat-next',
         prevEl: '.featured-cat-prev',
     },
+    watchOverflow: false,
 
     breakpoints: {
         0:   { slidesPerView: 2.5, spaceBetween: 16 },
@@ -74,6 +83,7 @@ const hotDealsSwiper = new Swiper('.hot-deals-swiper', {
     autoplay: {
         delay: 4500,
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
     speed: 900,
     slidesPerView: 2.2, // Hiển thị hơn 2 item trên mobile
@@ -82,6 +92,7 @@ const hotDealsSwiper = new Swiper('.hot-deals-swiper', {
         nextEl: '.hot-deals-next',
         prevEl: '.hot-deals-prev',
     },
+    watchOverflow: false,
     breakpoints: {
         576: { slidesPerView: 2.2, spaceBetween: 16 },
         768: { slidesPerView: 3, spaceBetween: 18 },
@@ -96,14 +107,16 @@ const newProductsSwiper = new Swiper('.new-products-swiper', {
     autoplay: {
         delay: 4500,
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
     speed: 900,
-    slidesPerView: 2.2, // Chỉnh xuống mobile
-    spaceBetween: 10,
+    slidesPerView: 2.2, // Hiển thị đồng nhất với Hot Deals
+    spaceBetween: 12,
     navigation: {
         nextEl: '.new-products-next',
         prevEl: '.new-products-prev',
     },
+    watchOverflow: false,
     breakpoints: {
         576: { slidesPerView: 2.2, spaceBetween: 16 },
         768: { slidesPerView: 3,   spaceBetween: 18 },
@@ -117,6 +130,7 @@ const featuredProductsSwiper = new Swiper('.featured-products-swiper', {
     autoplay: {
         delay: 4500,
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
     speed: 900,
     slidesPerView: 2.2, // Chỉnh xuống mobile
@@ -125,6 +139,7 @@ const featuredProductsSwiper = new Swiper('.featured-products-swiper', {
         nextEl: '.featured-products-next',
         prevEl: '.featured-products-prev',
     },
+    watchOverflow: false,
     breakpoints: {
         576: { slidesPerView: 2.2, spaceBetween: 16 },
         768: { slidesPerView: 3,   spaceBetween: 18 },
@@ -137,6 +152,7 @@ const videoSwiper = new Swiper('.video-swiper', {
     autoplay: {
         delay: 4500,
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
     speed: 900,
     slidesPerView: 1.1,
@@ -145,6 +161,7 @@ const videoSwiper = new Swiper('.video-swiper', {
         nextEl: '.video-swiper-button-next',
         prevEl: '.video-swiper-button-prev',
     },
+    watchOverflow: false,
     breakpoints: {
         576: { slidesPerView: 2, spaceBetween: 18 },
         992: { slidesPerView: 3, spaceBetween: 20 },

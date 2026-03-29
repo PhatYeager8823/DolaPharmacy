@@ -48,6 +48,10 @@
 
                         {{-- Nút tròn phân trang --}}
                         <div class="swiper-pagination"></div>
+
+                        {{-- Nút điều hướng (Thêm theo yêu cầu) --}}
+                        <div class="hero-prev"></div>
+                        <div class="hero-next"></div>
                     </div>
                 </div>
 
@@ -131,7 +135,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-tpcn.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-tpcn.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Thực Phẩm<br>Chức Năng</div>
                             </a>
@@ -141,7 +145,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-tang-can.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-tang-can.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Tăng Cân</div>
                             </a>
@@ -151,7 +155,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-giam-can.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-giam-can.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Giảm Cân</div>
                             </a>
@@ -161,7 +165,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-qua-tang.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-qua-tang.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Quà Tặng<br>Sức Khỏe</div>
                             </a>
@@ -171,7 +175,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-thiet-bi-y-te.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-thiet-bi-y-te.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Thiết Bị Y Tế</div>
                             </a>
@@ -181,7 +185,7 @@
                         <div class="swiper-slide">
                             <a href="#" class="featured-category-item">
                                 <div class="icon-wrap">
-                                    <img src="{{ asset('images/icons/cat-khuyen-mai-hot.webp') }}" alt="">
+                                    <img src="{{ asset('images/icons/cat-khuyen-mai-hot.webp') }}" alt="" loading="lazy">
                                 </div>
                                 <div class="title">Khuyến mãi hot</div>
                             </a>
@@ -191,8 +195,8 @@
                 </div>
 
                 {{-- Nút điều hướng --}}
-                <div class="swiper-button-prev featured-cat-prev"></div>
-                <div class="swiper-button-next featured-cat-next"></div>
+                <div class="featured-cat-prev"></div>
+                <div class="featured-cat-next"></div>
             </div>
         </div>
     </section>
@@ -248,8 +252,8 @@
                 </div>
 
                 {{-- Nút prev/next riêng cho section này --}}
-                <div class="swiper-button-prev hot-deals-prev"></div>
-                <div class="swiper-button-next hot-deals-next"></div>
+                <div class="hot-deals-prev"></div>
+                <div class="hot-deals-next"></div>
             </div>
 
             {{-- Nút xem tất cả --}}
@@ -280,8 +284,8 @@
                 </div>
 
                 {{-- Nút điều hướng --}}
-                <div class="swiper-button-prev new-products-prev"></div>
-                <div class="swiper-button-next new-products-next"></div>
+                <div class="new-products-prev"></div>
+                <div class="new-products-next"></div>
             </div>
 
             {{-- Nút xem tất cả --}}
@@ -303,13 +307,13 @@
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banners/banner_spm1.webp') }}" alt="Banner 1">
+                            <img src="{{ asset('images/banners/banner_spm1.webp') }}" alt="Banner 1" loading="lazy">
                         </a>
                     </div>
 
                     <div class="col-12 col-md-6">
                         <a href="#" class="sub-banner-card">
-                            <img src="{{ asset('images/banners/banner_spm2.webp') }}" alt="Banner 2">
+                            <img src="{{ asset('images/banners/banner_spm2.webp') }}" alt="Banner 2" loading="lazy">
                         </a>
                     </div>
 
@@ -331,7 +335,7 @@
                 {{-- Banner lớn bên trái (Giữ nguyên) --}}
                 <div class="col-12 col-lg-3 shine-effect">
                     <a href="#" class="featured-banner-card">
-                        <img src="{{ asset('images/banners/banner_spnb1.webp') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                        <img src="{{ asset('images/banners/banner_spnb1.webp') }}" alt="Banner nổi bật" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;" loading="lazy">
                     </a>
                 </div>
 
@@ -373,7 +377,7 @@
                 {{-- Ảnh bên trái --}}
                 <div class="col-12 col-lg-5 d-flex">
                     <div class="about-image-card shine-effect flex-fill">
-                        <img src="{{ asset('images/banners/gioithieu_doctor.webp') }}" alt="Giới thiệu Dola Pharmacy">
+                        <img src="{{ asset('images/banners/gioithieu_doctor.webp') }}" alt="Giới thiệu Dola Pharmacy" loading="lazy">
                     </div>
                 </div>
 
@@ -499,10 +503,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/tranhxabenhtat.webp') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/tranhxabenhtat.webp') }}" alt="Banner 1" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/uudaidocquyen.webp') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/uudaidocquyen.webp') }}" alt="Banner 2" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -554,10 +558,10 @@
                 <div class="col-12 col-lg-3 d-flex">
                     <div class="exclusive-left-banners flex-fill d-flex flex-column gap-3">
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/lamsachlanda.webp') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/lamsachlanda.webp') }}" alt="Gợi ý 1" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                         </div>
                         <div class="exclusive-banner-card shine-effect">
-                            <img src="{{ asset('images/banners/xithongkeoong.webp') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('images/banners/xithongkeoong.webp') }}" alt="Gợi ý 2" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                         </div>
                     </div>
                 </div>

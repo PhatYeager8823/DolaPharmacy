@@ -41,9 +41,8 @@
                         {{-- KIỂM TRA ĐĂNG NHẬP --}}
                         @guest
                             <li class="nav-item d-flex align-items-center">
-                                <a class="nav-link text-white fw-bold px-2 py-0" href="{{ route('login') }}">Đăng nhập</a>
-                                <span class="text-white mx-1 fw-bold">/</span>
-                                <a class="nav-link text-white fw-bold px-2 py-0" href="{{ route('register') }}">Đăng ký</a>
+                                <a class="link-auth" href="{{ route('login') }}">ĐĂNG NHẬP</a>
+                                <a class="link-auth" href="{{ route('register') }}">ĐĂNG KÝ</a>
                             </li>
                         @else
                             {{-- ĐÃ ĐĂNG NHẬP --}}
@@ -131,17 +130,17 @@
                     </button>
                 </div>
 
-                <div class="pharmacy-search flex-grow-1 header-search-wrapper mt-2 mt-lg-0 order-5 order-lg-3">
-                    <form action="{{ route('thuoc.index') }}" method="GET" class="header-search-form m-0">
-                        <button class="header-search-btn" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
+                <div class="pharmacy-search flex-grow-1 order-5 order-lg-3">
+                    <form action="{{ route('thuoc.index') }}" method="GET" class="search-form-wrapper m-0">
                         <input type="text"
                             name="keyword"
-                            class="header-search-input"
+                            class="search-input"
                             placeholder="Bạn đang tìm gì hôm nay..."
                             value="{{ request('keyword') }}"
                             required>
+                        <button class="search-btn" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </form>
                 </div>
 
@@ -348,10 +347,8 @@
                 <div class="mobile-auth-links d-flex align-items-center gap-2">
                     <i class="fa fa-user-circle text-secondary fs-4"></i>
                     <div>
-                        <a href="{{ route('login') }}" class="text-decoration-none fw-bold text-white">Đăng nhập</a>
-                        <span class="text-white-50 mx-1">/</span>
-                        {{-- SỬA ROUTE TẠI ĐÂY --}}
-                        <a href="{{ route('register') }}" class="text-decoration-none fw-bold text-white">Đăng ký</a>
+                        <a href="{{ route('login') }}" class="link-auth">ĐĂNG NHẬP</a>
+                        <a href="{{ route('register') }}" class="link-auth">ĐĂNG KÝ</a>
                     </div>
                 </div>
             @else

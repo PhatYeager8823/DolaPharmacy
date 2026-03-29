@@ -28,6 +28,7 @@
             <a href="{{ route('thuoc.show', $product->slug) }}" class="d-block w-100 h-100">
                 <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
                      alt="{{ $product->ten_thuoc }}"
+                     loading="lazy"
                      onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';">
             </a>
         </div>

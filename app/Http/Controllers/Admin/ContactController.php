@@ -24,4 +24,14 @@ class ContactController extends Controller
 
         return back()->with('success', 'Đã xóa tin nhắn liên hệ.');
     }
+
+    // Toggle trạng thái Đã đọc / Mới
+    public function toggleStatus($id)
+    {
+        $contact = LienHe::findOrFail($id);
+        $contact->trang_thai = $contact->trang_thai == 1 ? 0 : 1;
+        $contact->save();
+
+        return back()->with('success', 'Đã cập nhật trạng thái tin nhắn.');
+    }
 }

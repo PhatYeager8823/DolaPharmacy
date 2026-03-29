@@ -173,11 +173,12 @@
 
 @push('styles')
 <style>
-    .form-control, .form-select, input, textarea {
-        color: #ffffff !important;
+    /* Custom tweaks for Settings page if needed */
+    .tab-content {
+        padding: 1.5rem 0;
     }
-    .form-label {
-        color: #ffffff !important;
+    .form-text {
+        color: rgba(255,255,255,0.5) !important;
     }
 </style>
 @endpush

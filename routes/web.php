@@ -20,7 +20,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\WarehouseController; // <--- 1. Nhớ import dòng này ở đầu file
 use App\Http\Controllers\DanhGiaController;
-use App\Http\Controllers\Client\ChiNhanhController;
+// use App\Http\Controllers\Client\ChiNhanhController;
 
 // ==========================================
 // TRANG CHỦ
@@ -44,7 +44,7 @@ Route::get('/san-pham/{id}/danh-gia', function($id) {
     return redirect()->route('thuoc.show', $thuoc->slug);
 });
 
-Route::get('/he-thong-nha-thuoc', [ChiNhanhController::class, 'index'])->name('he-thong-nha-thuoc');
+// Route::get('/he-thong-nha-thuoc', [ChiNhanhController::class, 'index'])->name('he-thong-nha-thuoc');
 
 
 // ==========================================================
@@ -200,6 +200,7 @@ Route::prefix('quan-tri')
         // Contact
         // Mục Liên hệ (Chỉ cần index và destroy)
         Route::resource('contacts', App\Http\Controllers\Admin\ContactController::class)->only(['index', 'destroy']);
+        Route::patch('/contacts/{id}/toggle', [App\Http\Controllers\Admin\ContactController::class, 'toggleStatus'])->name('contacts.toggle');
 
         // Khách hàng
         // Quản lý Khách hàng (Chỉ Xem, Khóa, Xóa)

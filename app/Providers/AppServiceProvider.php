@@ -50,9 +50,12 @@ class AppServiceProvider extends ServiceProvider
                 $setting = null;
             }
 
-            // Nếu chưa có dữ liệu (hoặc chưa tạo bảng), tạo một object rỗng để không bị lỗi View
+            // Nếu chưa có dữ liệu (hoặc chưa tạo bảng), tạo một object rỗng với các giá trị mặc định để không bị lỗi View
             if (!$setting) {
                 $setting = new Setting();
+                $setting->is_promo_active = true; // Mặc định hiện promo nếu chưa cấu hình
+                $setting->promo_text = "CHÀO MỪNG BẠN MỚI";
+                $setting->hotline = "0123.456.789";
             }
 
             // Truyền biến $global_setting sang view
