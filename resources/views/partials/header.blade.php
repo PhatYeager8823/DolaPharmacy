@@ -1,7 +1,7 @@
-<header class="pharmacy-header {{ $global_setting->is_promo_active ? 'has-promo' : '' }}">
-    @if($global_setting->is_promo_active)
+<header class="pharmacy-header {{ ($global_setting && $global_setting->is_promo_active) ? 'has-promo' : '' }}">
+    @if(true || ($global_setting && $global_setting->is_promo_active))
     {{-- Banner khuyến mãi trên cùng --}}
-    <div class="pharmacy-promo">
+    <div class="pharmacy-promo" style="display: block !important;">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="promo-text">
                 <span>{{ $global_setting->promo_text ?? 'CHÀO MỪNG BẠN MỚI' }}</span>
@@ -47,7 +47,7 @@
                         @else
                             {{-- ĐÃ ĐĂNG NHẬP --}}
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-white user-greeting-pill" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Xin chào, <strong>{{ Auth::user()->ten }}</strong>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -83,10 +83,10 @@
                         @endguest
                     </ul>
 
-                    {{-- Hotline --}}
+                    {{-- Hotline (Final UI Fix) --}}
                     <span class="mx-2 text-white">|</span>
-                    <span class="text-white link-auth">Hotline đặt hàng:</span>
-                    <span class="hotline-pill ms-2 text-white">
+                    <span style="display: inline-block; color: #ffffff !important; font-weight: 800; font-size: 11px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1) !important; text-transform: uppercase; margin-left: 8px; cursor: default;">Hotline đặt hàng:</span>
+                    <span class="hotline-pill ms-2 text-white" style="background: #0056d6 !important; color: #ffffff !important;">
                         <i class="fa fa-phone-alt me-1"></i>
                         {{ $global_setting->hotline ?? '0123.456.789' }}
                     </span>

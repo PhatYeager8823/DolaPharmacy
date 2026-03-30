@@ -63,13 +63,8 @@ $color-glow-primary: rgba(0, 122, 255, 0.5); // Ánh sáng xanh dương
     &.scrolled {
         box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
         
-        // Không ẩn thanh top-links (giữ lại theo ý người dùng)
-        transform: translateY(0);
-
-        // Nếu có promo, để khoảng 70px theo ý bạn để cân đối nhất
-        &.has-promo {
-            transform: translateY(-70px);
-        }
+        // Luôn giữ ở vị trí 0 khi cuộn (không ẩn promo nữa để ổn định)
+        transform: translateY(0) !important;
     }
 
     @media (max-width: 991.98px) {
