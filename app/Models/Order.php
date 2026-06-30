@@ -12,7 +12,8 @@ class Order extends Model
     protected $fillable = [
         'ma_don_hang', 'nguoi_dung_id',
         'ten_nguoi_nhan', 'sdt_nguoi_nhan', 'dia_chi_giao_hang',
-        'tong_tien', 'phuong_thuc_thanh_toan', 'trang_thai', 'ghi_chu'
+        'tong_tien', 'phuong_thuc_thanh_toan', 'trang_thai', 'ghi_chu',
+        'is_admin_notified'
     ];
 
     public function items()

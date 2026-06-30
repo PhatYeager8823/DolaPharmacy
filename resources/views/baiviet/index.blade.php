@@ -2,8 +2,16 @@
 @section('title', 'Góc sức khỏe')
 
 @section('content')
-<div class="container py-5">
-    <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Góc sức khỏe & Y khoa</h2>
+{{-- 1. HEADER BANNER --}}
+<div class="bg-primary pt-4 pb-2 py-lg-5 text-center text-white">
+    <div class="container">
+        <h1 class="fw-bold display-6">Góc Sức Khỏe & Y Khoa</h1>
+        <p class="lead mb-0">Cập nhật kiến thức y tế và bí quyết chăm sóc sức khỏe mỗi ngày</p>
+    </div>
+</div>
+
+<div class="bg-light pb-5 pt-0 pt-lg-5">
+    <div class="container">
 
     <div class="row g-4">
         @foreach($posts as $post)

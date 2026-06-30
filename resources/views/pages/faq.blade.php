@@ -2,13 +2,20 @@
 @section('title', 'Câu hỏi thường gặp')
 
 @section('content')
-<div class="bg-light py-5">
+{{-- 1. HEADER BANNER --}}
+<div class="bg-primary pt-4 pb-2 py-lg-5 text-center text-white">
+    <div class="container">
+        <h1 class="fw-bold display-6">Câu hỏi thường gặp</h1>
+        <p class="lead mb-0">Giải đáp những thắc mắc phổ biến của bạn</p>
+    </div>
+</div>
+
+<div class="bg-light pb-5 pt-0 pt-lg-5">
     <div class="container">
 
-        {{-- Header --}}
-        <div class="text-center mb-5">
+        {{-- Header (Đã chuyển lên Banner nhưng giữ lại text phụ nếu cần hoặc xóa bớt) --}}
+        <div class="text-center mb-5 d-none d-lg-block">
             <h5 class="text-primary fw-bold text-uppercase">Hỗ trợ khách hàng</h5>
-            <h1 class="fw-bold">Câu hỏi thường gặp</h1>
             <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
                 Tổng hợp những thắc mắc phổ biến nhất của khách hàng khi mua sắm tại {{ $global_setting->ten_website }}.
             </p>

@@ -5,9 +5,6 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">Quản lý Đơn hàng</h4>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
 
     <div class="card">
         <h5 class="card-header">Danh sách đơn hàng</h5>
@@ -34,6 +31,8 @@
                                         <span class="badge bg-warning text-dark border border-warning shadow-sm"><i class='bx bx-credit-card me-1'></i>Chuyển khoản</span>
                                     @elseif($order->phuong_thuc_thanh_toan == 'cod')
                                         <span class="badge bg-success shadow-sm"><i class='bx bx-money me-1'></i>Tiền mặt (COD)</span>
+                                    @elseif($order->phuong_thuc_thanh_toan == 'momo')
+                                        <span class="badge shadow-sm" style="background-color: #d2005a; color: #ffffff;"><i class='bx bx-wallet me-1'></i>Ví MoMo</span>
                                     @endif
                                 @endif
                             </div>
@@ -63,19 +62,22 @@
                         <td class="text-primary fw-bold">{{ number_format($order->tong_tien) }} đ</td>
                         <td>
                             @php
-                                $badgeClass = match($order->trang_thai) {
+                                $statusKey = strtolower($order->trang_thai);
+                                $badgeClass = match($statusKey) {
                                     'cho_xac_nhan' => 'bg-label-secondary',
+                                    'cho_lay_hang' => 'bg-label-warning',
                                     'dang_giao' => 'bg-label-info',
                                     'da_giao' => 'bg-label-success',
                                     'da_huy' => 'bg-label-danger',
                                     default => 'bg-label-primary'
                                 };
-                                $statusText = match($order->trang_thai) {
+                                $statusText = match($statusKey) {
                                     'cho_xac_nhan' => 'Chờ xác nhận',
+                                    'cho_lay_hang' => 'Chờ lấy hàng',
                                     'dang_giao' => 'Đang giao',
                                     'da_giao' => 'Đã giao',
                                     'da_huy' => 'Đã hủy',
-                                    default => $order->trang_thai
+                                    default => strtoupper(str_replace('_', ' ', $order->trang_thai))
                                 };
                             @endphp
                             <span class="badge {{ $badgeClass }}">{{ $statusText }}</span>

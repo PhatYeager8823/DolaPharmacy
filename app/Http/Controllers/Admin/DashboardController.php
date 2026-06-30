@@ -40,7 +40,24 @@ class DashboardController extends Controller
             $monthlyRevenue[] = (float)($revenueData[$i] ?? 0);
         }
 
-        // 3. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (DOUGHNUT CHART)
+        // 3. BIỂU ĐỒ SỐ ĐƠN HÀNG 12 THÁNG (WAVY CHART)
+        $ordersData = Order::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('COUNT(id) as total')
+        )
+        ->where('trang_thai', 'da_giao')
+        ->whereYear('created_at', date('Y'))
+        ->groupBy('month')
+        ->orderBy('month')
+        ->pluck('total', 'month')
+        ->toArray();
+
+        $monthlyOrders = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyOrders[] = (int)($ordersData[$i] ?? 0);
+        }
+
+        // 4. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (DOUGHNUT CHART)
         $statusCounts = Order::select('trang_thai', DB::raw('count(*) as total'))
             ->groupBy('trang_thai')
             ->pluck('total', 'trang_thai')
@@ -54,13 +71,21 @@ class DashboardController extends Controller
             $statusCounts['da_huy'] ?? 0,
         ];
 
+        // Danh sách thuốc sắp hết hàng (< 10 hộp)
+        $lowStockProducts = Thuoc::where('so_luong_ton', '<', 10)
+                                 ->orderBy('so_luong_ton', 'asc')
+                                 ->limit(6)
+                                 ->get();
+
         return view('admin.dashboard.index', compact(
             'totalRevenue',
             'totalOrders',
             'totalProducts',
             'totalUsers',
             'monthlyRevenue',
-            'orderStats'
+            'monthlyOrders',
+            'orderStats',
+            'lowStockProducts'
         ));
     }
 }

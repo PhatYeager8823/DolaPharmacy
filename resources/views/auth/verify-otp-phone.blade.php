@@ -31,12 +31,6 @@
                             @endfor
                         </div>
 
-                        {{-- Hiển thị lỗi từ Session (Controller trả về) --}}
-                        @if(session('error'))
-                            <div class="alert alert-danger py-2 mb-3 small fw-bold">
-                                <i class="fa fa-exclamation-triangle me-1"></i> {{ session('error') }}
-                            </div>
-                        @endif
 
                         {{-- Hiển thị lỗi Validate --}}
                         @error('otp')
@@ -100,6 +94,33 @@
 
     window.onload = function() {
         if(inputs.length > 0) inputs[0].focus();
+
+        // [MỚI] AUTO-FILL OTP KHI DEV (CHỈ TRÊN LOCAL)
+        @if(session('dev_otp') && app()->environment('local'))
+            const devOtp = "{{ session('dev_otp') }}";
+            console.log("🔧 Dev Mode OTP captured:", devOtp);
+            
+            // Hiện thông báo cho Dev
+            Swal.fire({
+                title: '🔧 Dev Mode OTP',
+                text: 'Mã xác thực của bạn là: ' + devOtp,
+                icon: 'info',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+
+            // Tự động điền vào các ô
+            const otpArray = devOtp.split('');
+            inputs.forEach((input, index) => {
+                if (otpArray[index]) {
+                    input.value = otpArray[index];
+                }
+            });
+            updateRealInput();
+        @endif
     };
 </script>
 

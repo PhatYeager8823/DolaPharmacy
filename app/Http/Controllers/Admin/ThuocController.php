@@ -60,9 +60,8 @@ class ThuocController extends Controller
     // 2. Giao diện Thêm mới thuốc
     public function create()
     {
-        // Lấy dữ liệu để đổ vào các ô chọn (Select box)
-        // Chỉ lấy danh mục con (những danh mục có cha) để gán thuốc
-        $categories = DanhMuc::whereNotNull('danh_muc_cha_id')->get();
+        // Lấy tất cả danh mục để hiển thị phân cấp
+        $categories = DanhMuc::all();
         $brands = Brand::all();
         $suppliers = NhaCungCap::all();
 
@@ -91,9 +90,9 @@ class ThuocController extends Controller
 
         $data['so_luong_ton'] = 0; // <--- Mặc định thuốc mới tạo là 0
 
-        // Tự động tạo slug từ tên
-        // 1. Tạo slug gốc từ tên
-        $slugOriginal = Str::slug($request->ten_thuoc);
+        // Tự động tạo slug từ tên (Hoặc ghi đè bằng Slug do Form gửi lên)
+        // 1. Tạo slug gốc
+        $slugOriginal = $request->slug ? Str::slug($request->slug) : Str::slug($request->ten_thuoc);
         $slug = $slugOriginal;
 
         // 2. Kiểm tra xem slug này đã tồn tại chưa (Tính cả trong thùng rác - withTrashed)
@@ -142,7 +141,7 @@ class ThuocController extends Controller
     public function edit(string $id)
     {
         $product = Thuoc::findOrFail($id);
-        $categories = DanhMuc::whereNotNull('danh_muc_cha_id')->get();
+        $categories = DanhMuc::all();
         $brands = Brand::all();
         $suppliers = NhaCungCap::all();
 
@@ -175,7 +174,18 @@ class ThuocController extends Controller
 
         $data = $request->all();
         $data = $request->except(['so_luong_ton']); // <--- Loại bỏ, không cho sửa số lượng ở đây
-        $data['slug'] = Str::slug($request->ten_thuoc);
+        
+        // 1. Tạo slug gốc
+        $slugOriginal = $request->slug ? Str::slug($request->slug) : Str::slug($request->ten_thuoc);
+        $slug = $slugOriginal;
+        
+        // 2. Kiểm tra trùng slug với các sản phẩm KHÁC
+        $count = 1;
+        while (Thuoc::withTrashed()->where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+            $slug = $slugOriginal . '-' . $count;
+            $count++;
+        }
+        $data['slug'] = $slug;
 
         // Xử lý Checkbox (Nếu không tích -> trả về 0)
         $data['ke_don']        = $request->has('ke_don') ? 1 : 0;
@@ -208,6 +218,21 @@ class ThuocController extends Controller
         $redirectUrl = $request->input('redirect_url', Session::get('product_back_url', route('admin.products.index')));
 
         return redirect($redirectUrl)->with('success', 'Cập nhật thuốc thành công!');
+    }
+
+    // [MỚI] API Gợi ý tìm kiếm thuốc (AJAX)
+    public function suggest(Request $request)
+    {
+        $keyword = $request->keyword;
+        if (!$keyword) return response()->json([]);
+
+        $products = Thuoc::where('ten_thuoc', 'like', "%{$keyword}%")
+            ->orWhere('ma_san_pham', 'like', "%{$keyword}%")
+            ->select('id', 'ten_thuoc', 'ma_san_pham', 'hinh_anh')
+            ->limit(10)
+            ->get();
+
+        return response()->json($products);
     }
 
     // 6. Xóa sản phẩm

@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             BaiVietSeeder::class,
             VideoSeeder::class,
             FaqSeeder::class,
+            CouponSeeder::class,
+            SliderSeeder::class,
         ]);
     }
 }

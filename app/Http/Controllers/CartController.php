@@ -399,4 +399,22 @@ class CartController extends Controller
         // 4. Chuyển hướng về trang giỏ hàng
         return redirect()->route('cart.index')->with('success', 'Đã thêm các sản phẩm vào giỏ hàng!');
     }
+
+    // Xóa lịch sử sản phẩm đã đặt (Gần đây)
+    public function clearHistory()
+    {
+        if (!Auth::check()) return response()->json(['success' => false]);
+
+        $user = Auth::user();
+        $gioHang = GioHang::where('nguoi_dung_id', $user->id)->first();
+
+        if ($gioHang) {
+            $gioHang->chiTiets()->where('trang_thai', 1)->delete();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã dọn dẹp lịch sử đặt hàng!'
+        ]);
+    }
 }

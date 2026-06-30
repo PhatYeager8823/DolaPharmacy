@@ -35,4 +35,16 @@ class DanhMuc extends Model
     {
         return $this->hasMany(Thuoc::class, 'danh_muc_id');
     }
+
+    // [MỚI] Lấy tên đầy đủ theo phân cấp: Thuốc > Kê đơn > Tiêu hóa
+    public function getFullHierarchyAttribute()
+    {
+        $path = [$this->ten_danh_muc];
+        $parent = $this->parent;
+        while ($parent) {
+            array_unshift($path, $parent->ten_danh_muc);
+            $parent = $parent->parent;
+        }
+        return implode(' > ', $path);
+    }
 }

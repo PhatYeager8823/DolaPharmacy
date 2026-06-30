@@ -16,20 +16,24 @@
         </div>
 
         {{-- Toolbar: Tìm kiếm & Bộ lọc (Đã tách riêng cho đẹp) --}}
-        <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <div class="d-flex align-items-center gap-2">
                 {{-- Có thể thêm bộ lọc trạng thái ở đây nếu cần --}}
             </div>
 
             {{-- Form Tìm kiếm (Dài rộng thoải mái) --}}
             <form action="{{ route('admin.users.index') }}" method="GET" class="d-flex" style="width: 400px; max-width: 100%;">
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="bx bx-search"></i></span>
-                    <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo Tên, SĐT, Email..." value="{{ request('keyword') }}">
+                <div class="input-group position-relative" id="user-search-group">
+                    <span class="input-group-text"><i class="bx bx-search"></i></span>
+                    <input type="text" name="keyword" id="user-search-input" class="form-control" 
+                           placeholder="Tìm kiếm theo Tên, SĐT, Email..." value="{{ request('keyword') }}"
+                           autocomplete="off">
                     <button type="submit" class="btn btn-primary">Tìm</button>
                     @if(request('keyword'))
                         <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary" title="Xóa tìm kiếm"><i class="bx bx-x"></i></a>
                     @endif
+                    {{-- Khung gợi ý Cyber-Glass --}}
+                    <div id="user-suggestions" class="search-results-container scrollbar-hidden" style="top: 100%; width: 100%;"></div>
                 </div>
             </form>
         </div>
@@ -141,3 +145,106 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    const $input = $('#user-search-input');
+    const $suggestions = $('#user-suggestions');
+    let debounceTimer;
+
+    $input.on('input', function() {
+        clearTimeout(debounceTimer);
+        const keyword = $(this).val().trim();
+
+        if (keyword.length < 2) {
+            $suggestions.hide();
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            $.ajax({
+                url: "{{ route('admin.users.suggest') }}",
+                data: { keyword: keyword },
+                success: function(users) {
+                    if (users.length > 0) {
+                        let html = '';
+                        users.forEach(u => {
+                            const avatarPath = u.avatar ? `{{ asset('storage') }}/${u.avatar}` : null;
+                            const initial = u.ten.charAt(0).toUpperCase();
+                            
+                            let avatarHtml = '';
+                            if (avatarPath) {
+                                avatarHtml = `<img src="${avatarPath}" class="rounded-circle me-2" width="35" height="35" style="object-fit: cover;">`;
+                            } else {
+                                avatarHtml = `<div class="avatar-initial rounded-circle bg-label-primary me-2 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 0.8rem;">${initial}</div>`;
+                            }
+
+                            html += `
+                                <div class="search-result-item py-2 px-3 border-bottom cursor-pointer" style="border-color: rgba(255,255,255,0.05) !important;" data-name="${u.ten}">
+                                    <div class="d-flex align-items-center">
+                                        ${avatarHtml}
+                                        <div class="flex-grow-1 overflow-hidden text-start">
+                                            <div class="fw-bold text-truncate" style="font-size: 0.9rem; color: #fff;">${u.ten}</div>
+                                            <small class="text-info d-block text-truncate" style="font-size: 0.75rem;">${u.sdt || u.email}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        $suggestions.html(html).fadeIn(200);
+                    } else {
+                        $suggestions.hide();
+                    }
+                }
+            });
+        }, 300);
+    });
+
+    // Khi click vào một khách hàng
+    $(document).on('click', '.search-result-item', function() {
+        const name = $(this).data('name');
+        $input.val(name);
+        $suggestions.hide();
+        $input.closest('form').submit();
+    });
+
+    // Đóng khi click ngoài
+    $(document).on('mousedown', function(e) {
+        if (!$(e.target).closest('#user-search-group').length) {
+            $suggestions.hide();
+        }
+    });
+
+    // Hiển thị lại khi focus
+    $input.on('focus', function() {
+        if ($(this).val().trim().length >= 2 && $suggestions.children().length > 0) {
+            $suggestions.fadeIn(200);
+        }
+    });
+});
+</script>
+
+<style>
+    #user-suggestions {
+        position: absolute;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.95) !important;
+        backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(0, 242, 254, 0.4) !important;
+        border-radius: 12px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        margin-top: 5px;
+    }
+    .cursor-pointer { cursor: pointer; }
+    
+    /* Hover effect đồng bộ Cyber Theme */
+    #user-suggestions .search-result-item:hover {
+        background: rgba(0, 242, 254, 0.12) !important;
+        transition: all 0.2s ease;
+    }
+</style>
+@endpush

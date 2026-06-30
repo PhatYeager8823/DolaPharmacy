@@ -31,6 +31,15 @@
       </a>
     </li>
 
+    {{-- BÁO CÁO TỔNG HỢP --}}
+    <li class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+      <a href="{{ route('admin.reports.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-bar-chart-alt-2" style="color:#f59e0b !important;"></i>
+        <div data-i18n="Reports">Báo Cáo Tổng Hợp</div>
+      </a>
+    </li>
+
+
     {{-- NHÓM QUẢN LÝ BÁN HÀNG --}}
     <li class="menu-header small text-uppercase">
       <span class="menu-header-text">Bán hàng</span>

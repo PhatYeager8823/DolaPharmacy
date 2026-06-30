@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- 1. BREADCRUMB (Điều hướng) --}}
-    <div class="bg-light py-3 mb-4">
+    <div class="bg-light py-3 mb-4" style="padding-top: 20px !important;">
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0" style="font-size: 14px;">
@@ -184,12 +184,25 @@
                             <button class="btn btn-outline-secondary" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
                         </div>
 
-                        {{-- Nút Thêm vào giỏ (Loại bỏ type="submit", dùng onclick) --}}
-                        <button type="button"
-                                class="btn btn-primary btn-lg flex-grow-1 fw-bold shadow-sm"
-                                onclick="addToCart({{ $thuoc->id }}, this)">
-                            <i class="fa fa-cart-plus me-2"></i> Thêm vào giỏ hàng
-                        </button>
+                        {{-- Nhóm nút hành động --}}
+                        <div class="d-flex flex-column flex-sm-row gap-2 flex-grow-1">
+                            {{-- Nút Thêm vào giỏ --}}
+                            <button type="button"
+                                    id="product_add_to_cart_btn"
+                                    class="btn btn-outline-primary btn-lg fw-bold shadow-sm"
+                                    style="border-width: 2px; border-radius: 12px;"
+                                    onclick="addToCart({{ $thuoc->id }}, this)">
+                                <i class="fa fa-cart-plus me-2"></i> Thêm vào giỏ
+                            </button>
+                            
+                            {{-- Nút Mua ngay --}}
+                            <button type="button"
+                                    class="btn btn-primary btn-lg fw-bold shadow-sm"
+                                    style="border-radius: 12px;"
+                                    onclick="buyNow({{ $thuoc->id }})">
+                                Mua ngay
+                            </button>
+                        </div>
                     </div>
 
                 @endif
@@ -209,18 +222,18 @@
             <div class="col-12 col-lg-9">
                 <div class="card border-0 shadow-sm mb-5">
                     <div class="card-header bg-white border-bottom-0 pt-4 px-4">
-                        <ul class="nav nav-tabs card-header-tabs" id="productTab" role="tablist">
+                        <ul class="nav nav-tabs card-header-tabs modern-tabs" id="productTab" role="tablist">
                             <li class="nav-item">
-                                <button class="nav-link active fw-bold text-dark" id="cong-dung-tab" data-bs-toggle="tab" data-bs-target="#cong-dung" type="button">Công dụng</button>
+                                <button class="nav-link active" id="cong-dung-tab" data-bs-toggle="tab" data-bs-target="#cong-dung" type="button">Công dụng</button>
                             </li>
                             <li class="nav-item">
-                                <button class="nav-link fw-bold text-dark" id="thanh-phan-tab" data-bs-toggle="tab" data-bs-target="#thanh-phan" type="button">Thành phần</button>
+                                <button class="nav-link" id="thanh-phan-tab" data-bs-toggle="tab" data-bs-target="#thanh-phan" type="button">Thành phần</button>
                             </li>
                             <li class="nav-item">
-                                <button class="nav-link fw-bold text-dark" id="cach-dung-tab" data-bs-toggle="tab" data-bs-target="#cach-dung" type="button">Cách dùng</button>
+                                <button class="nav-link" id="cach-dung-tab" data-bs-toggle="tab" data-bs-target="#cach-dung" type="button">Cách dùng</button>
                             </li>
                             <li class="nav-item">
-                                <button class="nav-link fw-bold text-dark" id="danh-gia-tab" data-bs-toggle="tab" data-bs-target="#danh-gia" type="button">Đánh giá & Nhận xét</button>
+                                <button class="nav-link" id="danh-gia-tab" data-bs-toggle="tab" data-bs-target="#danh-gia" type="button">Đánh giá & Nhận xét</button>
                             </li>
                         </ul>
                     </div>
@@ -373,8 +386,38 @@
             </div>
         @endif
 
-    </div>
 
+    {{-- STICKY BUY BAR FOR MOBILE --}}
+    @if($thuoc->ke_don == 0)
+    <div class="sticky-buy-bar d-lg-none shadow-lg" id="stickyBuyBar">
+        <div class="container d-flex align-items-center justify-content-between py-2 gap-2">
+            {{-- Giá và đơn vị tính (Trên cùng 1 dòng) --}}
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="price-small text-primary fw-bold">{{ number_format($thuoc->gia_ban) }} đ</span>
+                <span class="unit-small text-muted">/ {{ $thuoc->don_vi_tinh ?? 'Hộp' }}</span>
+            </div>
+
+            {{-- Nhóm nút hành động --}}
+            <div class="d-flex gap-2 flex-grow-1 justify-content-end">
+                {{-- Nút Thêm vào giỏ --}}
+                <button type="button" 
+                        class="btn btn-outline-primary fw-bold btn-sm flex-grow-1 px-1" 
+                        style="border-radius: 8px; border-width: 2px; white-space: nowrap; font-size: 11px;"
+                        onclick="addToCart({{ $thuoc->id }}, this)">
+                    <i class="fa fa-cart-plus"></i> Thêm giỏ
+                </button>
+
+                {{-- Nút Mua ngay --}}
+                <button type="button" 
+                        class="btn btn-primary fw-bold btn-sm flex-grow-1 px-1" 
+                        style="border-radius: 8px; white-space: nowrap; font-size: 11px;"
+                        onclick="buyNow({{ $thuoc->id }})">
+                    <i class="fa fa-shopping-bag me-1"></i> Mua ngay
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 
 {{-- Đặt đoạn này ở dòng cuối cùng của file show.blade.php, SAU @endsection --}}

@@ -115,26 +115,134 @@
                     <div class="card-body">
                         <h6 class="fw-bold mb-3">Trạng thái đơn hàng</h6>
 
-                        {{-- Hiển thị trạng thái --}}
-                        @php
-                            $alertClass = match($order->trang_thai) {
-                                'da_giao' => 'alert-success',
-                                'da_huy' => 'alert-danger',
-                                'dang_giao' => 'alert-warning',
-                                default => 'alert-info' // cho_xac_nhan
-                            };
+                        {{-- Hiển thị trạng thái Graphic Stepper --}}
+                        <style>
+                            .track-stepper {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                position: relative;
+                                margin-bottom: 30px;
+                                padding: 0 10px;
+                            }
+                            .track-step {
+                                text-align: center;
+                                position: relative;
+                                z-index: 1;
+                                flex: 1;
+                            }
+                            .track-icon {
+                                width: 45px;
+                                height: 45px;
+                                border-radius: 50%;
+                                background-color: #f1f1f1;
+                                color: #ccc;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin: 0 auto 10px;
+                                font-size: 18px;
+                                border: 3px solid #fff;
+                                transition: all 0.3s;
+                                outline: 2px solid #e0e0e0;
+                            }
+                            .track-step.active .track-icon,
+                            .track-step.completed .track-icon {
+                                background-color: #198754;
+                                color: #fff;
+                                outline-color: #198754;
+                            }
+                            .track-step.error .track-icon {
+                                background-color: #dc3545;
+                                color: #fff;
+                                outline-color: #dc3545;
+                            }
+                            .track-text {
+                                font-size: 12px;
+                                color: #888;
+                                font-weight: 600;
+                            }
+                            .track-step.active .track-text,
+                            .track-step.completed .track-text {
+                                color: #198754;
+                            }
+                            .track-step.error .track-text {
+                                color: #dc3545;
+                            }
+                            .track-line {
+                                position: absolute;
+                                top: 22px;
+                                left: 15%;
+                                right: 15%;
+                                height: 4px;
+                                background-color: #e0e0e0;
+                                z-index: 0;
+                            }
+                            .track-line-progress {
+                                height: 100%;
+                                background-color: #198754;
+                                transition: width 0.5s ease-in-out;
+                            }
+                            @keyframes pulse-ring {
+                                0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+                                70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+                                100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+                            }
+                            .track-step.active .track-icon {
+                                animation: pulse-ring 2s infinite;
+                            }
+                        </style>
 
-                            $statusText = match($order->trang_thai) {
-                                'da_giao' => 'Giao hàng thành công',
-                                'da_huy' => 'Đơn hàng đã hủy',
-                                'dang_giao' => 'Đang vận chuyển',
-                                default => 'Chờ xác nhận'
-                            };
+                        @php
+                            $statusMap = [
+                                'cho_xac_nhan' => 1,
+                                'cho_lay_hang' => 2,
+                                'dang_giao' => 3,
+                                'da_giao' => 4
+                            ];
+                            $currentStep = $statusMap[$order->trang_thai] ?? 0;
+                            $progressMap = [0 => 0, 1 => 0, 2 => 33, 3 => 66, 4 => 100];
+                            $progressWidth = $progressMap[$currentStep] ?? 0;
+                            $isError = in_array($order->trang_thai, ['da_huy', 'tra_hang']);
                         @endphp
 
-                        <div class="alert {{ $alertClass }} mb-3 text-center fw-bold">
-                            {{ $statusText }}
-                        </div>
+                        @if($isError)
+                            <div class="alert alert-danger mb-3 text-center fw-bold">
+                                <i class="fa fa-times-circle me-1"></i>
+                                {{ $order->trang_thai == 'da_huy' ? 'Đơn hàng đã hủy' : 'Đơn hàng đã trả / hoàn tiền' }}
+                            </div>
+                        @else
+                            <div class="position-relative mt-2 mb-4">
+                                <div class="track-line">
+                                    <div class="track-line-progress" style="width: {{ $progressWidth }}%;"></div>
+                                </div>
+                                <div class="track-stepper">
+                                    <div class="track-step {{ $currentStep >= 1 ? ($currentStep == 1 ? 'active' : 'completed') : '' }}">
+                                        <div class="track-icon"><i class="fa fa-receipt"></i></div>
+                                        <div class="track-text">Chờ xác nhận</div>
+                                    </div>
+                                    <div class="track-step {{ $currentStep >= 2 ? ($currentStep == 2 ? 'active' : 'completed') : '' }}">
+                                        <div class="track-icon"><i class="fa fa-box-open"></i></div>
+                                        <div class="track-text">Chờ lấy hàng</div>
+                                    </div>
+                                    <div class="track-step {{ $currentStep >= 3 ? ($currentStep == 3 ? 'active' : 'completed') : '' }}">
+                                        <div class="track-icon"><i class="fa fa-truck"></i></div>
+                                        <div class="track-text">Đang giao</div>
+                                    </div>
+                                    <div class="track-step {{ $currentStep >= 4 ? 'completed active' : '' }}">
+                                        <div class="track-icon"><i class="fa fa-home"></i></div>
+                                        <div class="track-text">Thành công</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @if(in_array($order->trang_thai, ['cho_lay_hang', 'dang_giao']))
+                                <div class="text-center text-muted small mt-2 mb-2">
+                                    <i class="fa fa-satellite-dish me-1"></i>
+                                    Đơn hàng đang được ĐVVC cập nhật tự động...
+                                </div>
+                            @endif
+                        @endif
 
                         {{-- NÚT HỦY ĐƠN (Chỉ hiện khi chưa xử lý) --}}
                         @if($order->trang_thai == 'cho_xac_nhan')

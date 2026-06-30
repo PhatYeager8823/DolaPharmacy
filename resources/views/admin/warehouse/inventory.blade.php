@@ -64,16 +64,19 @@
 
                     {{-- Tìm kiếm --}}
                     <div class="col-md-4">
-                        <div class="input-group">
+                        <div class="input-group position-relative" id="inventory-search-group">
                             <span class="input-group-text">
                                 {{-- SVG Kính lúp --}}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                 </svg>
                             </span>
-                            <input type="text" class="form-control" name="keyword"
+                            <input type="text" class="form-control" name="keyword" id="inventory-search-input"
                                    value="{{ request('keyword') }}"
-                                   placeholder="Tìm theo tên, mã SP...">
+                                   placeholder="Tìm theo tên, mã SP..."
+                                   autocomplete="off">
+                            {{-- Khung gợi ý Cyber-Glass --}}
+                            <div id="inventory-suggestions" class="search-results-container scrollbar-hidden" style="top: 100%; width: 100%;"></div>
                         </div>
                     </div>
 
@@ -179,3 +182,97 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    const $input = $('#inventory-search-input');
+    const $suggestions = $('#inventory-suggestions');
+    let debounceTimer;
+
+    $input.on('input', function() {
+        clearTimeout(debounceTimer);
+        const keyword = $(this).val().trim();
+
+        if (keyword.length < 2) {
+            $suggestions.hide();
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            $.ajax({
+                url: "{{ route('admin.warehouse.suggest') }}",
+                data: { keyword: keyword },
+                success: function(products) {
+                    if (products.length > 0) {
+                        let html = '';
+                        products.forEach(p => {
+                            const imgUrl = p.hinh_anh ? `{{ asset('images/images_san_pham') }}/${p.hinh_anh}` : 'https://via.placeholder.com/40';
+                            html += `
+                                <div class="search-result-item py-2 px-3 border-bottom cursor-pointer" style="border-color: rgba(255,255,255,0.05) !important;" data-name="${p.ten_thuoc}">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${imgUrl}" class="rounded me-2" width="35" height="35" style="object-fit: contain; background: rgba(255,255,255,0.1);">
+                                        <div class="flex-grow-1 overflow-hidden text-start">
+                                            <div class="fw-bold text-truncate" style="font-size: 0.9rem; color: #fff;">${p.ten_thuoc}</div>
+                                            <small class="text-info d-block text-truncate" style="font-size: 0.75rem;">${p.ma_san_pham}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        $suggestions.html(html).fadeIn(200);
+                    } else {
+                        $suggestions.hide();
+                    }
+                }
+            });
+        }, 300);
+    });
+
+    // Khi click vào một kết quả
+    $(document).on('click', '.search-result-item', function() {
+        const name = $(this).data('name');
+        $input.val(name);
+        $suggestions.hide();
+        $input.closest('form').submit();
+    });
+
+    // Đóng khi click ngoài
+    $(document).on('mousedown', function(e) {
+        if (!$(e.target).closest('#inventory-search-group').length) {
+            $suggestions.hide();
+        }
+    });
+
+    // Hiển thị lại khi focus
+    $input.on('focus', function() {
+        if ($(this).val().trim().length >= 2 && $suggestions.children().length > 0) {
+            $suggestions.fadeIn(200);
+        }
+    });
+});
+</script>
+
+<style>
+    #inventory-suggestions {
+        position: absolute;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.95) !important;
+        backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(0, 242, 254, 0.4) !important;
+        border-radius: 12px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        margin-top: 5px;
+    }
+    .cursor-pointer { cursor: pointer; }
+    
+    /* Hover effect đồng bộ Cyber Theme */
+    #inventory-suggestions .search-result-item:hover {
+        background: rgba(0, 242, 254, 0.12) !important;
+        transition: all 0.2s ease;
+    }
+</style>
+@endpush

@@ -39,6 +39,11 @@ class AuthController extends Controller
         // Ghi log để test (Thực tế nên gửi SMS ở đây)
         Log::info("Mã OTP đăng nhập cho SĐT $sdt là: $otp");
 
+        // [MỚI] Gửi mã lên Session để hỗ trợ Dev Mode (Chỉ dành cho môi trường Local)
+        if (app()->environment('local')) {
+            session()->flash('dev_otp', $otp);
+        }
+
         return redirect()->route('auth.verify');
     }
 

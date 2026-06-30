@@ -8,6 +8,65 @@
 <style>
     /* Chỉnh chiều cao danh sách tối đa 200px (khoảng 5 dòng) */
     .ts-dropdown-content { max-height: 200px !important; }
+
+    /* === SỬA LỖI VÀ LÀM ĐẸP PHƯƠNG THỨC THANH TOÁN === */
+    .payment-card {
+        border: 2px solid #edeff2;
+        border-radius: 12px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        height: 100%;
+        background: #fff;
+    }
+    .payment-card:hover { border-color: #3ad4ff; background-color: rgba(58, 212, 255, 0.05); }
+    .payment-card.active {
+        border-color: #3ad4ff;
+        background-color: rgba(58, 212, 255, 0.08);
+        box-shadow: 0 8px 25px rgba(58, 212, 255, 0.15) !important;
+    }
+    .payment-label {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        margin-bottom: 0;
+        width: 100%;
+    }
+    .payment-icon {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .bg-soft-green { background-color: rgba(46, 204, 113, 0.15); }
+    .bg-soft-blue { background-color: rgba(58, 212, 255, 0.15); }
+    
+    .payment-text .fw-bold { font-size: 0.95rem; color: #2c3e50; }
+    .payment-text .text-muted { font-size: 0.8rem; display: block; }
+
+    /* Hiệu ứng tích xanh khi active */
+    .payment-card.active::after {
+        content: '\f058'; /* Font Awesome circle-check */
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #3ad4ff;
+        font-size: 1.2rem;
+    }
+    /* MoMo brand colors */
+    .bg-soft-pink { background-color: rgba(210, 0, 80, 0.12); }
+    .text-momo { color: #d2005a; }
+    .payment-card.active.momo-card { border-color: #d2005a; background-color: rgba(210, 0, 80, 0.06); }
+    .payment-card.active.momo-card::after { color: #d2005a; }
+    .payment-card.momo-card:hover { border-color: #d2005a; background-color: rgba(210, 0, 80, 0.04); }
 </style>
 <div class="bg-light py-4">
     <div class="container">
@@ -16,6 +75,11 @@
             @csrf
             {{-- Giữ Order Code để gửi lên Controller --}}
             <input type="hidden" name="ma_don_hang" value="{{ $ma_don_hang }}">
+
+            {{-- Thông tin Mua Ngay (Nếu có) --}}
+            <input type="hidden" name="buy_now_id" value="{{ request('buy_now_id') }}">
+            <input type="hidden" name="buy_now_qty" value="{{ request('qty') }}">
+            <input type="hidden" name="is_buy_now" value="{{ request()->has('buy_now_id') ? 1 : 0 }}">
             {{-- ================================ --}}
             <div class="row g-4">
 
@@ -92,21 +156,55 @@
                         </div>
                         <div class="card-body">
 
-                            {{-- 1. COD --}}
-                            <div class="form-check mb-3">
-                                {{-- Thêm class 'payment-radio' để JS bắt sự kiện --}}
-                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="cod" value="cod" checked>
-                                <label class="form-check-label fw-bold" for="cod">
-                                    <i class="fa fa-money-bill-alt text-success me-2"></i> Thanh toán khi nhận hàng (COD)
-                                </label>
-                            </div>
+                            <div class="row g-3">
+                                {{-- 1. COD --}}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="payment-card shadow-sm" onclick="selectPayment('cod')">
+                                        <input class="form-check-input payment-radio d-none" type="radio" name="payment_method" id="cod" value="cod" checked>
+                                        <label class="payment-label" for="cod">
+                                            <div class="payment-icon bg-soft-green">
+                                                <i class="fa fa-money-bill-alt text-success"></i>
+                                            </div>
+                                            <div class="payment-text">
+                                                <span class="d-block fw-bold mb-0">Tiền mặt (COD)</span>
+                                                <small class="text-muted">Giao hàng thu tiền</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
 
-                            {{-- 2. Chuyển khoản qua Ngân hàng --}}
-                            <div class="form-check">
-                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="banking" value="banking">
-                                <label class="form-check-label fw-bold" for="banking">
-                                    <i class="fa fa-university text-primary me-2"></i> Chuyển khoản ngân hàng (Quét mã QR)
-                                </label>
+                                {{-- 2. Chuyển khoản qua Ngân hàng --}}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="payment-card shadow-sm" onclick="selectPayment('banking')">
+                                        <input class="form-check-input payment-radio d-none" type="radio" name="payment_method" id="banking" value="banking">
+                                        <label class="payment-label" for="banking">
+                                            <div class="payment-icon bg-soft-blue">
+                                                <i class="fa fa-university text-primary"></i>
+                                            </div>
+                                            <div class="payment-text">
+                                                <span class="d-block fw-bold mb-0">Chuyển khoản</span>
+                                                <small class="text-muted">Quét mã QR</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {{-- 3. MoMo --}}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="payment-card shadow-sm momo-card" onclick="selectPayment('momo')">
+                                        <input class="form-check-input payment-radio d-none" type="radio" name="payment_method" id="momo" value="momo">
+                                        <label class="payment-label" for="momo">
+                                            <div class="payment-icon bg-soft-pink" style="overflow:hidden;">
+                                                <img src="{{ asset('images/momo.png') }}"
+                                                     alt="MoMo" style="width:38px; height:38px; object-fit:contain; border-radius:8px;">
+                                            </div>
+                                            <div class="payment-text">
+                                                <span class="d-block fw-bold mb-0 text-momo">Ví MoMo</span>
+                                                <small class="text-muted">Quét QR / OTP</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             {{-- Khung hiển thị QR tĩnh (Ban đầu ẩn) --}}
@@ -130,7 +228,7 @@
 
                 {{-- CỘT PHẢI: TÓM TẮT --}}
                 <div class="col-lg-5">
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border-0 shadow-lg checkout-summary-card">
                         <div class="card-header bg-white py-3">
                             <h5 class="fw-bold mb-0">Đơn hàng</h5>
                         </div>
@@ -306,10 +404,11 @@
 
         function toggleQR() {
             const selected = document.querySelector('input[name="payment_method"]:checked');
+            // Chỉ hiện QR nếu chọn 'banking' (chuyển khoản thủ công)
             if (selected && selected.value === 'banking') {
-                qrInfo.style.display = 'block'; 
+                qrInfo.style.display = 'block';
             } else {
-                qrInfo.style.display = 'none';  
+                qrInfo.style.display = 'none';
             }
         }
 
@@ -332,6 +431,30 @@
             // 2. Đổi nội dung nút để báo hiệu đang xử lý
             btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Đang xử lý...';
         });
+    });
+
+    // 4. Chọn phương thức thanh toán
+    function selectPayment(id) {
+        document.getElementById(id).checked = true;
+        
+        // Cập nhật giao diện thẻ
+        document.querySelectorAll('.payment-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        document.getElementById(id).closest('.payment-card').classList.add('active');
+        
+        // Trigger event change manually for radios (to show/hide QR)
+        const event = new Event('change');
+        document.getElementById(id).dispatchEvent(event);
+    }
+
+    // Set active class ban đầu
+    document.addEventListener('DOMContentLoaded', () => {
+        const checked = document.querySelector('input[name="payment_method"]:checked');
+        if(checked) {
+            const card = checked.closest('.payment-card');
+            if(card) card.classList.add('active');
+        }
     });
 </script>
 @endsection

@@ -24,12 +24,13 @@
         </button>
 
         {{-- ẢNH SẢN PHẨM (CHIỀU CAO CỐ ĐỊNH) --}}
-        <div class="fp-image">
+        <div class="fp-image mt-2 skeleton-box">
             <a href="{{ route('thuoc.show', $product->slug) }}" class="d-block w-100 h-100">
                 <img src="{{ $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png') }}"
                      alt="{{ $product->ten_thuoc }}"
                      loading="lazy"
-                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';">
+                     onload="this.parentElement.parentElement.classList.remove('skeleton-box')"
+                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';this.parentElement.parentElement.classList.remove('skeleton-box')">
             </a>
         </div>
 
@@ -74,18 +75,31 @@
         <div class="fp-actions">
             @if($product->so_luong_ton > 0)
                 @if($product->ke_don == 1)
-                    <a href="tel:{{ str_replace(['.', ' '], '', $global_setting->hotline ?? '0123.456.789') }}" class="fp-consult-btn" title="Cần tư vấn">
-                        <i class="fa fa-user-md"></i>
-                    </a>
+                    <div class="consult-wrapper">
+                        <button type="button" class="btn-consult-yellow" onclick="toggleBubbleMenu(event, this)">
+                            <i class="fa fa-user-md"></i> Cần tư vấn dược sĩ
+                        </button>
+                        <div class="bubble-menu">
+                            <a href="https://zalo.me/{{ preg_replace('/\D/', '', $global_setting->hotline ?? '0868888888') }}" target="_blank" class="bubble-item bubble-zalo" title="Chat Zalo">
+                                <img src="{{ asset('images/icons/zalo.webp') }}" alt="Zalo" style="width: 28px; height: 28px; object-fit: contain;">
+                            </a>
+                            <a href="https://m.me/your-pharmacy-page" target="_blank" class="bubble-item bubble-fb" title="Facebook Messenger">
+                                <img src="{{ asset('images/icons/facebook.webp') }}" alt="Facebook" style="width: 28px; height: 28px; object-fit: contain;">
+                            </a>
+                            <a href="tel:{{ preg_replace('/\D/', '', $global_setting->hotline ?? '0123456789') }}" class="bubble-item bubble-hotline" title="Gọi Hotline">
+                                <i class="fa fa-phone-alt"></i>
+                            </a>
+                        </div>
+                    </div>
                 @else
-                    <button type="button" class="fp-cart-btn"
-                            onclick="addToCart({{ $product->id }}, this)"
-                            title="Thêm vào giỏ">
-                        <i class="fa fa-shopping-bag"></i>
+                    <button type="button" class="fp-select-btn"
+                            onclick="openQuickBuyModal({{ $product->id }})"
+                            title="Chọn mua">
+                        <i class="fa fa-plus"></i> Chọn mua
                     </button>
                 @endif
             @else
-                <span class="badge bg-secondary small">Hết hàng</span>
+                <span class="badge bg-secondary small w-100 py-2">Hết hàng</span>
             @endif
         </div>
 

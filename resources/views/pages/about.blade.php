@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- 1. HEADER BANNER --}}
-<div class="bg-primary py-5 text-center text-white">
+<div class="bg-primary pt-4 pb-2 py-lg-5 text-center text-white">
     <div class="container">
         <h1 class="fw-bold display-5">Về chúng tôi - {{ $global_setting->ten_website }}</h1>
         <p class="lead mb-0">Tận tâm chăm sóc - Vững bước sức khỏe</p>
@@ -13,7 +13,7 @@
 </div>
 
 {{-- 2. CÂU CHUYỆN THƯƠNG HIỆU --}}
-<section class="py-5">
+<section class="pb-5 pt-0 pt-lg-5">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">

@@ -33,7 +33,7 @@
                                 <option value="">-- Là danh mục gốc --</option>
                                 @foreach($parents as $parent)
                                     <option value="{{ $parent->id }}" {{ $category->danh_muc_cha_id == $parent->id ? 'selected' : '' }}>
-                                        {{ $parent->ten_danh_muc }}
+                                        {{ $parent->full_hierarchy }}
                                     </option>
                                 @endforeach
                             </select>

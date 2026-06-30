@@ -2,12 +2,12 @@
     @if(true || ($global_setting && $global_setting->is_promo_active))
     {{-- Banner khuyến mãi trên cùng --}}
     <div class="pharmacy-promo" style="display: block !important;">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="promo-text">
-                <span>{{ $global_setting->promo_text ?? 'CHÀO MỪNG BẠN MỚI' }}</span>
+        <div class="container d-flex align-items-center justify-content-between py-1">
+            <div class="promo-text d-flex align-items-center gap-2">
+                <span class="d-none d-sm-inline">{{ $global_setting->promo_text ?? 'CHÀO MỪNG BẠN MỚI' }}</span>
                 <strong>TƯNG BỪNG ƯU ĐÃI</strong>
             </div>
-            <div class="promo-code">
+            <div class="promo-code d-none d-lg-block">
                 @if($global_setting->promo_code)
                     <span>NHẬP MÃ "<strong>{{ $global_setting->promo_code }}</strong>"</span>
                     <br>
@@ -15,8 +15,8 @@
                 <span>NHẬN QUÀ HẤP DẪN</span>
                 <p class="promo-note mb-0">(Áp dụng cho đơn hàng online đầu tiên từ 399K)</p>
             </div>
-            <div class="promo-date-btn d-flex align-items-center">
-                <div class="promo-date me-3">
+            <div class="promo-date-btn d-flex align-items-center gap-2">
+                <div class="promo-date d-none d-md-block">
                     @if($global_setting->promo_end_date)
                         <strong>Kết thúc: {{ date('d/m/Y', strtotime($global_setting->promo_end_date)) }}</strong>
                     @else
@@ -94,8 +94,9 @@
             </div>
 
             {{-- MAIN BAR --}}
-            <div class="d-flex align-items-center flex-wrap gap-2 gap-lg-3 py-3">
+            <div class="d-flex align-items-center flex-wrap gap-2 gap-lg-3 py-2 py-lg-3">
 
+                {{-- Nút danh mục (Mobile) --}}
                 {{-- Nút danh mục (Mobile) --}}
                 <div class="pharmacy-category-btn d-lg-none order-1">
                     <button class="btn btn-category d-flex align-items-center"
@@ -134,13 +135,18 @@
                     <form action="{{ route('thuoc.index') }}" method="GET" class="search-form-wrapper m-0">
                         <input type="text"
                             name="keyword"
+                            id="header-search-input"
                             class="search-input"
                             placeholder="Bạn đang tìm gì hôm nay..."
+                            autocomplete="off"
                             value="{{ request('keyword') }}"
                             required>
                         <button class="search-btn" type="submit">
                             <i class="fa fa-search"></i>
                         </button>
+
+                        {{-- RESULT DROPDOWN --}}
+                        <div id="quick-search-results" class="quick-search-results"></div>
                     </form>
                 </div>
 
@@ -150,12 +156,6 @@
                         <i class="fa fa-map-marker-alt"></i>
                     </a>
 
-                    @php
-                        $unreadCount = 0;
-                        if(Auth::check()) {
-                            $unreadCount = \App\Models\ThongBao::where('nguoi_dung_id', Auth::id())->where('da_xem', 0)->count();
-                        }
-                    @endphp
                     <a href="{{ route('notifications.index') }}" class="icon-circle position-relative" title="Thông báo">
                         <i class="fa fa-bell"></i>
                         @if($unreadCount > 0)
@@ -163,38 +163,13 @@
                         @endif
                     </a>
 
-                    @php
-                        $wishlistCount = 0;
-                        if(Auth::check()) {
-                            $wishlistCount = \App\Models\YeuThich::where('nguoi_dung_id', Auth::id())->count();
-                        }
-                    @endphp
                     <a href="{{ route('wishlist.index') }}" class="icon-circle position-relative" title="Sản phẩm yêu thích">
                         <i class="far fa-heart"></i>
                         <span class="badge-count wishlist-count-badge" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">
                             {{ $wishlistCount }}
                         </span>
                     </a>
-                </div>
-
-                {{-- Giỏ hàng --}}
-                <div class="header-cart-wrapper order-4 order-lg-5">
-                    @php
-                        $cartCount = 0;
-                        if (Auth::check()) {
-                            $userCart = \App\Models\GioHang::where('nguoi_dung_id', Auth::id())->first();
-                            if ($userCart) {
-                                $cartCount = \App\Models\GioHangChiTiet::where('gio_hang_id', $userCart->id)
-                                                                       ->where('trang_thai', 0)
-                                                                       ->sum('so_luong');
-                            }
-                        } else {
-                            $cartSession = session()->get('cart', []);
-                            $cartCount = array_sum(array_column($cartSession, 'quantity'));
-                        }
-                    @endphp
-
-                    <a href="{{ route('cart.index') }}" class="btn btn-cart d-flex align-items-center">
+                      <a href="{{ route('cart.index') }}" class="btn btn-cart d-flex align-items-center">
                         <span class="me-2"><i class="fa fa-shopping-cart"></i></span>
                         <span class="d-none d-lg-inline">Giỏ hàng</span>
                         <span class="cart-count ms-2" style="{{ $cartCount > 0 ? '' : 'display: none;' }}">
@@ -205,7 +180,7 @@
             </div>
 
             {{-- MENU NGANG --}}
-            <nav class="pharmacy-nav">
+            <nav class="pharmacy-nav d-none d-lg-block">
                 <ul class="nav nav-main justify-content-center">
                     <li class="nav-item mega-dropdown d-none d-lg-block">
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') ?? url('/') }}">Trang chủ</a>
@@ -273,9 +248,17 @@
                     </li>
                 </ul>
             </nav>
+            
+            {{-- NÚT MÓC THU GỌN HEADER THÔNG MINH (Đặt ở đây để di chuyển cùng Header) --}}
+            <div id="header-hook-toggle" title="Thu gọn/Hiện Header">
+                <div class="hook-icon-wrap">
+                    <i class="fas fa-link"></i>
+                </div>
+            </div>
         </div>
     </div>
 </header>
+
 
 {{-- MENU MEGA DROPDOWN (Dữ liệu thật từ AppServiceProvider) --}}
 <div class="collapse" id="categoryMegaMenu">
@@ -345,8 +328,8 @@
         <div class="mobile-top-links py-3">
             @guest
                 <div class="mobile-auth-links d-flex align-items-center gap-2">
-                    <i class="fa fa-user-circle text-secondary fs-4"></i>
-                    <div>
+                    <i class="fa fa-user-circle text-secondary fs-4 flex-shrink-0"></i>
+                    <div class="d-flex gap-2 flex-wrap">
                         <a href="{{ route('login') }}" class="link-auth">ĐĂNG NHẬP</a>
                         <a href="{{ route('register') }}" class="link-auth">ĐĂNG KÝ</a>
                     </div>
@@ -403,14 +386,13 @@
             <ul class="nav flex-column gap-1">
                 <li class="nav-item border-bottom"><a class="nav-link text-dark py-3" href="{{ route('about') }}"><i class="fa fa-info-circle me-2 text-secondary"></i> Giới thiệu</a></li>
 
-                @php $mobileParents = \App\Models\DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get(); @endphp
                 <li class="nav-item border-bottom">
                     <a class="nav-link text-dark py-3 d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#mobileProducts">
                         <span><i class="fa fa-pills me-2 text-secondary"></i> Sản phẩm</span><i class="fa fa-chevron-down small"></i>
                     </a>
                     <div class="collapse" id="mobileProducts">
                         <ul class="nav flex-column ms-2 border-start border-2 ps-3 mb-3">
-                            @foreach($mobileParents as $parent)
+                            @foreach($megaCategories as $parent)
                                 <li class="nav-item mt-2"><a href="{{ route('danhmuc.show', $parent->slug) }}" class="fw-bold text-primary text-decoration-none d-block py-1">{{ $parent->ten_danh_muc }}</a></li>
                                 @foreach($parent->children as $child)
                                     <li class="nav-item"><a class="nav-link py-1 text-secondary ps-0" href="{{ route('danhmuc.show', $child->slug) }}" style="font-size: 14px;">- {{ $child->ten_danh_muc }}</a></li>

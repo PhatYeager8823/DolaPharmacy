@@ -2,12 +2,16 @@
 @section('title', 'Video sức khỏe')
 
 @section('content')
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-primary">Video & Kiến thức sức khỏe</h2>
-        <p class="text-muted">Cập nhật những thông tin y khoa bổ ích qua video trực quan</p>
+{{-- 1. HEADER BANNER --}}
+<div class="bg-primary pt-4 pb-2 py-lg-5 text-center text-white">
+    <div class="container">
+        <h1 class="fw-bold display-6">Video & Kiến thức sức khỏe</h1>
+        <p class="lead mb-0">Cập nhật những thông tin y khoa bổ ích qua video trực quan từ chuyên gia</p>
     </div>
+</div>
+
+<div class="bg-light pb-5 pt-0 pt-lg-5">
+    <div class="container">
 
     <div class="row g-4">
         @foreach($videos as $video)

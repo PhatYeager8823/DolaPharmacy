@@ -38,7 +38,6 @@ class OrderController extends Controller
         $order->save();
 
         // Gửi thông báo nếu trạng thái thay đổi
-        // Gửi thông báo nếu trạng thái thay đổi
         if ($oldStatus != $request->trang_thai) {
 
             $msg = "";
@@ -46,27 +45,22 @@ class OrderController extends Controller
                 case 'cho_xac_nhan':
                     $msg = "Đơn hàng #{$order->ma_don_hang} đang chờ xác nhận.";
                     break;
-                case 'xac_nhan':
-                    $msg = "Đơn hàng #{$order->ma_don_hang} đã được cửa hàng xác nhận và đang đóng gói 📦";
+                case 'cho_lay_hang':
+                    $msg = "Đơn hàng #{$order->ma_don_hang} đã được cửa hàng đóng gói và đang chờ ĐVVC đến lấy 📦";
                     break;
                 case 'dang_giao':
-                    $msg = "Đơn hàng #{$order->ma_don_hang} đang trên đường giao đến bạn 🚚";
+                    $msg = "Đơn hàng #{$order->ma_don_hang} đã được lấy và đang trên đường giao đến bạn 🚚";
                     break;
-
-                // === [THÊM CASE NÀY ĐỂ SỬA LỖI] ===
                 case 'da_giao':
                     $msg = "Shipper báo đã giao đơn hàng #{$order->ma_don_hang} thành công ✅";
                     break;
-                // ===================================
-
-                case 'hoan_thanh':
-                    $msg = "Đơn hàng #{$order->ma_don_hang} đã hoàn thành. Cảm ơn bạn đã mua sắm! ❤️";
+                case 'tra_hang':
+                    $msg = "Đơn hàng #{$order->ma_don_hang} đã được hoàn trả.";
                     break;
                 case 'da_huy':
                     $msg = "Đơn hàng #{$order->ma_don_hang} đã bị hủy.";
                     break;
                 default:
-                    // Nếu gặp trạng thái lạ, tự động làm đẹp (VD: 'tra_hang' -> 'Tra hang')
                     $niceName = ucfirst(str_replace('_', ' ', $request->trang_thai));
                     $msg = "Đơn hàng #{$order->ma_don_hang} cập nhật trạng thái: $niceName";
             }
@@ -82,5 +76,27 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');
+    }
+
+    /**
+     * API kiểm tra đơn hàng mới cho Admin (Real-time polling)
+     */
+    public function checkNewOrders()
+    {
+        // Lấy các đơn hàng chưa được thông báo cho admin
+        $newOrders = Order::where('is_admin_notified', 0)
+            ->latest()
+            ->get();
+
+        if ($newOrders->count() > 0) {
+            // Đánh dấu ngay là đã thông báo để tránh lặp lại ở lần poll sau
+            Order::whereIn('id', $newOrders->pluck('id'))->update(['is_admin_notified' => 1]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'count'   => $newOrders->count(),
+            'orders'  => $newOrders
+        ]);
     }
 }

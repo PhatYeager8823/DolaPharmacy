@@ -31,7 +31,7 @@
                             <select class="form-select" id="basic-default-country" name="danh_muc_cha_id">
                                 <option value="">-- Là danh mục gốc --</option>
                                 @foreach($parents as $parent)
-                                    <option value="{{ $parent->id }}">{{ $parent->ten_danh_muc }}</option>
+                                    <option value="{{ $parent->id }}">{{ $parent->full_hierarchy }}</option>
                                 @endforeach
                             </select>
                             <div class="form-text">Nếu chọn mục này, đây sẽ là danh mục con.</div>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\DanhMuc;
 use App\Models\Setting; // <--- Đảm bảo đã import Model Setting
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,42 +24,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // =============================================================
-        // 1. CHIA SẺ DANH MỤC (Code cũ của bạn)
-        // =============================================================
-        try {
-            $megaCategories = DanhMuc::whereNull('danh_muc_cha_id')
-                                     ->with('children')
-                                     ->orderBy('id', 'asc')
-                                     ->get();
-
-            View::share('megaCategories', $megaCategories);
-        } catch (\Exception $e) {
-            // Tránh lỗi khi chưa chạy migration hoặc bảng chưa tồn tại
-            View::share('megaCategories', collect([]));
+        // Ép HTTPS khi chạy ngrok để không bị lỗi CSS trên mobile
+        if (str_contains(config('app.url'), 'ngrok-free.dev')) {
+            URL::forceScheme('https');
         }
+        // =============================================================
+        // 1. GLOBAL DATA COMPOSER (Optimized)
+        // =============================================================
+        // Use View Composer to share global settings, categories, and counts across all views
+        View::composer('*', \App\Http\View\Composers\FrontendViewComposer::class);
 
-        // =============================================================
-        // 2. CHIA SẺ CẤU HÌNH WEBSITE (Mới thêm)
-        // =============================================================
-        // Sử dụng View Composer để biến $global_setting tự động có mặt ở TẤT CẢ các view
+        // Share global settings (keeping old variable name for compatibility)
         View::composer('*', function ($view) {
             try {
-                // Lấy dòng cấu hình đầu tiên
                 $setting = Setting::first();
-            } catch (\Exception $e) {
-                $setting = null;
-            }
+            } catch (\Exception $e) { $setting = null; }
 
-            // Nếu chưa có dữ liệu (hoặc chưa tạo bảng), tạo một object rỗng với các giá trị mặc định để không bị lỗi View
             if (!$setting) {
                 $setting = new Setting();
-                $setting->is_promo_active = true; // Mặc định hiện promo nếu chưa cấu hình
+                $setting->is_promo_active = true;
                 $setting->promo_text = "CHÀO MỪNG BẠN MỚI";
                 $setting->hotline = "0123.456.789";
             }
-
-            // Truyền biến $global_setting sang view
             $view->with('global_setting', $setting);
         });
 

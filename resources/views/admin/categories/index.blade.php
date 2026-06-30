@@ -6,19 +6,6 @@
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Quản lý /</span> Danh mục sản phẩm</h4>
 
     {{-- Thông báo thành công/lỗi --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">

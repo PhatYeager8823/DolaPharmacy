@@ -2,7 +2,15 @@
 @section('title', $post->tieu_de)
 
 @section('content')
-<div class="container py-5">
+{{-- 1. HEADER BANNER (PHIÊN BẢN GỌN CHO TRANG CHI TIẾT) --}}
+<div class="bg-primary py-3 text-white mb-0">
+    <div class="container text-center">
+        <h5 class="fw-bold mb-0">Chi tiết bài viết</h5>
+    </div>
+</div>
+
+<div class="bg-light pb-5 pt-0 pt-lg-4">
+    <div class="container pt-3">
     <div class="row">
         {{-- NỘI DUNG BÀI VIẾT --}}
         <div class="col-lg-8">

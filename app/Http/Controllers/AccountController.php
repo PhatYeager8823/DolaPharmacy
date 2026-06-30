@@ -306,4 +306,23 @@ class AccountController extends Controller
             return redirect()->back()->with('error', 'Đơn hàng đang được vận chuyển, không thể hủy lúc này!');
         }
     }
+
+    // API Giả lập Webhook ĐVVC
+    public function simulateShipping(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Chỉ giả lập khi đơn hàng đang ở mốc Gọi shipper hoặc Đang giao
+        if ($order->trang_thai == 'cho_lay_hang') {
+            $order->trang_thai = 'dang_giao';
+            $order->save();
+            return response()->json(['success' => true, 'new_status' => 'dang_giao']);
+        } elseif ($order->trang_thai == 'dang_giao') {
+            $order->trang_thai = 'da_giao';
+            $order->save();
+            return response()->json(['success' => true, 'new_status' => 'da_giao']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Không thể giả lập ở trạng thái hiện tại.']);
+    }
 }

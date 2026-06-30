@@ -1,7 +1,7 @@
 {{-- resources/views/partials/account-sidebar.blade.php --}}
 
 {{-- 1. Thẻ thành viên VÀNG --}}
-<div class="card text-white mb-3 shadow-sm {{ $membership['color'] }}"
+<div class="card text-white mb-3 shadow-sm {{ $membership['color'] }} membership-card-glow"
      style="border: none; border-radius: 15px; background-image: linear-gradient(45deg, rgba(255,255,255,0.15), transparent);">
 
     {{-- SỬA LẠI: Đổi p-4 thành p-3 để rộng chỗ hơn --}}

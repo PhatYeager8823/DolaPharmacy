@@ -57,26 +57,72 @@
                     @endif
 
                     <div class="filter-sidebar">
-                        {{-- 1. DANH MỤC --}}
-                        <div class="mb-4">
-                            <h6 class="fw-bold mb-3">Danh mục</h6>
-                            <ul class="list-unstyled filter-list">
+                        {{-- 1. DANH MỤC THIẾT KẾ MỚI (FLAT & PILL STYLE) --}}
+                        <style>
+                            .category-sidebar-list {
+                                list-style: none;
+                                padding: 0;
+                                margin: 0;
+                            }
+                            .cat-parent-item {
+                                margin-bottom: 20px;
+                            }
+                            .cat-parent-label {
+                                font-size: 1.1rem;
+                                color: #007aff;
+                                margin-bottom: 12px;
+                                padding-left: 5px;
+                                border-left: 4px solid #007aff;
+                            }
+                            .cat-child-list {
+                                list-style: none;
+                                padding-left: 0;
+                            }
+                            .cat-link {
+                                display: block;
+                                padding: 10px 18px;
+                                color: #4b5563;
+                                text-decoration: none;
+                                border-radius: 50px;
+                                font-size: 0.95rem;
+                                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                                margin-bottom: 4px;
+                                border: 1px solid transparent;
+                            }
+                            .cat-link:hover {
+                                background: rgba(0, 122, 255, 0.08);
+                                color: #007aff;
+                                padding-left: 25px;
+                                border-color: rgba(0, 122, 255, 0.1);
+                                box-shadow: 0 4px 12px rgba(0, 122, 255, 0.05);
+                            }
+                            .cat-link.active {
+                                background: #007aff;
+                                color: #ffffff !important;
+                                font-weight: 600;
+                                box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+                            }
+                        </style>
+
+                        <div class="mb-4 pt-2">
+                            <h6 class="fw-bold mb-4 d-flex align-items-center">
+                                <i class="fas fa-th-large me-2 text-primary"></i> Danh mục sản phẩm
+                            </h6>
+                            <ul class="category-sidebar-list">
                                 @foreach($allParents as $parent)
-                                    <li>
-                                        <a href="{{ route('danhmuc.show', $parent->slug) }}"
-                                           class="fw-bold {{ (isset($danhMuc) && ($danhMuc->id == $parent->id || ($danhMuc->parent && $danhMuc->parent->id == $parent->id))) ? 'text-primary' : 'text-dark' }}">
-                                            {{ $parent->ten_danh_muc }}
-                                        </a>
+                                    <li class="cat-parent-item">
+                                        <div class="cat-parent-label fw-bold">{{ $parent->ten_danh_muc }}</div>
+                                        <ul class="cat-child-list">
+                                            @foreach($parent->children as $child)
+                                                <li>
+                                                    <a href="{{ route('danhmuc.show', $child->slug) }}" 
+                                                       class="cat-link {{ (isset($danhMuc) && $danhMuc->id == $child->id) ? 'active' : '' }}">
+                                                        {{ $child->ten_danh_muc }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     </li>
-                                    @foreach($parent->children as $child)
-                                        <li class="ps-3">
-                                            <a href="{{ route('danhmuc.show', $child->slug) }}"
-                                               class="{{ (isset($danhMuc) && $danhMuc->id == $child->id) ? 'text-primary fw-bold' : '' }}">
-                                                {{ $child->ten_danh_muc }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                    <li class="mb-2"></li>
                                 @endforeach
                             </ul>
                         </div>

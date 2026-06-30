@@ -164,4 +164,19 @@ class WarehouseController extends Controller
         $phieuNhap = PhieuNhap::with(['chiTiet.thuoc', 'nhaCungCap', 'nguoiNhap'])->findOrFail($id);
         return view('admin.warehouse.show', compact('phieuNhap'));
     }
+
+    // [MỚI] API Gợi ý tìm kiếm nhanh cho Báo cáo tồn kho
+    public function suggest(Request $request)
+    {
+        $keyword = $request->keyword;
+        if (!$keyword) return response()->json([]);
+
+        $products = Thuoc::where('ten_thuoc', 'like', "%{$keyword}%")
+            ->orWhere('ma_san_pham', 'like', "%{$keyword}%")
+            ->select('id', 'ten_thuoc', 'ma_san_pham', 'hinh_anh')
+            ->limit(10)
+            ->get();
+
+        return response()->json($products);
+    }
 }

@@ -17,4 +17,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Thuoc::class);
     }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
 }

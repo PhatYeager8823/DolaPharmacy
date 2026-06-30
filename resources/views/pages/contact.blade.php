@@ -2,12 +2,59 @@
 @section('title', 'Liên hệ với chúng tôi')
 
 @section('content')
-<div class="bg-light py-5">
+{{-- 1. HEADER BANNER --}}
+<div class="bg-primary pt-4 pb-2 py-lg-5 text-center text-white">
+    <div class="container">
+        <h1 class="fw-bold display-6">Liên hệ với {{ $global_setting->ten_website }}</h1>
+        <p class="lead mb-0">Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn</p>
+    </div>
+</div>
+
+<div class="bg-light pb-5 pt-0 pt-lg-5">
     <div class="container">
 
         <div class="row g-5">
-            {{-- CỘT TRÁI: THÔNG TIN --}}
-            <div class="col-lg-5">
+            {{-- CỘT TRÁI: FORM (ĐÃ CHUYỂN TỪ PHẢI SANG TRÁI) --}}
+            <div class="col-lg-7 order-1">
+                <div class="card border-0 shadow-sm p-4">
+                    <h3 class="fw-bold mb-4">Gửi tin nhắn cho chúng tôi</h3>
+
+
+                    <form action="{{ route('contact.store') }}" method="POST">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">Họ và tên <span class="text-danger">*</span></label>
+                                <input type="text" name="ho_ten" class="form-control bg-light border-0 py-3" placeholder="Nhập họ tên..." required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">Số điện thoại</label>
+                                <input type="text" name="sdt" class="form-control bg-light border-0 py-3" placeholder="Nhập số điện thoại...">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control bg-light border-0 py-3" placeholder="Nhập email..." required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small">Tiêu đề</label>
+                                <input type="text" name="tieu_de" class="form-control bg-light border-0 py-3" placeholder="Bạn cần hỗ trợ vấn đề gì?">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small">Nội dung <span class="text-danger">*</span></label>
+                                <textarea name="noi_dung" rows="5" class="form-control bg-light border-0" placeholder="Viết nội dung tin nhắn..." required></textarea>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold text-uppercase">
+                                    <i class="fa fa-paper-plane me-2"></i> Gửi tin nhắn
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- CỘT PHẢI: THÔNG TIN (ĐÃ CHUYỂN TỪ TRÁI SANG PHẢI) --}}
+            <div class="col-lg-5 order-2">
                 <h2 class="fw-bold text-primary mb-4">Thông tin liên hệ</h2>
                 <p class="text-muted mb-4">
                     Nếu bạn có thắc mắc về đơn hàng, thuốc hoặc cần tư vấn sức khỏe,
@@ -68,44 +115,6 @@
                 </div>
             </div>
 
-            {{-- CỘT PHẢI: FORM --}}
-            <div class="col-lg-7">
-                <div class="card border-0 shadow-sm p-4">
-                    <h3 class="fw-bold mb-4">Gửi tin nhắn cho chúng tôi</h3>
-
-
-                    <form action="{{ route('contact.store') }}" method="POST">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small">Họ và tên <span class="text-danger">*</span></label>
-                                <input type="text" name="ho_ten" class="form-control bg-light border-0 py-3" placeholder="Nhập họ tên..." required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small">Số điện thoại</label>
-                                <input type="text" name="sdt" class="form-control bg-light border-0 py-3" placeholder="Nhập số điện thoại...">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small">Email <span class="text-danger">*</span></label>
-                                <input type="email" name="email" class="form-control bg-light border-0 py-3" placeholder="Nhập email..." required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small">Tiêu đề</label>
-                                <input type="text" name="tieu_de" class="form-control bg-light border-0 py-3" placeholder="Bạn cần hỗ trợ vấn đề gì?">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small">Nội dung <span class="text-danger">*</span></label>
-                                <textarea name="noi_dung" rows="5" class="form-control bg-light border-0" placeholder="Viết nội dung tin nhắn..." required></textarea>
-                            </div>
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold text-uppercase">
-                                    <i class="fa fa-paper-plane me-2"></i> Gửi tin nhắn
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
 
     </div>

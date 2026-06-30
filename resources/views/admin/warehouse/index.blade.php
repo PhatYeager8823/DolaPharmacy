@@ -10,13 +10,6 @@
         </a>
     </div>
 
-    {{-- Hiển thị thông báo thành công --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
     <div class="card">
         <h5 class="card-header">Danh sách phiếu nhập</h5>

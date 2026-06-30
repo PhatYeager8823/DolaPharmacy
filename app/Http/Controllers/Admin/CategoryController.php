@@ -21,8 +21,8 @@ class CategoryController extends Controller
     // 2. Form thêm mới
     public function create()
     {
-        // Lấy danh mục cha để chọn (nếu tạo danh mục con)
-        $parents = DanhMuc::whereNull('danh_muc_cha_id')->get();
+        // Lấy tất cả danh mục để tạo cấu trúc cây
+        $parents = DanhMuc::all();
         return view('admin.categories.create', compact('parents'));
     }
 
@@ -30,16 +30,20 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ten_danh_muc' => 'required|unique:danh_mucs,ten_danh_muc',
+            'ten_danh_muc' => 'required',
         ], [
             'ten_danh_muc.required' => 'Tên danh mục không được để trống',
-            'ten_danh_muc.unique' => 'Tên danh mục đã tồn tại'
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->ten_danh_muc); // Tự tạo slug từ tên
-
-        // Xử lý ảnh (Nếu có) - Phần này làm sau hoặc để null tạm
+        // Tạo slug duy nhất
+        $slug = Str::slug($request->ten_danh_muc);
+        $count = 1;
+        while (DanhMuc::where('slug', $slug)->exists()) {
+            $slug = Str::slug($request->ten_danh_muc) . '-' . $count;
+            $count++;
+        }
+        $data['slug'] = $slug;
 
         DanhMuc::create($data);
 
@@ -50,7 +54,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = DanhMuc::findOrFail($id);
-        $parents = DanhMuc::whereNull('danh_muc_cha_id')->where('id', '!=', $id)->get();
+        // Lấy tất cả trừ chính nó để tránh lặp vô hạn
+        $parents = DanhMuc::where('id', '!=', $id)->get();
         $backUrl = \Illuminate\Support\Facades\Session::get('category_back_url', route('admin.categories.index'));
         return view('admin.categories.edit', compact('category', 'parents', 'backUrl'));
     }

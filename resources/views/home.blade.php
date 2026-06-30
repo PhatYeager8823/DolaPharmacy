@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <section class="hero-section py-4">
+    <section class="hero-section py-2 py-lg-4">
         <div class="container">
             <div class="row g-3">
 
@@ -725,7 +725,7 @@
             </div>
 
             <div class="text-center mt-4">
-                <a href="#" class="btn blog-viewall-btn">Xem tất cả</a>
+                <a href="{{ route('video.index') }}" class="btn video-viewall-btn">Xem tất cả</a>
             </div>
 
         </div>
@@ -846,6 +846,39 @@
 
         setInterval(update, 1000);
         update();
+    })();
+
+    // ===== XỬ LÝ VIDEO MODAL TRANG CHỦ =====
+    (function() {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        const close = document.querySelector('.video-modal-close');
+        
+        if (!modal || !frame || !close) return;
+
+        // Khi nhấn vào thumbnail video
+        document.querySelectorAll('.video-thumb').forEach(thumb => {
+            thumb.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-video-url');
+                if (url) {
+                    // Thêm autoplay=1 để phát ngay
+                    frame.src = url + (url.includes('?') ? '&' : '?') + 'autoplay=1&rel=0';
+                    modal.style.display = 'flex';
+                }
+            });
+        });
+
+        // Khi nhấn nút X hoặc nhấn ra ngoài modal
+        function closeModal() {
+            modal.style.display = 'none';
+            frame.src = '';
+        }
+
+        close.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
     })();
 </script>
 @endpush

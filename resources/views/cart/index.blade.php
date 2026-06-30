@@ -151,7 +151,12 @@
         {{-- SẢN PHẨM ĐÃ ĐẶT (QUÁ KHỨ) - HIỆN BÊN DƯỚI ĐỂ NGĂN CÁCH --}}
         @if(Auth::check() && count($orderedItems) > 0)
             <div class="mt-5 pt-4 border-top">
-                <h5 class="fw-bold mb-4 text-secondary"><i class="fa fa-history me-2"></i> Sản phẩm đã đặt (Gần đây)</h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0 text-secondary"><i class="fa fa-history me-2"></i> Sản phẩm đã đặt (Gần đây)</h5>
+                    <button class="btn btn-link link-danger btn-sm text-decoration-none fw-bold p-0" onclick="clearCartHistory()">
+                        <i class="fa fa-broom me-1"></i> Làm sạch
+                    </button>
+                </div>
                 <div class="card border-0 shadow-sm overflow-hidden">
                     <div class="card-body p-0">
                         @foreach($orderedItems as $itemId => $item)
@@ -315,6 +320,33 @@
         .then(data => {
             if(data.success) location.reload();
             else showAlert('Có lỗi xảy ra, vui lòng thử lại.', 'error');
+        });
+    }
+
+    function clearCartHistory() {
+        Swal.fire({
+            title: 'Dọn dẹp lịch sử?',
+            text: "Danh sách này sẽ được làm sạch để trang gọn gàng hơn.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1b5e20',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Dọn dẹp ngay',
+            cancelButtonText: 'Để sau'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('{{ route('cart.clear_history') }}', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) location.reload();
+                });
+            }
         });
     }
 

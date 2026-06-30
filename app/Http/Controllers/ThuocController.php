@@ -16,27 +16,26 @@ class ThuocController extends Controller
     {
         // 1. Khởi tạo Query
         $query = Thuoc::where('is_active', 1)
-                    ->where('so_luong_ton', '>', 0) // <--- THÊM VÀO ĐÂY
+                    ->where('so_luong_ton', '>', 0)
                     ->with('brand');
 
-        // 2. Xử lý TÌM KIẾM (Thêm đoạn này)
+        // 2. Xử lý TÌM KIẾM
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
-
             $query->where(function ($q) use ($keyword) {
-                // Tìm theo tên thuốc
                 $q->where('ten_thuoc', 'like', '%' . $keyword . '%')
-                  // Tìm theo hoạt chất (Rất hữu ích cho nhà thuốc)
                   ->orWhere('hoat_chat', 'like', '%' . $keyword . '%')
-                  // Tìm theo công dụng
                   ->orWhere('cong_dung', 'like', '%' . $keyword . '%');
             });
         }
         
-        // 3. LỌC THEO THƯƠNG HIỆU (Nhận mảng brand_ids từ form)
+        // 3. LỌC THEO THƯƠNG HIỆU
         if ($request->has('brands')) {
             $query->whereIn('brand_id', $request->brands);
         }
+
+        // 4. Lấy dữ liệu cho Sidebar (Cấu trúc 2 tầng chuẩn)
+        $allParents = DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get();
 
         // 4. LỌC THEO MỨC GIÁ
         if ($request->has('price_range')) {
@@ -88,29 +87,21 @@ class ThuocController extends Controller
         $products = $query->paginate(12);
 
         // --- Dữ liệu phụ cho Sidebar ---
-        // Lấy danh mục cha
-        $allParents = DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get();
-
-        // Lấy danh sách tất cả thương hiệu để hiện checkbox
         $allBrands = \App\Models\Brand::all();
-
         $danhMuc = null;
-        $children = collect();
-        $popularSubCategories = $allParents; // Ở trang chủ thì hiện danh mục cha
+        $popularSubCategories = $allParents; 
 
         return view('thuoc.index', compact(
             'products',
             'allParents',
-            'allBrands', // Truyền thêm biến này sang view
+            'allBrands',
             'danhMuc',
-            'children',
             'popularSubCategories'
         ));
     }
 
     public function show($slug)
     {
-        // Giữ nguyên như cũ (code ở câu trả lời trước)
         $thuoc = Thuoc::where('slug', $slug)
                     ->where('is_active', 1)
                     ->with(['brand', 'nhaCungCap', 'danhMuc', 'danhGias' => function($q) {
@@ -118,12 +109,14 @@ class ThuocController extends Controller
                     }])
                     ->firstOrFail();
 
-        // Tính số sao trung bình
         $danhGias = $thuoc->danhGias;
         $avgRating = $danhGias->count() > 0 ? round($danhGias->avg('so_sao'), 1) : 0;
 
+        // Cấu trúc Sidebar chuẩn cho trang Show
         $allParents = DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get();
+        
         $danhMuc = $thuoc->danhMuc;
+        // ... (phần code liên quan giữ nguyên)
         $relatedProducts = Thuoc::where('danh_muc_id', $thuoc->danh_muc_id)
                                 ->where('id', '!=', $thuoc->id)
                                 ->where('is_active', 1)
@@ -139,14 +132,15 @@ class ThuocController extends Controller
     {
         // 1. Lấy sản phẩm khuyến mãi
         $products = Thuoc::where('is_active', 1)
-                        ->where('so_luong_ton', '>', 0) // <--- THÊM VÀO ĐÂY
+                        ->where('so_luong_ton', '>', 0)
                         ->whereColumn('gia_cu', '>', 'gia_ban')
                         ->latest()
                         ->paginate(12);
 
-        // 2. Lấy dữ liệu cho Sidebar (Bộ lọc)
+        // 2. Lấy dữ liệu cho Sidebar đa tầng (Sử dụng cấu trúc chuẩn đồng bộ với trang TẤT CẢ SẢN PHẨM)
         $allParents = DanhMuc::whereNull('danh_muc_cha_id')->with('children')->get();
-        $allBrands  = Brand::all();
+        
+        $allBrands = Brand::all();
 
         // 3. === SỬA ĐOẠN NÀY: Lấy danh mục cha để hiện ô tròn ===
         // Thay vì collect([]), ta lấy các danh mục gốc (cấp 1)
@@ -155,5 +149,73 @@ class ThuocController extends Controller
         // 4. Tiêu đề & View
         $title = "Sản phẩm khuyến mãi hot";
         return view('thuoc.index', compact('products', 'title', 'allParents', 'allBrands', 'popularSubCategories'));
+    }
+
+    /**
+     * Tìm kiếm nhanh bằng AJAX
+     */
+    public function quickSearch(Request $request)
+    {
+        $keyword = $request->get('keyword');
+        
+        if (strlen($keyword) < 2) {
+            return response()->json([]);
+        }
+
+        $products = Thuoc::where('is_active', 1)
+            ->where('so_luong_ton', '>', 0)
+            ->where(function($q) use ($keyword) {
+                $q->where('ten_thuoc', 'like', '%' . $keyword . '%')
+                  ->orWhere('slug', 'like', '%' . $keyword . '%')
+                  ->orWhere('hoat_chat', 'like', '%' . $keyword . '%');
+            })
+            ->select('id', 'ten_thuoc', 'slug', 'gia_ban', 'gia_cu', 'hinh_anh', 'don_vi_tinh')
+            ->limit(8)
+            ->get()
+            ->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->ten_thuoc,
+                    'slug' => $p->slug,
+                    'price' => number_format($p->gia_ban) . 'đ',
+                    'old_price' => $p->gia_cu > $p->gia_ban ? number_format($p->gia_cu) . 'đ' : null,
+                    'image' => $p->hinh_anh ? asset('images/images_san_pham/' . $p->hinh_anh) : asset('images/no-image.png'),
+                    'url' => route('thuoc.show', $p->slug),
+                    'unit' => $p->don_vi_tinh ?? 'Hộp'
+                ];
+            });
+
+        return response()->json($products);
+    }
+
+    /**
+     * Lấy thông tin nhanh sản phẩm (Quick View) cho Modal
+     */
+    public function getQuickView($id)
+    {
+        $product = Thuoc::where('id', $id)
+            ->where('is_active', 1)
+            ->with(['brand', 'danhMuc'])
+            ->first();
+
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Sản phẩm không tồn tại'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $product->id,
+                'name' => $product->ten_thuoc,
+                'price' => number_format($product->gia_ban) . 'đ',
+                'raw_price' => $product->gia_ban,
+                'old_price' => $product->gia_cu > $product->gia_ban ? number_format($product->gia_cu) . 'đ' : null,
+                'image' => $product->hinh_anh ? asset('images/images_san_pham/' . $product->hinh_anh) : asset('images/no-image.png'),
+                'unit' => $product->don_vi_tinh ?? 'Hộp',
+                'description' => $product->mo_ta_ngan ?? '',
+                'category_name' => $product->danhMuc->ten_danh_muc ?? '',
+                'is_prescription' => $product->ke_don == 1
+            ]
+        ]);
     }
 }

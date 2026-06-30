@@ -60,4 +60,23 @@ class UserController extends Controller
 
         return back()->with('success', 'Đã xóa khách hàng vĩnh viễn.');
     }
+
+    // [MỚI] API Gợi ý tìm kiếm khách hàng
+    public function suggest(Request $request)
+    {
+        $keyword = $request->keyword;
+        if (!$keyword) return response()->json([]);
+
+        $users = NguoiDung::where('vai_tro', '!=', 'admin')
+            ->where(function($q) use ($keyword) {
+                $q->where('ten', 'like', "%{$keyword}%")
+                  ->orWhere('sdt', 'like', "%{$keyword}%")
+                  ->orWhere('email', 'like', "%{$keyword}%");
+            })
+            ->select('id', 'ten', 'sdt', 'email', 'avatar')
+            ->limit(10)
+            ->get();
+
+        return response()->json($users);
+    }
 }

@@ -1,5 +1,15 @@
 <?php
 
+// Test Realtime Notification
+Route::get('/test-realtime', function () {
+    event(new \App\Events\RealtimeNotification(
+        'Đây là thông báo Realtime từ hệ thống!',
+        'success',
+        'Thành công rực rỡ'
+    ));
+    return "Đã phát một thông báo realtime! Hãy kiểm tra cửa sổ trình duyệt khác.";
+});
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\DanhMucController;
@@ -16,6 +26,7 @@ use App\Http\Controllers\YeuThichController;
 use App\Http\Controllers\ThongBaoController;
 use App\Http\Controllers\DiaChiController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\WarehouseController; // <--- 1. Nhớ import dòng này ở đầu file
@@ -36,6 +47,8 @@ Route::get('/danh-muc/{slug}', [DanhMucController::class, 'show'])->name('danhmu
 
 Route::get('/san-pham', [ThuocController::class, 'index'])->name('thuoc.index');
 Route::get('/san-pham/{slug}', [ThuocController::class, 'show'])->name('thuoc.show');
+Route::get('/api/search/quick', [ThuocController::class, 'quickSearch'])->name('api.search.quick');
+Route::get('/api/products/{id}/quick-view', [ThuocController::class, 'getQuickView'])->name('api.products.quick_view');
 Route::post('/san-pham/{id}/danh-gia', [DanhGiaController::class, 'store'])->name('sanpham.danh_gia')->middleware('auth');
 
 // Route dự phòng trường hợp Lỗi validation back() làm mất Referer bị biến thành GET
@@ -43,9 +56,6 @@ Route::get('/san-pham/{id}/danh-gia', function($id) {
     $thuoc = \App\Models\Thuoc::findOrFail($id);
     return redirect()->route('thuoc.show', $thuoc->slug);
 });
-
-// Route::get('/he-thong-nha-thuoc', [ChiNhanhController::class, 'index'])->name('he-thong-nha-thuoc');
-
 
 // ==========================================================
 // AUTHENTICATION (Đăng nhập/Đăng ký bằng SĐT + OTP)
@@ -76,6 +86,7 @@ Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.
 Route::patch('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/repurchase', [CartController::class, 'repurchase'])->name('cart.repurchase');
+Route::delete('/cart/clear-history', [CartController::class, 'clearHistory'])->name('cart.clear_history');
 
 
 // ==========================================
@@ -131,6 +142,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Route hủy đơn hàng
     Route::post('/account/orders/cancel/{id}', [App\Http\Controllers\AccountController::class, 'cancelOrder'])->name('account.orders.cancel');
+
+    // Route Giả lập Webhook ĐVVC
+    Route::post('/api/webhook/simulate-shipping/{id}', [App\Http\Controllers\AccountController::class, 'simulateShipping'])->name('api.webhook.simulate');
 });
 
 
@@ -172,14 +186,19 @@ Route::prefix('quan-tri')
     ->group(function () {
 
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/bao-cao', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/bao-cao/xuat', [ReportController::class, 'export'])->name('reports.export');
         Route::resource('categories', CategoryController::class);
+        
+        // Gợi ý tìm kiếm thuốc
+        Route::get('products/suggest', [App\Http\Controllers\Admin\ThuocController::class, 'suggest'])->name('products.suggest');
         Route::resource('products', App\Http\Controllers\Admin\ThuocController::class);
 
         // Quản lý Đơn hàng
         Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
-        // Xóa chữ "admin." đi, chỉ để "orders.update_status"
-        Route::put('orders/update-status/{id}', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update_status');        // Quản lý Thương hiệu
+        Route::put('orders/update-status/{id}', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update_status');
+        Route::get('/api/check-new-orders', [App\Http\Controllers\Admin\OrderController::class, 'checkNewOrders'])->name('api.check_new_orders');
         Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
 
         // Nhà cung cấp
@@ -204,6 +223,7 @@ Route::prefix('quan-tri')
 
         // Khách hàng
         // Quản lý Khách hàng (Chỉ Xem, Khóa, Xóa)
+        Route::get('/users/suggest', [App\Http\Controllers\Admin\UserController::class, 'suggest'])->name('users.suggest');
         Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
         Route::patch('/users/{id}/toggle', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle');
         Route::delete('/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
@@ -219,7 +239,8 @@ Route::prefix('quan-tri')
         Route::put('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
 
         // Quản lý Kho - Nhập hàng
-        // 1. Route Báo cáo tồn kho (THÊM DÒNG NÀY VÀO TRƯỚC RESOURCE)
+        // 1. Route Báo cáo tồn kho & Gợi ý (THÊM DÒNG NÀY VÀO TRƯỚC RESOURCE)
+        Route::get('warehouse/suggest', [WarehouseController::class, 'suggest'])->name('warehouse.suggest');
         Route::get('warehouse/inventory', [WarehouseController::class, 'inventory'])->name('warehouse.inventory');
 
         // 2. Route Resource Nhập hàng (Cái cũ bạn đã có)
@@ -238,7 +259,9 @@ Route::prefix('quan-tri')
 Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/thanh-toan', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/dat-hang-thanh-cong/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
-// Đã gỡ Route VNPAY hoàn toàn
+// MoMo Callbacks
+Route::get('/thanh-toan/momo-return', [CheckoutController::class, 'momoReturn'])->name('checkout.momo_return');
+Route::post('/thanh-toan/momo-notify', [CheckoutController::class, 'momoNotify'])->name('checkout.momo_notify');
 // voucher
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.add');
 Route::get('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');

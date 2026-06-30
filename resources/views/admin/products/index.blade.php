@@ -5,9 +5,6 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Quản lý /</span> Danh sách thuốc</h4>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -26,11 +23,14 @@
                         {{-- 1. Tìm từ khóa --}}
                         <div class="col-md-4">
                             <label class="form-label">Tìm kiếm</label>
-                            <div class="input-group">
+                            <div class="input-group position-relative" id="product-search-group">
                                 <span class="input-group-text"><i class="bx bx-search"></i></span>
-                                <input type="text" class="form-control" name="keyword"
+                                <input type="text" class="form-control" name="keyword" id="product-search-input"
                                     value="{{ request('keyword') }}"
-                                    placeholder="Tên thuốc, Mã SP...">
+                                    placeholder="Tên thuốc, Mã SP..."
+                                    autocomplete="off">
+                                {{-- Khung gợi ý Cyber-Glass --}}
+                                <div id="product-suggestions" class="search-results-container scrollbar-hidden" style="top: 100%; width: 100%;"></div>
                             </div>
                         </div>
 
@@ -134,7 +134,6 @@
                                     <a class="dropdown-item" href="{{ route('admin.products.edit', $p->id) }}">
                                         <i class="bx bx-edit-alt me-1"></i> Sửa
                                     </a>
-                                    {{-- THAY BẰNG ĐOẠN NÀY: --}}
                                     <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -156,3 +155,97 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    const $input = $('#product-search-input');
+    const $suggestions = $('#product-suggestions');
+    let debounceTimer;
+
+    $input.on('input', function() {
+        clearTimeout(debounceTimer);
+        const keyword = $(this).val().trim();
+
+        if (keyword.length < 2) {
+            $suggestions.hide();
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            $.ajax({
+                url: "{{ route('admin.products.suggest') }}",
+                data: { keyword: keyword },
+                success: function(products) {
+                    if (products.length > 0) {
+                        let html = '';
+                        products.forEach(p => {
+                            const imgUrl = p.hinh_anh ? `{{ asset('images/images_san_pham') }}/${p.hinh_anh}` : 'https://via.placeholder.com/40';
+                            html += `
+                                <div class="search-result-item py-2 px-3 border-bottom cursor-pointer" style="border-color: rgba(255,255,255,0.05) !important;" data-name="${p.ten_thuoc}">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${imgUrl}" class="rounded me-2" width="35" height="35" style="object-fit: contain; background: rgba(255,255,255,0.1);">
+                                        <div class="flex-grow-1 overflow-hidden text-start">
+                                            <div class="fw-bold text-truncate" style="font-size: 0.9rem; color: #fff;">${p.ten_thuoc}</div>
+                                            <small class="text-info d-block text-truncate" style="font-size: 0.75rem;">${p.ma_san_pham}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        $suggestions.html(html).fadeIn(200);
+                    } else {
+                        $suggestions.hide();
+                    }
+                }
+            });
+        }, 300);
+    });
+
+    // Khi click vào một kết quả
+    $(document).on('click', '.search-result-item', function() {
+        const name = $(this).data('name');
+        $input.val(name);
+        $suggestions.hide();
+        $input.closest('form').submit();
+    });
+
+    // Đóng khi click ngoài
+    $(document).on('mousedown', function(e) {
+        if (!$(e.target).closest('#product-search-group').length) {
+            $suggestions.hide();
+        }
+    });
+
+    // Hiển thị lại khi focus
+    $input.on('focus', function() {
+        if ($(this).val().trim().length >= 2 && $suggestions.children().length > 0) {
+            $suggestions.fadeIn(200);
+        }
+    });
+});
+</script>
+
+<style>
+    #product-suggestions {
+        position: absolute;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.95) !important;
+        backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(0, 242, 254, 0.4) !important;
+        border-radius: 12px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        margin-top: 5px;
+    }
+    .cursor-pointer { cursor: pointer; }
+    
+    /* Hover effect đồng bộ Cyber Theme */
+    .search-result-item:hover {
+        background: rgba(0, 242, 254, 0.12) !important;
+        transition: all 0.2s ease;
+    }
+</style>
+@endpush

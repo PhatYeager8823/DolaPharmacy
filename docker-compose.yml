@@ -1,30 +1,84 @@
 services:
+  # ─── Laravel App (PHP + Apache) ───────────────────────────
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: nhathuoc-app
+    restart: unless-stopped
     ports:
       - "8000:80"
+      - "8081:8081"
+    # NOTE: In production/Docker, do NOT mount the whole project
+    # because it would override the vendor/ and public/build/ built
+    # inside the image. Only mount mutable storage directories.
     volumes:
       - .:/var/www/html
-      - ./storage:/var/www/html/storage
-      - ./public/images:/var/www/html/public/images
       - /var/www/html/vendor
-      - /var/www/html/bootstrap/cache
+      - /var/www/html/node_modules
+      - storage_data:/var/www/html/storage
+      - images_data:/var/www/html/public/images
+
     depends_on:
       db:
         condition: service_healthy
     environment:
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=nhathuoc
-      - DB_USERNAME=root
-      - DB_PASSWORD=rootpassword
+      APP_NAME: "Dola Pharmacy"
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8000"
+      APP_KEY: "base64:NWbqP0G9fpGSCDwKhVdxHwVLMcP4Oh3j4F9RqYMM8pk="
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: nhathuoc
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: "587"
+      MAIL_USERNAME: bdphatchibi@gmail.com
+      MAIL_PASSWORD: "wsiucwvnbzrdgajq"
+      MAIL_ENCRYPTION: tls
+      MAIL_FROM_ADDRESS: bdphatchibi@gmail.com
+      MAIL_FROM_NAME: "Dola Pharmacy"
+      GEMINI_API_KEY: "AIzaSyA73W3utS8ox-NCAtDAYn1GoJIy-nGeT2o"
     networks:
       - nhathuoc-network
 
+  # ─── Reverb WebSocket Server (Auto-start) ─────────────────
+  reverb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nhathuoc-reverb
+    restart: unless-stopped
+    entrypoint: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8081", "--debug"]
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+      - storage_data:/var/www/html/storage
+    environment:
+      APP_NAME: "Dola Pharmacy"
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: "base64:NWbqP0G9fpGSCDwKhVdxHwVLMcP4Oh3j4F9RqYMM8pk="
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: nhathuoc
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+    depends_on:
+      - app
+    networks:
+      - nhathuoc-network
+
+  # ─── MySQL Database ────────────────────────────────────────
   db:
     image: mysql:8.0
     container_name: nhathuoc-db
@@ -40,20 +94,23 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
     networks:
       - nhathuoc-network
 
+  # ─── phpMyAdmin ────────────────────────────────────────────
   phpmyadmin:
-    image: phpmyadmin
+    image: phpmyadmin:latest
     container_name: nhathuoc-phpmyadmin
     restart: always
     ports:
       - "8080:80"
     environment:
-      - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=rootpassword
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      UPLOAD_LIMIT: 100M
     networks:
       - nhathuoc-network
     depends_on:
@@ -65,3 +122,5 @@ networks:
 
 volumes:
   db_data:
+  storage_data:
+  images_data:

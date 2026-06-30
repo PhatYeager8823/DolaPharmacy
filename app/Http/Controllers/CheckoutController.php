@@ -14,6 +14,7 @@ use App\Models\DiaChi;
 use App\Models\NguoiDung;
 use App\Models\Thuoc;
 use App\Models\TonKho;
+use App\Services\MomoService;
 use Carbon\Carbon;
 
 class CheckoutController extends Controller
@@ -21,15 +22,39 @@ class CheckoutController extends Controller
     // ====================================================
     // 1. HIỂN THỊ TRANG THANH TOÁN
     // ====================================================
-    public function index()
+    public function index(Request $request)
     {
         $cartItems = [];
         $total = 0;
         $user = Auth::user();
         $addresses = [];
 
-        // --- A. LẤY DỮ LIỆU GIỎ HÀNG (Code cũ của bạn) ---
-        if ($user) {
+        // --- A. XỬ LÝ MUA NGAY (Ưu tiên cao nhất) ---
+        if ($request->has('buy_now_id')) {
+            $id = $request->buy_now_id;
+            $qty = $request->qty ?? 1;
+            $thuoc = Thuoc::find($id);
+
+            if ($thuoc) {
+                $cartItems[] = [
+                    'thuoc_id' => $thuoc->id,
+                    'name'     => $thuoc->ten_thuoc,
+                    'price'    => $thuoc->gia_ban,
+                    'quantity' => $qty,
+                    'image'    => $thuoc->hinh_anh,
+                    'unit'     => $thuoc->don_vi_tinh
+                ];
+                $total = $thuoc->gia_ban * $qty;
+                
+                if ($user) {
+                    $addresses = DiaChi::where('nguoi_dung_id', $user->id)->get();
+                }
+            } else {
+                return redirect()->route('cart.index')->with('error', 'Sản phẩm không tồn tại!');
+            }
+        } 
+        // --- B. LẤY DỮ LIỆU GIỎ HÀNG CHUNG (Nếu không phải mua ngay) ---
+        else if ($user) {
             $gioHang = GioHang::where('nguoi_dung_id', $user->id)->first();
             if ($gioHang) {
                 $dbItems = $gioHang->chiTiets()->where('trang_thai', 0)->with('thuoc')->get();
@@ -131,27 +156,38 @@ class CheckoutController extends Controller
         ]);
 
         // [QUAN TRỌNG] LẤY GIỎ HÀNG RA BIẾN RIÊNG NGAY TỪ ĐẦU
-        // Để đảm bảo dữ liệu không bị mất dù có chuyện gì xảy ra với Session
         $finalCartItems = [];
         $totalMoney = 0;
 
-        // Ưu tiên lấy từ Session (vì đây là luồng cho khách vãng lai/chưa đăng nhập)
-        $cartSession = session()->get('cart', []);
-
-        if (!empty($cartSession)) {
-            foreach ($cartSession as $id => $item) {
+        // --- A. KIỂM TRA NẾU LÀ MUA NGAY ---
+        if ($request->has('is_buy_now') && $request->is_buy_now == 1) {
+            $thuoc = Thuoc::find($request->buy_now_id);
+            if ($thuoc) {
                 $finalCartItems[] = [
-                    'thuoc_id'  => $id,
-                    'ten_thuoc' => $item['name'],
-                    'so_luong'  => $item['quantity'],
-                    'gia_ban'   => $item['price'],
-                    'thanh_tien'=> $item['price'] * $item['quantity']
+                    'thuoc_id'  => $thuoc->id,
+                    'ten_thuoc' => $thuoc->ten_thuoc,
+                    'so_luong'  => $request->buy_now_qty ?? 1,
+                    'gia_ban'   => $thuoc->gia_ban,
+                    'thanh_tien'=> $thuoc->gia_ban * ($request->buy_now_qty ?? 1)
                 ];
-                $totalMoney += $item['price'] * $item['quantity'];
+                $totalMoney = $thuoc->gia_ban * ($request->buy_now_qty ?? 1);
             }
-        } else {
-            // Backup: Nếu session rỗng thì kiểm tra trong DB (trường hợp user đã login từ trước)
-            if (Auth::check()) {
+        } 
+        // --- B. NẾU LÀ THANH TOÁN GIỎ HÀNG CHUNG ---
+        else {
+            $cartSession = session()->get('cart', []);
+            if (!empty($cartSession)) {
+                foreach ($cartSession as $id => $item) {
+                    $finalCartItems[] = [
+                        'thuoc_id'  => $id,
+                        'ten_thuoc' => $item['name'],
+                        'so_luong'  => $item['quantity'],
+                        'gia_ban'   => $item['price'],
+                        'thanh_tien'=> $item['price'] * $item['quantity']
+                    ];
+                    $totalMoney += $item['price'] * $item['quantity'];
+                }
+            } else if (Auth::check()) {
                 $gh = GioHang::where('nguoi_dung_id', Auth::id())->first();
                 if ($gh) {
                     foreach ($gh->chiTiets()->where('trang_thai', 0)->get() as $ct) {
@@ -318,15 +354,17 @@ class CheckoutController extends Controller
                 session()->forget('coupon');
             }
 
-            // Xóa/Cập nhật trạng thái giỏ hàng sau khi đặt thành công
-            session()->forget('cart'); // Xóa session cho cả khách và user (để tránh trùng)
+            // 5. XỬ LÝ LÀM SẠCH GIỎ HÀNG (CHỈ KHI THANH TOÁN TOÀN BỘ GIỎ)
+            if (!$request->has('is_buy_now') || $request->is_buy_now != 1) {
+                session()->forget('cart'); // Xóa session cho cả khách và user (để tránh trùng)
 
-            if($user) {
-                 // Với User: Chuyển sang trạng thái "Đã đặt" (trang_thai = 1) thay vì xóa hẳn
-                 $gioHang = \App\Models\GioHang::where('nguoi_dung_id', $user->id)->first();
-                 if ($gioHang) {
-                     $gioHang->chiTiets()->where('trang_thai', 0)->update(['trang_thai' => 1]);
-                 }
+                if($user) {
+                     // Với User: Chuyển sang trạng thái "Đã đặt" (trang_thai = 1) thay vì xóa hẳn
+                     $gioHang = \App\Models\GioHang::where('nguoi_dung_id', $user->id)->first();
+                     if ($gioHang) {
+                         $gioHang->chiTiets()->where('trang_thai', 0)->update(['trang_thai' => 1]);
+                     }
+                }
             }
 
             DB::commit(); // === LƯU THÀNH CÔNG ===
@@ -344,6 +382,12 @@ class CheckoutController extends Controller
                  $order->save();
             }
 
+            // Nếu chọn MoMo: Redirect sang cổng thanh toán MoMo
+            if ($request->payment_method === 'momo') {
+                DB::commit();
+                return $this->createMomoPayment($order);
+            }
+
             return redirect()->route('checkout.success', ['id' => $order->id])
                              ->with('success', 'Bạn đã đặt hàng thành công!');
         } catch (\Exception $e) {
@@ -354,126 +398,77 @@ class CheckoutController extends Controller
 
 
     // ====================================================
-    // 4. TAO PAYMENT VNPAY
+    // 4. TẠO PAYMENT MOMO
     // ====================================================
-    public function createVnPayPayment($order)
+    public function createMomoPayment(Order $order)
     {
-        // Xét múi giờ VN để Checksum không bị lệch giờ (VNPAY bắt lỗi timezone khá gắt)
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $momo = new MomoService();
 
-        // Kéo dữ liệu cấu hình từ .env (đã được bọc trim để chống khoảng trắng tự do)
-        $vnp_TmnCode = trim(config('vnpay.vnp_TmnCode'));
-        $vnp_HashSecret = trim(config('vnpay.vnp_HashSecret'));
-        $vnp_Url = config('vnpay.vnp_Url');
-        $vnp_Returnurl = config('vnpay.vnp_Returnurl');
+        $amount    = (int) $order->tong_tien;  // MoMo dùng VND nguyên (không nhân 100 như VNPay)
+        $orderId   = $order->ma_don_hang;
+        $orderInfo = 'Thanh toan don hang ' . $order->ma_don_hang . ' - Dola Pharmacy';
 
-        $vnp_TxnRef = $order->ma_don_hang;
-        // XÓA HẾT DẤU CÁCH thay bằng dấu gạch dưới để đề phòng urlencode bị biến thành dấu + (plus)
-        $vnp_OrderInfo = "Thanh_toan_don_hang_" . $order->ma_don_hang;
-        $vnp_OrderType = 'billpayment';
-        
-        // Ép kiểu (int) để đề phòng $order->tong_tien là số thập phân có dấu chấm (VD: 25000.00)
-        $vnp_Amount = (int)($order->tong_tien * 100);
-        $vnp_Locale = 'vn';
-        $vnp_BankCode = '';
-        $vnp_IpAddr = request()->ip();
+        $result = $momo->createPayment($orderId, $amount, $orderInfo);
 
-        $inputData = array(
-            "vnp_Version" => "2.1.0",
-            "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $vnp_Amount,
-            "vnp_Command" => "pay",
-            "vnp_CreateDate" => date('YmdHis'),
-            "vnp_CurrCode" => "VND",
-            "vnp_IpAddr" => $vnp_IpAddr,
-            "vnp_Locale" => $vnp_Locale,
-            "vnp_OrderInfo" => $vnp_OrderInfo,
-            "vnp_OrderType" => $vnp_OrderType,
-            "vnp_ReturnUrl" => $vnp_Returnurl,
-            "vnp_TxnRef" => $vnp_TxnRef,
-        );
-
-        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
-            $inputData['vnp_BankCode'] = $vnp_BankCode;
+        if ($result['success']) {
+            return redirect()->away($result['payUrl']);
         }
 
-        ksort($inputData);
-        $query = "";
-        $i = 0;
-        $hashdata = "";
-
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashdata .= urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
-            $query .= urlencode($key) . "=" . urlencode($value) . '&';
-        }
-
-        $vnp_Url = $vnp_Url . "?" . $query;
-
-        if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
-            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
-        }
-
-        return redirect()->away($vnp_Url);
+        // Nếu tạo MoMo thất bại → Vẫn giữ đơn, báo lỗi và cho về trang success (Đơn đã tạo rồi)
+        return redirect()->route('checkout.success', $order->id)
+            ->with('warning', 'Không thể kết nối MoMo: ' . $result['message'] . '. Vui lòng thanh toán khi nhận hàng.');
     }
 
+
     // ====================================================
-    // 5. VNPAY RETURN (CALLBACK)
+    // 5. MOMO RETURN (CALLBACK SAU KHI THANH TOÁN)
     // ====================================================
-    public function vnpayReturn(Request $request)
+    public function momoReturn(Request $request)
     {
-        $vnp_HashSecret = trim(config('vnpay.vnp_HashSecret'));
-        
-        $inputData = array();
-        foreach ($request->all() as $key => $value) {
-            if (substr($key, 0, 4) == "vnp_") {
-                $inputData[$key] = $value;
-            }
-        }
-        
-        $vnp_SecureHash = $inputData['vnp_SecureHash'];
-        unset($inputData['vnp_SecureHash']);
-        unset($inputData['vnp_SecureHashType']);
-        
-        ksort($inputData);
-        $i = 0;
-        $hashData = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
+        $data = $request->all();
+
+        // Tìm đơn hàng theo mã
+        $order = Order::where('ma_don_hang', $data['orderId'] ?? '')->first();
+
+        if (!$order) {
+            return redirect()->route('home')->with('error', 'Không tìm thấy đơn hàng.');
         }
 
-        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
-        $order = Order::where('ma_don_hang', $request->vnp_TxnRef)->first();
+        // Xác thực chữ ký từ MoMo
+        $momo = new MomoService();
+        $isValid = $momo->verifySignature($data);
 
-        if ($secureHash == $vnp_SecureHash) {
-            if ($request->vnp_ResponseCode == '00') {
-                if ($order) {
-                    $order->ghi_chu = "[VNPAY: Đã thanh toán thành công] " . $order->ghi_chu;
-                    $order->save();
-                    return redirect()->route('checkout.success', $order->id)->with('success', 'Giao dịch thanh toán VNPAY thành công!');
-                }
-            } else {
-                if ($order) {
-                    $order->ghi_chu = "[VNPAY: Giao dịch thất bại / Bị hủy] " . $order->ghi_chu;
-                    $order->trang_thai = 'da_huy';
-                    $order->save();
-                }
-                return redirect()->route('home')->with('error', 'Giao dịch thanh toán VNPAY bị hủy hoặc thất bại.');
-            }
+        if ($isValid && ($data['resultCode'] ?? -1) == 0) {
+            // ✅ THANH TOÁN THÀNH CÔNG
+            $order->ghi_chu = '[MoMo: Đã thanh toán thành công - TransID: ' . ($data['transId'] ?? 'N/A') . '] ' . $order->ghi_chu;
+            $order->save();
+            return redirect()->route('checkout.success', $order->id)
+                ->with('success', '🎉 Thanh toán MoMo thành công!');
         }
-        
-        return redirect()->route('home')->with('error', 'Chữ ký VNPAY không hợp lệ.');
+
+        // ❌ THANH TOÁN THẤT BẠI / BỊ HỦY
+        $errorMsg = $data['message'] ?? 'Giao dịch bị hủy.';
+        $order->ghi_chu = '[MoMo: Thất bại - ' . $errorMsg . '] ' . $order->ghi_chu;
+        $order->trang_thai = 'da_huy';
+        $order->save();
+
+        return redirect()->route('home')
+            ->with('error', 'Thanh toán MoMo thất bại: ' . $errorMsg);
     }
+
+
+    // ====================================================
+    // 6. MOMO IPN (WEBHOOK - MoMo gọi phía server)
+    // ====================================================
+    public function momoNotify(Request $request)
+    {
+        // Endpoint này MoMo gọi server-to-server để xác nhận giao dịch
+        // Trong môi trường local/sandbox không nhận được IPN thật nên chỉ log lại
+        \Log::info('[MoMo IPN]', $request->all());
+        return response()->json(['message' => 'ok'], 200);
+    }
+
+
 
 
     // ====================================================

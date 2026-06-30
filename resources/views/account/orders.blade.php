@@ -28,17 +28,22 @@
                                 </div>
                                 <div>
                                     @php
-                                        $statusColor = match($order->trang_thai) {
+                                        $statusKey = strtolower($order->trang_thai);
+                                        $statusColor = match($statusKey) {
+                                            'cho_xac_nhan' => 'secondary',
+                                            'cho_lay_hang' => 'warning text-dark',
+                                            'dang_giao' => 'info text-dark',
                                             'da_giao' => 'success',
-                                            'dang_giao' => 'warning text-dark',
                                             'da_huy' => 'danger',
                                             default => 'secondary'
                                         };
-                                        $statusText = match($order->trang_thai) {
-                                            'da_giao' => 'Đã giao hàng',
+                                        $statusText = match($statusKey) {
+                                            'cho_xac_nhan' => 'Chờ xác nhận',
+                                            'cho_lay_hang' => 'Chờ lấy hàng',
                                             'dang_giao' => 'Đang vận chuyển',
+                                            'da_giao' => 'Đã giao hàng',
                                             'da_huy' => 'Đã hủy',
-                                            default => 'Chờ xác nhận'
+                                            default => strtoupper(str_replace('_', ' ', $order->trang_thai))
                                         };
                                     @endphp
                                     <span class="badge bg-{{ $statusColor }}">{{ $statusText }}</span>

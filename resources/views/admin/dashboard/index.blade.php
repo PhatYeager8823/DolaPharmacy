@@ -105,6 +105,82 @@
             </div>
         </div>
     </div>
+
+    {{-- BIỂU ĐỒ LƯỢN SÓNG (WAVY CHART): SỐ ĐƠN HÀNG --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title m-0 me-2 fw-bold text-info">Số lượng đơn hàng hoàn thành</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="wavyOrdersChart" style="max-height: 350px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- 3. CẢNH BÁO TỒN KHO HẾT HÀNG --}}
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card h-100" style="border-left: 4px solid #f59e0b !important;">
+                <div class="card-header d-flex align-items-center justify-content-between pb-3">
+                    <h5 class="card-title m-0 me-2 fw-bold text-warning">
+                        <i class="bx bx-error-circle me-1"></i> Cảnh báo Thuốc Sắp Hết Hàng
+                    </h5>
+                    <a href="{{ route('thuoc.index') }}" class="btn btn-sm btn-outline-warning">Nhập Kho Ngay</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless mb-0">
+                            <thead class="border-bottom text-muted">
+                                <tr>
+                                    <th># MÃ SẢN PHẨM</th>
+                                    <th>TÊN THUỐC</th>
+                                    <th>GIÁ BÁN</th>
+                                    <th class="text-end">SỐ LƯỢNG TỒN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($lowStockProducts as $thuoc)
+                                    <tr>
+                                        <td><strong>{{ $thuoc->ma_san_pham }}</strong></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @if($thuoc->hinh_anh)
+                                                    <img src="{{ asset('storage/' . $thuoc->hinh_anh) }}" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                                                @else
+                                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="bx bx-image text-muted"></i>
+                                                    </div>
+                                                @endif
+                                                <span class="text-truncate fw-bold" style="max-width: 250px;">{{ $thuoc->ten_thuoc }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ number_format($thuoc->gia_ban) }} đ</td>
+                                        <td class="text-end">
+                                            @if($thuoc->so_luong_ton == 0)
+                                                <span class="badge bg-danger rounded-pill px-3 py-2 shadow-sm">🛑 Hết Hàng (0)</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2 shadow-sm">⚠️ Sắp hết ({{ $thuoc->so_luong_ton }})</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-success fw-bold">
+                                            <i class="bx bx-check-shield fs-4 mb-2 d-block"></i>
+                                            Tuyệt vời! Tất cả thuốc trong kho đều dồi dào số lượng.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- 3. SCRIPT VẼ BIỂU ĐỒ --}}
@@ -158,6 +234,58 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // --- B. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (Doughnut Chart) ---
+    const ctxWavy = document.getElementById('wavyOrdersChart').getContext('2d');
+    
+    let gradientWavy = ctxWavy.createLinearGradient(0, 0, 0, 400);
+    gradientWavy.addColorStop(0, 'rgba(0, 242, 254, 0.4)'); // Cyan cyber
+    gradientWavy.addColorStop(1, 'rgba(0, 242, 254, 0.0)');  // Trong suốt ở đáy
+
+    new Chart(ctxWavy, {
+        type: 'line',
+        data: {
+            labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+            datasets: [{
+                label: 'Số đơn hoàn thành',
+                data: @json($monthlyOrders),
+                backgroundColor: gradientWavy,
+                borderColor: '#00f2fe',
+                borderWidth: 3,
+                tension: 0.4, // CỰC KỲ QUAN TRỌNG: 0.4 tạo độ lượn sóng mềm mại
+                fill: true,   // Đổ màu vùng gradient mượt mà bên dưới
+                pointBackgroundColor: '#0b1120',
+                pointBorderColor: '#00f2fe',
+                pointHoverBackgroundColor: '#00f2fe',
+                pointHoverBorderColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        }
+    });
+
+    // --- C. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (Doughnut Chart) ---
     const ctxStatus = document.getElementById('orderStatusChart').getContext('2d');
     new Chart(ctxStatus, {
         type: 'doughnut',

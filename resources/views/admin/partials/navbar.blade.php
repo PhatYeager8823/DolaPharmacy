@@ -7,14 +7,20 @@
 
 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
     <div class="navbar-nav align-items-center">
-    <div class="nav-item d-flex align-items-center">
-        <i class="bx bx-search fs-4 lh-0 me-2"></i>
+    <div class="nav-item d-flex align-items-center position-relative">
+        <i class="bx bx-search fs-4 lh-0 me-2 text-muted"></i>
         <input
-        type="text"
-        class="form-control border-0 shadow-none"
-        placeholder="Tìm kiếm..."
-        aria-label="Search..."
+            id="admin-search-input"
+            type="text"
+            class="form-control border-0 shadow-none bg-transparent"
+            placeholder="Tìm tính năng... (Ctrl + K)"
+            aria-label="Search..."
+            autocomplete="off"
         />
+        {{-- Khung hiển thị kết quả tìm kiếm nhanh --}}
+        <div id="search-results" class="search-results-container scrollbar-hidden"></div>
+        {{-- Lớp phủ mờ nền khi tìm kiếm --}}
+        <div id="search-overlay"></div>
     </div>
     </div>
     <ul class="navbar-nav flex-row align-items-center ms-auto">
@@ -27,15 +33,14 @@
         <ul class="dropdown-menu dropdown-menu-end">
         <li>
             <a class="dropdown-item" href="#">
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 <div class="flex-shrink-0 me-3">
                 <div class="avatar avatar-online">
                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                 </div>
                 </div>
                 <div class="flex-grow-1">
-                <span class="fw-semibold d-block">{{ Auth::user()->ten ?? 'Admin' }}</span>
-                <small class="text-muted">Quản trị viên</small>
+                <span class="fw-semibold d-block">{{ Auth::user()->ten ?? 'Admin' }} 👨‍✈️</span>
                 </div>
             </div>
             </a>
@@ -50,7 +55,7 @@
         <li><div class="dropdown-divider"></div></li>
         <li>
             {{-- Nút đăng xuất --}}
-            <a class="dropdown-item" href="{{ route('logout') }}"
+            <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">
                 <i class="bx bx-power-off me-2"></i>
                 <span class="align-middle">Đăng xuất</span>

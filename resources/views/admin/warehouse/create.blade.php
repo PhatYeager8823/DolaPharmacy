@@ -2,6 +2,30 @@
 @section('title', 'Tạo Phiếu Nhập Kho')
 
 @section('content')
+@push('styles')
+<style>
+    /* SỬA LỖI UI: Chữ trắng trên nền trắng trong bảng nhập hàng */
+    #tblNhapHang input.form-control {
+        color: #333 !important;
+        background-color: #fff !important;
+        border: 1px solid #ced4da !important;
+    }
+    #tblNhapHang input.form-control:focus {
+        border-color: #00f2fe !important;
+        background-color: #fff !important;
+        color: #000 !important;
+        box-shadow: 0 0 5px rgba(0,242,254,0.3) !important;
+    }
+    /* Đảm bảo select2 trong bảng này cũng nhìn thấy chữ */
+    #tblNhapHang .select2-container .select2-selection--single {
+        background-color: #fff !important;
+    }
+    #tblNhapHang .select2-container .select2-selection--single .select2-selection__rendered {
+        color: #333 !important;
+    }
+</style>
+@endpush
+
 <div class="container-xxl flex-grow-1 container-p-y">
 
     {{-- 1. TIÊU ĐỀ & NÚT QUAY LẠI --}}
@@ -12,13 +36,6 @@
         </a>
     </div>
 
-    {{-- 2. KHỐI THÔNG BÁO LỖI (QUAN TRỌNG) --}}
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible" role="alert">
